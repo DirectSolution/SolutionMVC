@@ -9,7 +9,6 @@ class Helper
      * It combines the raw query and the placeholders. For sure not really perfect (as PDO is more complex than just
      * combining raw query and arguments), but it does the job.
      * 
-     * @author Panique
      * @param string $raw_sql
      * @param array $parameters
      * @return string

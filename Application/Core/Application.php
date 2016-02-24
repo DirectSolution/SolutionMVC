@@ -1,5 +1,5 @@
 <?php
-
+namespace SolutionMvc\Core;
 class Application
 {
     /** @var null The controller */

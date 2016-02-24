@@ -9,5 +9,14 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        
+        "vrana/notorm" : "dev-master"
+        
+    },
+    
+    "autoload": {
+        "psr-4": {"SolutionMvc\\": ""}
+    }
+
 }
