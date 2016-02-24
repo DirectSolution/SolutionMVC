@@ -1,21 +1,13 @@
 {
-    "name": "panique/mini",
-    "type": "project",
-    "description": "An extremely simple naked PHP application",
-    "keywords": ["skeleton", "boilerplate", "naked", "barebone", "application"],
-    "homepage": "https://github.com/panique/mini",
-    "license": "MIT",
+    "name": "solutionhost/solution-mvc",
+    "description": "Solution Host simple MVC",
+    "type": "PHP",
     "authors": [
         {
-            "name": "Panique",
-            "role": "Developer"
+            "name": "Doug Hayward",
+            "email": "doug@hsdirect.co.uk"
         }
     ],
-    "support": {
-        "issues": "https://github.com/panique/mini/issues",
-        "source": "https://github.com/panique/mini"
-    },
-    "require": {
-        "php": ">=5.3.0"
-    }
+    "minimum-stability": "dev",
+    "require": {}
 }
