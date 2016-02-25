@@ -60,11 +60,11 @@ class Application {
                 } else {
                     //Something failed so direct to error controller
 //                    header('location: ' . URL . 'error');                    
-                    $error->errorType404();
+                    $error->errorType404("OIOFIJ");
                 }
             }
         } else {
-            $error->errorType404();
+            $error->errorType404("OIOFIJ");
         }
     }
 

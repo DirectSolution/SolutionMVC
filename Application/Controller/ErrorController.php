@@ -10,8 +10,11 @@ namespace SolutionMvc\Controller;
  */
 class ErrorController extends \SolutionMvc\Core\Controller
 {
+    public function __construct() {
+    }
     
     public function errorType404(){
+        
         require APP . 'View/_templates/header.php';
         require APP . 'View/error/404.php';
         require APP . 'View/_templates/footer.php';
