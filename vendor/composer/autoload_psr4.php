@@ -6,5 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'SolutionMvc\\' => array($baseDir . '/'),
+    'SolutionMvc\\View\\' => array($baseDir . '/Application/View'),
+    'SolutionMvc\\Model\\' => array($baseDir . '/Application/Model'),
+    'SolutionMvc\\Library\\' => array($baseDir . '/Application/Libs'),
+    'SolutionMvc\\Core\\' => array($baseDir . '/Application/Core'),
+    'SolutionMvc\\Controller\\' => array($baseDir . '/Application/Controller'),
+    'SolutionMvc\\Config\\' => array($baseDir . '/Application/Config'),
+    'SolutionMvc\\' => array($baseDir . '/Application'),
 );

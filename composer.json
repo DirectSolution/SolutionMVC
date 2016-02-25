@@ -16,7 +16,15 @@
     },
     
     "autoload": {
-        "psr-4": {"SolutionMvc\\": ""}
+        "psr-4": {
+            "SolutionMvc\\": "Application/",
+            "SolutionMvc\\Core\\": "Application/Core",
+            "SolutionMvc\\Library\\": "Application/Libs",
+            "SolutionMvc\\Model\\": "Application/Model",
+            "SolutionMvc\\View\\": "Application/View",
+            "SolutionMvc\\Controller\\": "Application/Controller",
+            "SolutionMvc\\Config\\": "Application/Config"
+            }
     }
 
 }

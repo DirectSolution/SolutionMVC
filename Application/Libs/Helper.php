@@ -1,5 +1,5 @@
 <?php
-
+namespace SolutionMvc\Library;
 class Helper
 {
     /**

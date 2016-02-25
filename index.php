@@ -17,7 +17,6 @@ define('APP', ROOT . 'application' . DIRECTORY_SEPARATOR);
 // If you have no idea what this means: Don't worry, you don't need it, simply leave it like it is.
 //if (file_exists(ROOT . 'vendor/autoload.php')) {
     require ROOT . 'vendor/autoload.php';
-//    $loader->add('SolutionMvc\\', ROOT);
 //}
 
 // load application config (error reporting etc.)
@@ -32,7 +31,5 @@ define('APP', ROOT . 'application' . DIRECTORY_SEPARATOR);
 //require APP . 'core/controller.php';
 
 // start the application
-
 use SolutionMvc\Core\Application;
 $app = new Application();
-    

@@ -1,5 +1,5 @@
 <?php
-
+namespace SolutionMvc\Config;
 /**
  * Configuration
  *
