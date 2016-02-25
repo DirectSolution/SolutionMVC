@@ -10,7 +10,7 @@ use SolutionMvc\Core\Controller;
  * This is really weird behaviour, but documented here: http://php.net/manual/en/language.oop5.decon.php
  *
  */
-class Home extends Controller
+class HomeController extends Controller
 {
     /**
      * PAGE: index
@@ -26,7 +26,7 @@ class Home extends Controller
         print "Loaded Homepage";
         
     }
-
+    
     /**
      * PAGE: exampleone
      * This method handles what happens when you move to http://yourproject/home/exampleone
@@ -34,10 +34,11 @@ class Home extends Controller
      */
     public function exampleOne()
     {
+        print "one";
         // load views
-        require APP . 'view/_templates/header.php';
-        require APP . 'view/home/example_one.php';
-        require APP . 'view/_templates/footer.php';
+//        require APP . 'view/_templates/header.php';
+//        require APP . 'view/home/example_one.php';
+//        require APP . 'view/_templates/footer.php';
     }
 
     /**
@@ -48,8 +49,10 @@ class Home extends Controller
     public function exampleTwo()
     {
         // load views
-        require APP . 'view/_templates/header.php';
-        require APP . 'view/home/example_two.php';
-        require APP . 'view/_templates/footer.php';
+        // 
+        print "two";
+//        require APP . 'view/_templates/header.php';
+//        require APP . 'view/home/example_two.php';
+//        require APP . 'view/_templates/footer.php';
     }
 }
