@@ -11,8 +11,7 @@
     "minimum-stability": "dev",
     "require": {
         
-        "vrana/notorm" : "dev-master",
-        "DirectSolution/SolutionORM" : "dev-master"
+        "direct-solution/solution-orm" : "dev-master"
         
     },
     

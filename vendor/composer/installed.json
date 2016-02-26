@@ -1,40 +1,35 @@
 [
     {
-        "name": "vrana/notorm",
+        "name": "direct-solution/solution-orm",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/vrana/notorm.git",
-            "reference": "e49d5d2f1bfe440dc82b61f46172635dfcb6f6dd"
+            "url": "https://github.com/DirectSolution/SolutionORM.git",
+            "reference": "756f7292638fbcb3f62f5a73dfae012463e65d46"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/vrana/notorm/zipball/e49d5d2f1bfe440dc82b61f46172635dfcb6f6dd",
-            "reference": "e49d5d2f1bfe440dc82b61f46172635dfcb6f6dd",
+            "url": "https://api.github.com/repos/DirectSolution/SolutionORM/zipball/756f7292638fbcb3f62f5a73dfae012463e65d46",
+            "reference": "756f7292638fbcb3f62f5a73dfae012463e65d46",
             "shasum": ""
         },
-        "time": "2014-10-30 16:55:08",
+        "time": "2016-02-26 13:57:18",
         "type": "library",
         "installation-source": "source",
         "autoload": {
-            "files": [
-                "NotORM.php"
-            ]
+            "psr-4": {
+                "SolutionORM\\": "",
+                "SolutionMvc\\Source\\": "src/"
+            }
         },
         "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0",
-            "GPL-2.0+"
-        ],
         "authors": [
             {
-                "name": "Jakub Vrána",
-                "homepage": "http://www.vrana.cz/"
+                "name": "Doug Hayward"
             }
         ],
-        "description": "NotORM is a PHP library for simple working with data in the database.",
-        "homepage": "http://www.notorm.com/",
+        "description": "SolutionORM, forked modernised version of NotOrm.",
         "keywords": [
             "database",
             "dbal"
