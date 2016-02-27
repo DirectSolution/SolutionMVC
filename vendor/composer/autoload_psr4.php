@@ -6,9 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'SolutionORM\\Interfaces\\' => array($vendorDir . '/direct-solution/solution-orm/src/Interfaces'),
+    'SolutionORM\\Controllers\\Cache\\' => array($vendorDir . '/direct-solution/solution-orm/src/Controllers/Cache'),
+    'SolutionORM\\Controllers\\' => array($vendorDir . '/direct-solution/solution-orm/src/Controllers'),
     'SolutionORM\\' => array($vendorDir . '/direct-solution/solution-orm'),
     'SolutionMvc\\View\\' => array($baseDir . '/Application/View'),
-    'SolutionMvc\\Source\\' => array($vendorDir . '/direct-solution/solution-orm/src'),
     'SolutionMvc\\Model\\' => array($baseDir . '/Application/Model'),
     'SolutionMvc\\Library\\' => array($baseDir . '/Application/Libs'),
     'SolutionMvc\\Core\\' => array($baseDir . '/Application/Core'),
