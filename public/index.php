@@ -17,10 +17,15 @@ define('APP', ROOT . 'Application' . DIRECTORY_SEPARATOR);
 require ROOT . 'vendor/autoload.php';
 
 // load application config (error reporting etc.)
-use SolutionMvc\Config\Config;
+use SolutionMvc\Config\Config, PDO;
 $config = new Config();
 
 // load the application Core Controller
+
+$connection = new PDO("mysql:dbname=testingDB", 'root', 'X8rx812rDH');
+$orm = new SolutionORM\SolutionORM($connection);
+
+print_r($orm->TestTable());
 
 use SolutionMvc\Core\Application;
 $app = new Application();
