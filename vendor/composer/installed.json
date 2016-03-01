@@ -5,22 +5,24 @@
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/DirectSolution/SolutionORM.git",
-            "reference": "756f7292638fbcb3f62f5a73dfae012463e65d46"
+            "url": "https://github.com/direct-solution/solution-orm.git",
+            "reference": "81c865d9ce20dd60c531d645cc691ec867522af2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/DirectSolution/SolutionORM/zipball/756f7292638fbcb3f62f5a73dfae012463e65d46",
-            "reference": "756f7292638fbcb3f62f5a73dfae012463e65d46",
+            "url": "https://api.github.com/repos/direct-solution/solution-orm/zipball/81c865d9ce20dd60c531d645cc691ec867522af2",
+            "reference": "81c865d9ce20dd60c531d645cc691ec867522af2",
             "shasum": ""
         },
-        "time": "2016-02-26 13:57:18",
+        "time": "2016-02-27 00:36:50",
         "type": "library",
         "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "SolutionORM\\": "",
-                "SolutionMvc\\Source\\": "src/"
+                "SolutionORM\\Controllers\\": "src/Controllers/",
+                "SolutionORM\\Controllers\\Cache\\": "src/Controllers/Cache/",
+                "SolutionORM\\Interfaces\\": "src/Interfaces/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
