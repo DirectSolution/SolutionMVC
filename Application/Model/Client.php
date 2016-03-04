@@ -5,7 +5,7 @@ namespace SolutionMvc\Model;
 use SolutionMvc\Model\BaseModel;
 
 /**
- * Description of User
+ * Description of Client
  *
  * @author doug
  */
