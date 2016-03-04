@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/direct-solution/solution-orm.git",
-                "reference": "81c865d9ce20dd60c531d645cc691ec867522af2"
+                "reference": "12189c7cd2c60fbd247f137fb0fe114d389ddb29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/direct-solution/solution-orm/zipball/81c865d9ce20dd60c531d645cc691ec867522af2",
-                "reference": "81c865d9ce20dd60c531d645cc691ec867522af2",
+                "url": "https://api.github.com/repos/direct-solution/solution-orm/zipball/12189c7cd2c60fbd247f137fb0fe114d389ddb29",
+                "reference": "12189c7cd2c60fbd247f137fb0fe114d389ddb29",
                 "shasum": ""
             },
             "type": "library",
@@ -41,7 +41,7 @@
                 "database",
                 "dbal"
             ],
-            "time": "2016-02-27 00:36:50"
+            "time": "2016-03-04 13:21:59"
         }
     ],
     "packages-dev": [],

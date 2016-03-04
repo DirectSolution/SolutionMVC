@@ -50,12 +50,15 @@ class Config {
          * Configuration for: Database
          * This is the place where you define your database credentials, database type etc.
          */
+        
+        //mysql:dbname=prod_portal; host=89.151.79.10", 'hsdirect', '9Etr8F*uBr'
         define('DB_TYPE', 'mysql');
-        define('DB_HOST', '127.0.0.1');
-        define('DB_NAME', 'mini');
-        define('DB_USER', 'root');
-        define('DB_PASS', 'your_password');
+        define('DB_HOST', '89.151.79.10');
+        define('DB_NAME', 'prod_portal');
+        define('DB_USER', 'hsdirect');
+        define('DB_PASS', '9Etr8F*uBr');
         define('DB_CHARSET', 'utf8');
+        
     }
 
 }

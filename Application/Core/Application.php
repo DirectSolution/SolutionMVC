@@ -15,8 +15,33 @@ class Application {
 
     /** @var array URL parameters */
     private $url_params = array();
+    
+    
+    function getUrl_controller() {
+        return $this->url_controller;
+    }
 
-    /**
+    function getUrl_action() {
+        return $this->url_action;
+    }
+
+    function getUrl_params() {
+        return $this->url_params;
+    }
+
+    function setUrl_controller($url_controller) {
+        $this->url_controller = $url_controller;
+    }
+
+    function setUrl_action($url_action) {
+        $this->url_action = $url_action;
+    }
+
+    function setUrl_params($url_params) {
+        $this->url_params = $url_params;
+    }
+
+        /**
      * "Start" the application:
      * Analyze the URL elements and calls the according controller/method or the fallback
      */

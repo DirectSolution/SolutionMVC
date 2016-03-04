@@ -22,10 +22,7 @@ $config = new Config();
 
 // load the application Core Controller
 
-$connection = new PDO("mysql:dbname=testingDB", 'root', 'X8rx812rDH');
-$orm = new SolutionORM\SolutionORM($connection);
 
-print_r($orm->TestTable());
 
 use SolutionMvc\Core\Application;
 $app = new Application();
