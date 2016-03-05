@@ -53,10 +53,10 @@ class Config {
         
         //mysql:dbname=prod_portal; host=89.151.79.10", 'hsdirect', '9Etr8F*uBr'
         define('DB_TYPE', 'mysql');
-        define('DB_HOST', '89.151.79.10');
-        define('DB_NAME', 'prod_portal');
-        define('DB_USER', 'hsdirect');
-        define('DB_PASS', '9Etr8F*uBr');
+        define('DB_HOST', 'localhost');
+        define('DB_NAME', 'tablename');
+        define('DB_USER', 'root');
+        define('DB_PASS', 'password');
         define('DB_CHARSET', 'utf8');
         
     }
