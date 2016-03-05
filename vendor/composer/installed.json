@@ -6,15 +6,15 @@
         "source": {
             "type": "git",
             "url": "https://github.com/direct-solution/solution-orm.git",
-            "reference": "12189c7cd2c60fbd247f137fb0fe114d389ddb29"
+            "reference": "a06cf34a53928b24c6f5569e869ce3fcc7f26eac"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/direct-solution/solution-orm/zipball/12189c7cd2c60fbd247f137fb0fe114d389ddb29",
-            "reference": "12189c7cd2c60fbd247f137fb0fe114d389ddb29",
+            "url": "https://api.github.com/repos/direct-solution/solution-orm/zipball/a06cf34a53928b24c6f5569e869ce3fcc7f26eac",
+            "reference": "a06cf34a53928b24c6f5569e869ce3fcc7f26eac",
             "shasum": ""
         },
-        "time": "2016-03-04 13:21:59",
+        "time": "2016-03-04 16:46:04",
         "type": "library",
         "installation-source": "source",
         "autoload": {
