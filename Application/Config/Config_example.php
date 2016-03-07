@@ -51,7 +51,6 @@ class Config {
          * This is the place where you define your database credentials, database type etc.
          */
         
-        //mysql:dbname=prod_portal; host=89.151.79.10", 'hsdirect', '9Etr8F*uBr'
         define('DB_TYPE', 'mysql');
         define('DB_HOST', 'localhost');
         define('DB_NAME', 'tablename');

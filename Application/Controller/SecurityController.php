@@ -17,6 +17,12 @@ use SolutionMvc\Core\Controller;
  */
 class SecurityController extends Controller {
 
+    public function login($post){
+        return json_encode($post);
+
+    }
+    
+    
     public function getUser($username, $client) {
         try {
 
