@@ -16,7 +16,8 @@ class User extends BaseModel {
     }
     
     public function getOneUserByUsernameAndClient($username, $client) {
-        return $this->orm->mast_users->limit(1)->where("username LIKE ?", "%" . $username)->and("client LIKE ?", "%".$client);
+        return $this->orm->mast_users->where("username LIKE ?", "%" . $username)->and("client LIKE ?", "%".$client)->fetch();
+       
     }
     
 

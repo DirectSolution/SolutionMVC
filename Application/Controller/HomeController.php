@@ -19,7 +19,7 @@ class HomeController extends Controller {
      * PAGE: index
      * This method handles what happens when you move to http://yourproject/home/index (which is the default page btw)
      */
-    public function index() {
+    public function indexAction() {
 
         print "Loaded Homepage";
     }
@@ -29,7 +29,7 @@ class HomeController extends Controller {
      * This method handles what happens when you move to http://yourproject/home/exampleone
      * The camelCase writing is just for better readability. The method name is case-insensitive.
      */
-    public function exampleOne($id) {
+    public function exampleOneAction($id) {
 
         
 
@@ -40,7 +40,7 @@ class HomeController extends Controller {
      * This method handles what happens when you move to http://yourproject/home/exampletwo
      * The camelCase writing is just for better readability. The method name is case-insensitive.
      */
-    public function exampleTwo() {
+    public function exampleTwoAction() {
         // load views
         // 
         print "two";

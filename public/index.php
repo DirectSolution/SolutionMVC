@@ -1,10 +1,10 @@
 <?php
-print "<pre>";
+//print "<pre>";
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-
+ header("Access-Control-Allow-Origin: *");
 error_reporting(E_ALL);
-print "</pre>";
+//print "</pre>";
 // TODO get rid of this and work with namespaces + composer's autoloader
 
 // set a constant that holds the project's folder path, like "/var/www/".

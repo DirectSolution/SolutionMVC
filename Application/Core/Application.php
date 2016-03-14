@@ -81,15 +81,15 @@ class Application {
             } else {
                 if (strlen($this->url_action) == 0) {
                     // no action defined: call the default index() method of a selected controller
-                    $this->url_controller->index();
+                    $this->url_controller->indexAction();
                 } else {
                     //Something failed so direct to error controller
 //                    header('location: ' . URL . 'error');                    
-                    $error->errorType404("OIOFIJ");
+                    $error->errorType404Action("OIOFIJ");
                 }
             }
         } else {
-            $error->errorType404("OIOFIJ");
+            $error->errorType404Action("OIOFIJ");
         }
     }
 
@@ -105,14 +105,14 @@ class Application {
             $url = explode('/', $url);
 
             $controller = isset($url[0]) ? ucfirst(strtolower($url[0])) : null;
-            $action = isset($url[1]) ? ucfirst(strtolower($url[1])) : null;
-
+            $action = isset($url[1]) ? ucfirst(strtolower($url[1]))."Action" : null;
+            
             // Put URL parts into according properties
             // By the way, the syntax here is just a short form of if/else, called "Ternary Operators"
             // @see http://davidwalsh.name/php-shorthand-if-else-ternary-operators
             $this->url_controller = isset($controller) ? $controller : null;
             $this->url_action = isset($action) ? $action : null;
-
+//            die($this->url_action);
             // Remove controller and action from the split URL
             unset($url[0], $url[1], $action, $controller);
 
