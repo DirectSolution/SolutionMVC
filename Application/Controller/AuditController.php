@@ -33,7 +33,7 @@ class AuditController {
     }
 
     public function newAction() {
-        
+
         $postdata = file_get_contents("php://input");
         $request = json_decode($postdata);
 
@@ -47,9 +47,8 @@ class AuditController {
     }
 
     public function getAction($id = "1") {
-        switch ($id) {
-            case "1";
-                $response = '                
+        if ($id == "1") {
+            $response = '                
                 {
                 "name": "Some audit",
                 "description": "A description",
@@ -122,9 +121,9 @@ class AuditController {
                 ]
             }
                 ';
-                break;
-            case "2";
-                $response = '
+        } else if ($id == "2") {
+
+            $response = '
                 {
                 "name": "Some audit 2",
                 "description": "A description 2",
@@ -196,9 +195,9 @@ class AuditController {
                     }
                 ]
             }
-                ';
-                break;
+               ';
         }
+        
         return print $response;
     }
 
