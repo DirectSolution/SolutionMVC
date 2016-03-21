@@ -30,7 +30,6 @@ class BaseModel {
      */
     function __construct() {
         $this->openDatabaseConnection();
-
         $this->tableName = $this->tableNameByClass(get_class($this));
     }
 

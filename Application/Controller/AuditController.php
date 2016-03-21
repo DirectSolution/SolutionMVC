@@ -1,12 +1,11 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace SolutionMvc\Controller;
+
+use SolutionMvc\Model\Audit,
+        SolutionMvc\Model\AuditType,
+        SolutionMvc\Model\QuestionType,
+        SolutionMvc\Core\Response;
 
 /**
  * Description of AuditController
@@ -14,6 +13,13 @@ namespace SolutionMvc\Controller;
  * @author doug
  */
 class AuditController {
+    
+    protected $response;
+
+
+    public function __construct() {
+        $this->response = new Response();
+    }
 
     public function indexAction() {
         return print '
@@ -32,173 +38,34 @@ class AuditController {
             ';
     }
 
-    public function newAction() {
+    public function initialNewAuditDataAction($client = 000) {
+        $auditTypes = new AuditType();
+        $questionTypes = new QuestionType();
+        
+        $this->response->auditTypes = $auditTypes->allAuditTypesArray($client);
+        $this->response->questionTypes = $questionTypes->allQuestionTypesArray($client);
+
+        return print json_encode($this->response);
+    }
+
+    public function newAuditAction() {
 
         $postdata = file_get_contents("php://input");
         $request = json_decode($postdata);
 
-        $response = new \SolutionMvc\Core\Response();
-        $response->result = "Password Correct";
-        $response->status = "success";
-        $response->username = "dhayward";
-        $response->data = $request;
+        $this->response->result = "Password Correct";
+        $this->response->status = "success";
+        $this->response->username = "dhayward";
+        $this->response->data = $request;
 
-        return print json_encode($response);
+
+        return print json_encode($this->response);
     }
 
-    public function getAction($id = "1") {
-        if ($id == "1") {
-            $response = '                
-                {
-                "name": "Some audit",
-                "description": "A description",
-                "auditType": {"id": "1"},
-                "groups": [
-                    {
-                        "name": "Group 1",
-                        "questions": [
-                            {
-                                "question": "Question 1",
-                                "answerType": {"id": "2"},
-                                "answerRequired": "1",
-                                "addEvidence": "0",
-                                "evidenceRequired": "1",
-                                "addExpiry": "1",
-                                "expiryRequired": "1"
-                            },
-                            {
-                                "question": "Question 2",
-                                "answerType": {"id": "3"},
-                                "answerRequired": "0",
-                                "addEvidence": "0",
-                                "evidenceRequired": "0",
-                                "addExpiry": "1",
-                                "expiryRequired": "0"
-                            },
-                            {
-                                "question": "Question 3",
-                                "answerType": {"id": "1"},
-                                "answerRequired": "1",
-                                "addEvidence": "1",
-                                "evidenceRequired": "0",
-                                "addExpiry": "0",
-                                "expiryRequired": "1"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Group 2",
-                        "questions": [
-                            {
-                                "question": "Question 1",
-                                "answerType": {"id": "2"},
-                                "answerRequired": "1",
-                                "addEvidence": "1",
-                                "evidenceRequired": "1",
-                                "addExpiry": "1",
-                                "expiryRequired": "1"
-                            },
-                            {
-                                "question": "Question 2",
-                                "answerType": {"id": "3"},
-                                "answerRequired": "0",
-                                "addEvidence": "0",
-                                "evidenceRequired": "0",
-                                "addExpiry": "0",
-                                "expiryRequired": "0"
-                            },
-                            {
-                                "question": "Question 3",
-                                "answerType": {"id": "1"},
-                                "answerRequired": "1",
-                                "addEvidence": "1",
-                                "evidenceRequired": "0",
-                                "addExpiry": "1",
-                                "expiryRequired": "1"
-                            }
-                        ]
-                    }
-                ]
-            }
-                ';
-        } else if ($id == "2") {
-
-            $response = '
-                {
-                "name": "Some audit 2",
-                "description": "A description 2",
-                "auditType": {"id": "1"},
-                "groups": [
-                    {
-                        "name": "Group 1",
-                        "questions": [
-                            {
-                                "question": "Question 1",
-                                "answerType": {"id": "2"},
-                                "answerRequired": "1",
-                                "addEvidence": "0",
-                                "evidenceRequired": "1",
-                                "addExpiry": "1",
-                                "expiryRequired": "1"
-                            },
-                            {
-                                "question": "Question 2",
-                                "answerType": {"id": "3"},
-                                "answerRequired": "0",
-                                "addEvidence": "0",
-                                "evidenceRequired": "0",
-                                "addExpiry": "1",
-                                "expiryRequired": "0"
-                            },
-                            {
-                                "question": "Question 3",
-                                "answerType": {"id": "1"},
-                                "answerRequired": "1",
-                                "addEvidence": "1",
-                                "evidenceRequired": "0",
-                                "addExpiry": "0",
-                                "expiryRequired": "1"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Group 2",
-                        "questions": [
-                            {
-                                "question": "Question 1",
-                                "answerType": {"id": "2"},
-                                "answerRequired": "1",
-                                "addEvidence": "1",
-                                "evidenceRequired": "1",
-                                "addExpiry": "1",
-                                "expiryRequired": "1"
-                            },
-                            {
-                                "question": "Question 2",
-                                "answerType": {"id": "3"},
-                                "answerRequired": "0",
-                                "addEvidence": "0",
-                                "evidenceRequired": "0",
-                                "addExpiry": "0",
-                                "expiryRequired": "0"
-                            },
-                            {
-                                "question": "Question 3",
-                                "answerType": {"id": "1"},
-                                "answerRequired": "1",
-                                "addEvidence": "1",
-                                "evidenceRequired": "0",
-                                "addExpiry": "1",
-                                "expiryRequired": "1"
-                            }
-                        ]
-                    }
-                ]
-            }
-               ';
-        }
-        
-        return print $response;
+    public function getAuditAction($id = "1") {
+        $this->response->questionTypes = $questionTypes->allQuestionTypesArray($client);
+        $audit = new Audit;
+        return print ($audit->testDataForAudit($id));
     }
 
     public function deleteAuditAction() {

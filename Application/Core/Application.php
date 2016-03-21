@@ -46,16 +46,18 @@ class Application {
      * Analyze the URL elements and calls the according controller/method or the fallback
      */
     public function __construct() {
+        
+        
         // create array with URL parts in $url
         $this->splitUrl();
         $error = new ErrorController();
-
+        
         // check for controller: no controller given ? then load start-page
         if (!$this->url_controller) {
 
             //require APP . 'controller/home.php';
             $page = new \SolutionMvc\Controller\HomeController();
-            $page->index();
+            $page->indexAction();
         } elseif (file_exists(APP . 'Controller/' . $this->url_controller . 'Controller.php')) {
             // here we did check for controller: does such a controller exist ?
             // if so, then load this file and create this controller
@@ -106,6 +108,8 @@ class Application {
 
             $controller = isset($url[0]) ? ucfirst(strtolower($url[0])) : null;
             $action = isset($url[1]) ? ucfirst(strtolower($url[1]))."Action" : null;
+            
+            
             
             // Put URL parts into according properties
             // By the way, the syntax here is just a short form of if/else, called "Ternary Operators"
