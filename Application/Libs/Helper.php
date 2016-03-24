@@ -1,7 +1,18 @@
 <?php
+
 namespace SolutionMvc\Library;
-class Helper
-{
+
+class Helper {
+
+    public function searchForId($id, $array) {
+        foreach ($array as $key => $val) {
+            if ($val['id'] == $id) {
+                return $val['name'];
+            }
+        }
+        return null;
+    }
+
     /**
      * debugPDO
      *
@@ -38,14 +49,14 @@ class Helper
         }
 
         /*
-        echo "<br> [DEBUG] Keys:<pre>";
-        print_r($keys);
-        
-        echo "\n[DEBUG] Values: ";
-        print_r($values);
-        echo "</pre>";
-        */
-        
+          echo "<br> [DEBUG] Keys:<pre>";
+          print_r($keys);
+
+          echo "\n[DEBUG] Values: ";
+          print_r($values);
+          echo "</pre>";
+         */
+
         $raw_sql = preg_replace($keys, $values, $raw_sql, 1, $count);
 
         return $raw_sql;

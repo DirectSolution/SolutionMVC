@@ -24,9 +24,9 @@ class AuditFixtures {
         if ($id == 1) {
             $response = '                
                     {
-                    "name": "Some audit",
+                    "name": "Audit Sample Number 1",
                     "description": "A description",
-                    "auditType": {"id": 1},
+                    "auditType": {"id": 3},
                     "groups": [
                         {
                             "id" : 1,
@@ -38,7 +38,7 @@ class AuditFixtures {
                                     "answerType": {"id": 2},
                                     "answerRequired": 1,
                                     "addEvidence": 0,
-                                    "evidenceRequired": 1,
+                                    "evidenceRequired": 0,
                                     "addExpiry": 1,
                                     "expiryRequired": 1
                                 },
@@ -50,7 +50,7 @@ class AuditFixtures {
                                     "addEvidence": 0,
                                     "evidenceRequired": 0,
                                     "addExpiry": 1,
-                                    "expiryRequired": 0
+                                    "expiryRequired": 1
                                 },
                                 {
                                 "id":3,
@@ -59,7 +59,7 @@ class AuditFixtures {
                                     "answerRequired": 1,
                                     "addEvidence": 1,
                                     "evidenceRequired": 0,
-                                    "addExpiry": 0,
+                                    "addExpiry": 1,
                                     "expiryRequired": 1
                                 }
                             ]
@@ -74,9 +74,9 @@ class AuditFixtures {
                                     "answerType": {"id": 2},
                                     "answerRequired": 1,
                                     "addEvidence": 1,
-                                    "evidenceRequired": 1,
-                                    "addExpiry": 1,
-                                    "expiryRequired": 1
+                                    "evidenceRequired": 0,
+                                    "addExpiry": 0,
+                                    "expiryRequired": 0
                                 },
                                 {
                                 "id":5,
@@ -107,7 +107,7 @@ class AuditFixtures {
 
             $response = '
                     {
-                    "name": "Some audit 2",
+                    "name": "Second Audit Example",
                     "description": "A description 2",
                     "auditType": {"id": 1},
                     "groups": [
@@ -121,7 +121,7 @@ class AuditFixtures {
                                     "answerType": {"id": 2},
                                     "answerRequired": 1,
                                     "addEvidence": 0,
-                                    "evidenceRequired": 1,
+                                    "evidenceRequired": 0,
                                     "addExpiry": 1,
                                     "expiryRequired": 1
                                 },
@@ -142,7 +142,7 @@ class AuditFixtures {
                                     "answerRequired": 1,
                                     "addEvidence": 1,
                                     "evidenceRequired": 0,
-                                    "addExpiry": 0,
+                                    "addExpiry": 1,
                                     "expiryRequired": 1
                                 },
                                 {
@@ -152,7 +152,7 @@ class AuditFixtures {
                                     "answerRequired": 1,
                                     "addEvidence": 1,
                                     "evidenceRequired": 0,
-                                    "addExpiry": 0,
+                                    "addExpiry": 1,
                                     "expiryRequired": 1
                                 }
                             ]
