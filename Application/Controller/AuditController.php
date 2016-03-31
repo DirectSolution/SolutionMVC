@@ -5,6 +5,7 @@ namespace SolutionMvc\Controller;
 use SolutionMvc\Model\Audit,
     SolutionMvc\Model\AuditType,
     SolutionMvc\Model\QuestionType,
+    SolutionMvc\Model\QuestionGroup,
     SolutionMvc\Model\QuestionTypeOption,
     SolutionMvc\Core\Response;
 
@@ -101,8 +102,8 @@ class AuditController {
     public function saveAuditAction() {
         $postdata = file_get_contents("php://input");
 
-        $this->audit->insertNewAudit(json_decode($postdata));    
-        
+        $this->audit->insertNewAudit(json_decode($postdata));
+
         $this->response->result = "Audit Saved";
         $this->response->status = "success";
         $this->response->username = "dhayward";
@@ -131,13 +132,36 @@ class AuditController {
         $questionTypes = new QuestionType();
         $this->response->questionTypes = $questionTypes->allQuestionTypesArray($client);
         $audit = new Audit;
+        $questionGroups = new QuestionGroup();
+        $auditData = $audit->auditByIdArray($id);
+
+//        return print var_dump($auditData);
+        //Start building the json object
+
+        $this->response = array(
+            "name" => $auditData['name'],
+            "description" => $auditData['description'],
+            "auditType" => array( "id" => $auditData['audit_type_id']),
+            "groups" => $questionGroups->getAllQuestionGroupsByAuditIdArray($id),
+            
+        );
+    
+//        $auditData['groups'] = $questionGroups->getAllQuestionGroupsByAuditIdArray($id);
+       
+//        var_dump($questionGroups->getAllQuestionGroupsByAuditIdArray($id));
+//        $this->response->groups = $questionGroups->getAllQuestionGroupsByAuditIdArray($id);
+        //$this->response->groups = "THIS";
 
 
-        return print ($audit->testDataForAudit($id));
+//        $this->response->data->name = $auditData->name;
+
+        return print json_encode($this->response);
     }
 
-    public function deleteAuditAction() {
-        
+    public function retireAuditAction() {
+        $postdata = json_decode(file_get_contents("php://input"));                
+        $this->response->status = $this->audit->retireAudit($postdata->id);                
+        return print json_encode($this->response);
     }
 
 }
