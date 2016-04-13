@@ -1,0 +1,10 @@
+key:
+    password: "password_encruption_key"
+    secret_key: "secret key"
+db:
+    type: "mysql"
+    host: "localhost"
+    name: "table"
+    user: "username"
+    pass: "password"
+    charset: "utf8"
