@@ -17,4 +17,5 @@ return array(
     'SolutionMvc\\Controller\\' => array($baseDir . '/Application/Controller'),
     'SolutionMvc\\Config\\' => array($baseDir . '/Application/Config'),
     'SolutionMvc\\' => array($baseDir . '/Application'),
+    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
 );

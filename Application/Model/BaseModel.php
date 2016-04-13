@@ -2,7 +2,8 @@
 
 namespace SolutionMvc\Model;
 
-use PDO;
+use PDO,
+    Symfony\Component\Yaml\Parser;
 
 /**
  * Description of BaseModel
@@ -19,7 +20,7 @@ class BaseModel {
 
     /** @var string */
     private $tableName;
-
+    private $config;
     /**
      * @var null Model
      */
@@ -28,7 +29,10 @@ class BaseModel {
     /**
      * Whenever controller is created, open a database connection too and load "the model".
      */
-    function __construct() {
+    public function __construct() {
+        $this->yaml = new Parser();
+        $this->config = $this->yaml->parse(file_get_contents("../Application/Config/Config.yml"));
+        $this->db = $this->config['db'];
         $this->openDatabaseConnection();
         $this->tableName = $this->tableNameByClass(get_class($this));
     }
@@ -43,10 +47,10 @@ class BaseModel {
         // @see http://www.php.net/manual/en/pdostatement.fetch.php
         $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING);
 
-        //$this->dbPortal = new PDO("mysql:dbname=prod_portal; host=89.151.79.10", 'hsdirect', '9Etr8F*uBr');
         // generate a database connection, using the PDO connector
         // @see http://net.tutsplus.com/tutorials/php/why-you-should-be-using-phps-pdo-for-database-access/
-        $this->db = new PDO(DB_TYPE . ':host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET, DB_USER, DB_PASS, $options);
+        $this->db = new PDO($this->db['type'] . ':host=' . $this->db['host'] . ';dbname=' . $this->db['name'] . ';charset=' . $this->db['charset'], $this->db['user'], $this->db['pass'], $options);
+       // $this->db = new PDO(DB_TYPE . ':host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET, DB_USER, DB_PASS, $options);
 
         $this->orm = new \SolutionORM\SolutionORM($this->db);
     }

@@ -14,14 +14,10 @@ namespace SolutionMvc\Core;
  * @author doug
  */
 class Response {
-    
-    public $header = "";
-    public $status = "";
-    public $result = "";
-    public $username = "";
-    public $data = "";
-    
-    public function __construct() {
-        $this->token = md5($this->username);
-    }
+
+    public $headers;
+    public $status;
+    public $result;
+    public $username;
+    public $data;
 }

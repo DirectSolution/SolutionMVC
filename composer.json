@@ -11,7 +11,9 @@
     "minimum-stability": "dev",
     "require": {
         
-        "direct-solution/solution-orm" : "dev-master"
+        "direct-solution/solution-orm" : "dev-master",
+        "symfony/yaml": "2.6.*",
+        "firebase/php-jwt": "^3.0"
         
     },
     

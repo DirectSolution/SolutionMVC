@@ -4,6 +4,37 @@ namespace SolutionMvc\Library;
 
 class Helper {
 
+    /**
+     * @param string
+     * @return array
+     * @description Explode a filename, retaining its file extension. returns an array with the filename and the extension eg: array("fileName" => Somefile, "fileExtension" => .jpg);
+     */
+    public function explodeOnLastDot($file) {
+        //Explode on "." delimiter
+        $makeArray = explode(".", $file);
+        //Get the last instance which should be followed by a file extension
+        $fileExtension = end($makeArray);
+        //Get the Filename by exploding on extension
+        $fileName = explode(".".$fileExtension, $file);
+        //Return both parts
+        return array(
+            "fileName" => $fileName[0],
+            "fileExtension" => ".".$fileExtension);
+    }
+
+    /**
+     * 
+     * @param type string
+     * @return string
+     * @description Pass in full filename, returns a string containing an encoded filename while retaining the extension eg Pass in SomeFile.jpg and expect 120jdhhriwquehdf.jpg back, use this to avoid clashing filenames.
+     */    
+    public function encodeFileName($file) {
+        //Get an array of the filename + extension
+        $split = $this->explodeOnLastDot($file);
+        $encodeFileName = md5(urldecode($split['fileName'] . time()));
+        return $encodeFileName . $split['fileExtension'];
+    }
+
     public function searchForId($id, $array) {
         foreach ($array as $key => $val) {
             if ($val['id'] == $id) {

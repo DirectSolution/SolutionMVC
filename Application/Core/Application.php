@@ -15,8 +15,7 @@ class Application {
 
     /** @var array URL parameters */
     private $url_params = array();
-    
-    
+
     function getUrl_controller() {
         return $this->url_controller;
     }
@@ -41,17 +40,20 @@ class Application {
         $this->url_params = $url_params;
     }
 
-        /**
+    /**
      * "Start" the application:
      * Analyze the URL elements and calls the according controller/method or the fallback
      */
     public function __construct() {
-        
-        
+
+        // Check for Options request, if true send back 200. Options headers fuck everything up by attempting to process a blank packet.
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            return http_response_code(200);
+        }
         // create array with URL parts in $url
         $this->splitUrl();
         $error = new ErrorController();
-        
+
         // check for controller: no controller given ? then load start-page
         if (!$this->url_controller) {
 
@@ -107,10 +109,10 @@ class Application {
             $url = explode('/', $url);
 
             $controller = isset($url[0]) ? ucfirst(strtolower($url[0])) : null;
-            $action = isset($url[1]) ? ucfirst(strtolower($url[1]))."Action" : null;
-            
-            
-            
+            $action = isset($url[1]) ? ucfirst(strtolower($url[1])) . "Action" : null;
+
+
+
             // Put URL parts into according properties
             // By the way, the syntax here is just a short form of if/else, called "Ternary Operators"
             // @see http://davidwalsh.name/php-shorthand-if-else-ternary-operators

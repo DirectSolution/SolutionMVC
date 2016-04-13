@@ -3,11 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/var/www/html/SolutionMVC/Application/Controller/HelperController.php</file>
+            <file>file:/var/www/html/SolutionMVC/Application/Libs/Helper.php</file>
             <file>file:/var/www/html/SolutionMVC/Application/Controller/AuditController.php</file>
-            <file>file:/var/www/html/SolutionMVC/Application/Model/Question.php</file>
-            <file>file:/var/www/html/SolutionMVC/Application/Model/Fixtures/AuditFixtures.php</file>
-            <file>file:/var/www/html/SolutionMVC/Application/Model/QuestionGroup.php</file>
+            <file>file:/var/www/html/SolutionMVC/Application/Controller/AssetController.php</file>
+            <file>file:/var/www/html/SolutionMVC/Application/Controller/UploadController.php</file>
+            <file>file:/var/www/html/SolutionMVC/Application/Model/Helpers.php</file>
             <file>file:/var/www/html/SolutionMVC/Application/Model/Audit.php</file>
+            <file>file:/var/www/html/SolutionMVC/Application/Model/Asset.php</file>
         </group>
     </open-files>
 </project-private>

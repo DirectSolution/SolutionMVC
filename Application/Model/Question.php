@@ -26,20 +26,21 @@ class Question extends BaseModel {
      * @Description Pass in group_id, returns all questions by related group.
      */
     public function getQuestionsByGroupIdArray($id) {
-        foreach ($this->getQuestionsByGroupId($id) AS $key => $question) {
-            $Questions[$key] = array(
+        foreach ($this->getQuestionsByGroupId($id) AS $question) {
+            $Questions[] = array(
                 "id" => $question['id'],
                 "question" => $question['question'],
-                "answerRequired" => $question['answer_required'],
-                "addEvidence" => $question['add_evidence'],
-                "evidenceRequired" => $question['evidence_required'],
-                "addExpiry" => $question['add_expiry'],
-                "expiryRequired" => $question['expiry_required'],
-                "answerType" => array("id" => $question['type_id']),
-                "group_id" => $question['group_id'],
-                "client_id" => $question['client_id'],
-                "audit_id" => $question['audit_id'],
+                "answerRequired" => (int) $question['answer_required'],
+                "addEvidence" => (int) $question['add_evidence'],
+                "evidenceRequired" => (int) $question['evidence_required'],
+                "addExpiry" => (int) $question['add_expiry'],
+                "expiryRequired" => (int) $question['expiry_required'],
+                "answerType" => array("id" => (int)$question['type_id']),
+                "group_id" => (int) $question['group_id'],
+                "client_id" => (int) $question['client_id'],
+                "audit_id" => (int) $question['audit_id'],
             );
+
         }
         return $Questions;
     }
