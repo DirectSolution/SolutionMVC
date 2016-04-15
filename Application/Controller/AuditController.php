@@ -41,6 +41,7 @@ class AuditController {
 
         $this->postdata = json_decode(file_get_contents("php://input"));
         $this->token = $this->security->DecodeSecurityToken($this->postdata->token);
+        $this->response->token = $this->security->EncodeSecurityToken((array)$this->token->user);
     }
 
     public function indexAction() {
@@ -160,6 +161,8 @@ class AuditController {
     //Used to load all audit data (Questions, Question Types, Evidence, Expiry)
     // for Update and TakeAudit pages.  
     public function getAuditAction($id) {
+        
+        
         $client = $this->token->user->client;      
         
         $questionTypes = new QuestionType();

@@ -11,12 +11,16 @@ use SolutionMvc\Model\BaseModel;
  */
 class Asset extends BaseModel {
 
-    public function getAll($client) {
+    public function getAll($client) {       
         return $this->orm->Assets->where("client_id", $client)->where("retired", 0);
     }
 
     public function getAllByType($id, $client) {
-        return $this->orm->Assets->where("client_id", $client)->where("AssetTypes_id", $id)->where("retired", 0);
+        return $this->orm->Assets->where("client_id", $client)->where("AssetTypes_id", $id)->and("retired", 0);
+    }
+    
+    public function getAllByGroup($id, $client) {
+        return $this->orm->Assets->where("client_id", $client)->where("AssetGroups_id", $id)->and("retired", 0);
     }
 
     public function getAllByTypeArray($id, $client) {
@@ -25,8 +29,15 @@ class Asset extends BaseModel {
         }
         return $assets;
     }
+    public function getAllByGroupArray($id, $client) {
+        foreach ($this->getAllByGroup($id, $client) AS $key => $asset) {
+            $assets[$key] = $this->assetArray($asset);
+        }
+        return $assets;
+    }
 
     public function getAllArray($client) {
+                
         foreach ($this->getAll($client) AS $key => $asset) {
             $assets[$key] = $this->assetArray($asset);
         }
@@ -66,13 +77,13 @@ class Asset extends BaseModel {
         );
     }
 
-    public function setAsset($asset) {
-        $this->orm->Assets->insert($this->buildInsertAssetArray($asset));
+    public function setAsset($asset, $client) {
+        $this->orm->Assets->insert($this->buildInsertAssetArray($asset, $client));
     }
     
 
 
-    public function buildInsertAssetArray($asset) {
+    public function buildInsertAssetArray($asset, $client) {
                 
         return array(
             "forename" => $asset->forename,
@@ -87,8 +98,7 @@ class Asset extends BaseModel {
             "dob" => $asset->dob,
             "start_date" => $asset->start_date,
             "created_date" => new \SolutionORM\Controllers\LiteralController("NOW()"),
-//            "client_id" => (int) $this->client_id,
-            "client_id" => (int) 0,
+            "client_id" => (int) $client,
             "AssetGroups_id" => (int) $asset->AssetGroups_id->id,
             "AssetTypes_id" => (int) $asset->AssetTypes_id->id,
             "image" => $asset->filename,

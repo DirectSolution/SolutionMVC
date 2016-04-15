@@ -53,7 +53,7 @@ class Security {
             "iss" => "https://portal.solutionhost.co.uk",
             "user" => array(
                 "id" =>  $user['id'],
-                "name" => $user['username'],
+                "username" => $user['username'],
                 "client" => ltrim($user['client'], 0),
                 "level" => "admin",
             ),
@@ -61,11 +61,13 @@ class Security {
             "iat" => $time,
             //Not before now - 10 incase of slight variance.
             "nbf" => $time,
-            //Set maximum Expiry time currently 1 hour. 
-            "exp" => $time + (60 * 60)
+            //Set maximum Expiry time currently half hour, this gets refreshed everytime they make a call to the backend.
+            "exp" => $time + (60 * 30)
+//            "exp" => $time + (60 * 60)
         );
         return $this->jwt->encode($token, $key);
     }
+    
 
     public function DecodeSecurityToken($token) {
         try {

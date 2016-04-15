@@ -20,4 +20,5 @@ class Response {
     public $result;
     public $username;
     public $data;
+    public $token;
 }
