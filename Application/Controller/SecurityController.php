@@ -37,7 +37,7 @@ class SecurityController extends Controller {
         if ($user['status'] == "success") {
             $passwordCheck = $this->security->checkPassword($request->user->password, $user['response']['password']);
             if ($passwordCheck == true) {
-                $this->response->headers = http_response_code(200);
+//                $this->response->headers = http_response_code(200);
                 $this->response->result = "Password Correct";
                 $this->response->status = "success";
                 $this->response->username = $user['response']['username'];
