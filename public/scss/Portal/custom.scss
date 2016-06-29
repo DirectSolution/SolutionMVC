@@ -1,0 +1,527 @@
+::-webkit-input-placeholder{
+    text-align: center;
+}
+::-moz-placeholder{
+    text-align: center;
+}
+input{
+    text-align: center;
+}
+
+html,
+body {
+
+    height: 100%;
+    /*background-color: #333;*/
+}
+body {
+    color: #000;
+    /*text-align: center;*/
+    /*text-shadow: 0 1px 3px rgba(0,0,0,.5);*/
+}
+
+/* Extra markup and styles for table-esque vertical and horizontal centering */
+.site-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%; /* For at least Firefox */
+    min-height: 100%;
+    -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.2);
+    box-shadow: inset 0 0 100px rgba(0,0,0,.2);
+}
+.site-wrapper-inner {
+    display: table-cell;
+    vertical-align: top;
+}
+.cover-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+.larger-cover-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Padding for spacing */
+.inner {
+    padding: 30px;
+}
+
+
+/*
+ * Header
+ */
+.masthead-brand {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.masthead-nav > li {
+    display: inline-block;
+}
+.masthead-nav > li + li {
+    margin-left: 20px;
+}
+.masthead-nav > li > a {
+    padding-right: 0;
+    padding-left: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000; /* IE8 proofing */
+    color: rgba(0,0,0,.75);
+    border-bottom: 2px solid transparent;
+}
+.masthead-nav > li > a:hover,
+.masthead-nav > li > a:focus {
+    background-color: transparent;
+    border-bottom-color: #000;
+    border-bottom-color: rgba(0,0,0,.25);
+}
+.masthead-nav > .active > a,
+.masthead-nav > .active > a:hover,
+.masthead-nav > .active > a:focus {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
+@media (min-width: 768px) {
+    .masthead-brand {
+        float: left;
+    }
+    .masthead-nav {
+        float: right;
+    }
+}
+
+
+.masthead-nav{
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+/*
+ * Cover
+ */
+
+.cover {
+    padding: 0 20px;
+}
+.cover .btn-lg {
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+
+/*
+ * Footer
+ */
+
+.mastfoot {
+    color: #999; /* IE8 proofing */
+    color: rgba(0,0,0,.5);
+    /*background-color: rgba(0,0,0,.5);*/
+}
+
+
+/*
+ * Affix and center
+ */
+
+@media (min-width: 768px) {
+    /* Pull out the header and footer */
+    .masthead {
+        position: fixed;
+        top: 0;
+    }
+    .mastfoot {
+
+        position: fixed;
+        bottom: 0;
+    }
+    /* Start the vertical centering */
+    .site-wrapper-inner {
+        vertical-align: middle;
+    }
+    /* Handle the widths */
+    .masthead,
+    .mastfoot,
+    .larger-cover-container{
+        width: 100%; /* Must be percentage or pixels for horizontal alignment */
+    }
+    .cover-container{
+        width: 100%; /* Must be percentage or pixels for horizontal alignment */
+    }
+}
+
+@media (min-width: 700px) {
+    .masthead,
+    .mastfoot,
+    .cover-container {
+        /*    width: 400px;*/
+        width: 80%;
+    } 
+    .larger-masthead,
+    .larger-mastfoot,
+    .larger-cover-container {
+        width: 800px;
+        /*width: 80%;*/
+
+    }
+}
+
+.box-with-border{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 15px;
+}
+.box-with-border img{
+    margin: auto;
+}
+
+.img-responsive-center-fill{
+    width: 100%;
+    max-height: 140px;
+}
+
+
+.small-input{
+    width: 100%;
+}
+
+@media screen and (min-width: 680px) {
+    .small-input{
+        width: 50%;
+        margin: auto;
+    }
+}
+.bg-red{
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #ffe7da;
+}
+.bg-amber{
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fffcda;
+}
+.bg-green{
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #e4ffda;
+}
+
+.margin-bottom{
+    margin-bottom: 20px;
+}
+
+
+.ticker-badge{
+    margin-bottom: 10px;
+    width: 100%;
+    display: block;
+    text-align: center;
+    background-color: #999;
+    border-radius: 4px;
+    padding: 7px;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;  
+}
+
+.weather-badge{
+    margin-bottom: 10px;
+    /*width: 100%;*/
+    display: inline-block;
+    text-align: center;
+    background-color: #999;
+    border-radius: 4px;
+    padding: 7px;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;  
+}
+
+.weather-badge{
+    background-color: #4996ff;
+}
+
+/*}*/
+@media screen and (min-width: 680px) {
+    .ticker-badge {
+        display: inline-block;
+        width: auto;
+        /*width: 10%;*/
+        text-align: center;
+        background-color: #999;
+        border-radius: 4px;
+        padding: 7px;
+        color: white;
+        font-weight: bold;
+        margin-right: 10px;  
+    }        
+}
+.news-article{
+    color: #333;
+}
+.news-article time{
+    font-style: oblique;
+    font-weight: lighter;
+}
+
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+.global-error-outer{
+    display: table-row;
+}
+.global-error-inner{
+    width: 100%;
+    margin: 20px auto;
+}
+
+.question-del-cont{
+    right: 5px; position: absolute; top:0;
+}
+
+.bootstrap-switch .bootstrap-switch-handle-on, .bootstrap-switch .bootstrap-switch-handle-off {
+    text-align: center !important;
+}
+
+@media (min-width: $screen-sm-min) {    
+    .global-error-inner{
+        width: 80%;
+    }
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: $screen-md-min) { 
+
+
+    .global-error-inner{
+        width: 50%;
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: $screen-lg-min) {
+    .question-del-cont{
+        top: 5px;
+    }
+    .global-error-inner{
+        width: 40%;
+    }
+
+    .bootstrap-switch .bootstrap-switch-handle-on, .bootstrap-switch .bootstrap-switch-handle-off {
+        text-align: left !important;
+    }
+}
+
+.img-table{
+    max-width: 150px;
+}
+
+.button-li{
+    margin: 0 5px;
+}
+
+
+.select2-container{
+    width:100% !important;
+}
+
+
+.switch-label{
+    word-spacing: 100px;
+    word-spacing: 100vw;
+    display: block;
+}
+
+.switch-align-middle{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.btn-round{
+border-radius: 6px;
+height: 20px;
+width: 20px;
+text-align: center;
+padding: 0px 3px;
+font-size: 12pt;
+}
+
+
+
+.question-del-positioner{
+    /*border: 1px solid grey;*/ 
+    /*border-radius: 3px;*/
+    /*width: 25px;*/
+    /*margin: 0px;*/
+    float: right;
+    padding: 3px;
+    /*background: #f7f7f7;*/
+}
+
+.onoffswitch {
+    position: relative; width: 63px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 1px solid #999999; border-radius: 4px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 22px; padding: 0; line-height: 22px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "Yes";
+    padding-left: 7px;
+    background-color: $brand-success; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "No";
+    padding-right: 7px;
+    background-color: #f8f8f8; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 15px; height:15px; margin: 4.5px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 37px;
+    border: 1px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
+
+.clonedInput{
+    padding: 5px;
+    margin: 0px -30px;
+}
+.clonedInput:nth-child(odd) {
+    background-color: $faded-primary;
+}
+
+
+
+
+
+////////////
+
+
+
+
+
+
+        label.btn span {
+            font-size: 1.5em ;
+        }
+
+        label input[type="radio"] ~ i.fa.fa-circle-o{
+            color: #c8c8c8;    display: inline;
+        }
+        label input[type="radio"] ~ i.fa.fa-check-circle-o{
+            display: none;
+        }
+        label input[type="radio"]:checked ~ i.fa.fa-circle-o{
+            display: none;
+        }
+        label input[type="radio"]:checked ~ i.fa.fa-check-circle-o{
+            color: #7AA3CC;    display: inline;
+        }
+        label:hover input[type="radio"] ~ i.fa {
+            color: #7AA3CC;
+        }
+
+        label input[type="checkbox"] ~ i.fa.fa-square-o{
+            color: #c8c8c8;    display: inline;
+        }
+        label input[type="checkbox"] ~ i.fa.fa-check-square-o{
+            display: none;
+        }
+        label input[type="checkbox"]:checked ~ i.fa.fa-square-o{
+            display: none;
+        }
+        label input[type="checkbox"]:checked ~ i.fa.fa-check-square-o{
+            color: #7AA3CC;    display: inline;
+        }
+        label:hover input[type="checkbox"] ~ i.fa {
+            color: #7AA3CC;
+        }
+
+        div[data-toggle="buttons"] label.active{
+            color: #7AA3CC;
+        }
+
+        div[data-toggle="buttons"] label {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 11px;
+            font-weight: normal;
+            line-height: 2em;
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: top;
+            cursor: pointer;
+            background-color: none;
+            border: 0px solid 
+                #c8c8c8;
+            border-radius: 3px;
+            color: #c8c8c8;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        div[data-toggle="buttons"] label:hover {
+            color: #7AA3CC;
+        }
+
+        div[data-toggle="buttons"] label:active, div[data-toggle="buttons"] label.active {
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .alternate:nth-child(odd){
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .dz-image img{
+            width:100%;
+        }
+        .dropzone{
+            padding : 0;
+        }
+        .dropzone .dz-preview{
+            padding : 0;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .group{
+            border: 1px solid #f1f1f1;
+            padding: 5px 20px;
+            border-radius: 7px;
+        }
+
+

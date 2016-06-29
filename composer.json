@@ -10,13 +10,14 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        
-        "direct-solution/solution-orm" : "dev-master",
+        "direct-solution/solution-orm": "dev-master",
         "symfony/yaml": "2.6.*",
-        "firebase/php-jwt": "^3.0"
-        
+        "firebase/php-jwt": "^3.0",
+        "twig/twig": "~1.0",
+                "fisharebest/php-polyfill": "~1.0"
+
+
     },
-    
     "autoload": {
         "psr-4": {
             "SolutionMvc\\": "Application/",
@@ -25,8 +26,12 @@
             "SolutionMvc\\Model\\": "Application/Model",
             "SolutionMvc\\View\\": "Application/View",
             "SolutionMvc\\Controller\\": "Application/Controller",
+            "SolutionMvc\\Portal\\Controller\\": "Application/Portal/Controller",
+            "SolutionMvc\\Portal\\Model\\": "Application/Portal/Model",
+            "SolutionMvc\\Audit\\Controller\\": "Application/Audit/Controller",
+            "SolutionMvc\\Audit\\Model\\": "Application/Audit/Model",
             "SolutionMvc\\Config\\": "Application/Config"
-            }
+        }
     }
 
 }

@@ -15,11 +15,11 @@ class Helper {
         //Get the last instance which should be followed by a file extension
         $fileExtension = end($makeArray);
         //Get the Filename by exploding on extension
-        $fileName = explode(".".$fileExtension, $file);
+        $fileName = explode("." . $fileExtension, $file);
         //Return both parts
         return array(
             "fileName" => $fileName[0],
-            "fileExtension" => ".".$fileExtension);
+            "fileExtension" => "." . $fileExtension);
     }
 
     /**
@@ -27,7 +27,7 @@ class Helper {
      * @param type string
      * @return string
      * @description Pass in full filename, returns a string containing an encoded filename while retaining the extension eg Pass in SomeFile.jpg and expect 120jdhhriwquehdf.jpg back, use this to avoid clashing filenames.
-     */    
+     */
     public function encodeFileName($file) {
         //Get an array of the filename + extension
         $split = $this->explodeOnLastDot($file);
@@ -93,4 +93,58 @@ class Helper {
         return $raw_sql;
     }
 
+    function getClosest($search, $arr) {
+        $closest = array();
+        foreach ($arr as $item) {
+            if (empty($closest) || abs($search - $closest['value']) > abs($item['value'] - $search)) {
+                $closest = $item;
+            }
+        }
+        return $closest;
+    }
+
+    /**
+     * GetPercent
+     *
+     * Returns a percent value when passed Score and High
+     * 
+     * @param string $raw_sql
+     * @param array $parameters
+     * @return string
+     */
+    public function getPercent($a, $b) {
+        return($a / ($b)) * 100;
+    }
+
+    public function base64image($path) {
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+
+    public function passwordHasherAction($password) {
+        return md5($this->secret . $password);
+    }
+    
+    
+    public function getCountries(){
+       $helpers = new \SolutionMvc\Audit\Model\Helpers();
+       return $helpers->getCountriesArray();
+    }
+
+    public function getCounties(){
+       $helpers = new \SolutionMvc\Audit\Model\Helpers();
+       return $helpers->getCountiesArray();
+    }
+
+    
+    public function convertDayMonthYearToMysqlDataTime($date = null){                
+        if($date != null){        
+            $d = \DateTime::createFromFormat('!d/m/Y', $date);
+            return $d->format('Y-m-d H:i:s');       
+        }else{
+            return null;
+        }
+    }
+    
 }

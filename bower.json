@@ -15,5 +15,17 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jquery": "~1.11.0",
+    "matchHeight": "^0.7.0",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.37",
+    "bootstrap-switch": "^3.3.2",
+    "datatables": "^1.10.12",
+    "bootstrap-slider": "*",
+    "jquery-ui": "^1.11.4",
+    "jqueryuibootstrap": "jquery-ui-bootstrap/jquery-ui-bootstrap#masterbs3",
+    "rangeslider.js": "^2.1.1",
+    "dropzone": "^4.3.0"
+  }
 }

@@ -1,0 +1,256 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'asset' %}
+{% block breadcrumbs %}
+    <li class="active">Asset Manager</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Asset Manager         
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    {#<pre>
+        {{ dump(data)}}
+    </pre>#}
+
+    <div class="modal fade" id="assignmentModal" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h3>Current Assignments</h3>
+                        <ul id="inUse" class="list-group">
+                        </ul>
+                    </div>
+
+                    <p id='leadText'>Use the following form in order to assign audit's to </p>                    
+                    <form id="setAssignments">
+                        <input id='assetID' type='hidden' value=''>
+                        <select multiple id='audits' placeholder='Select audits..' name='audits' class="form-control select-2-cont">
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id='saveAssignments' type="button" class="btn btn-success">Save Assignments</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Retire Asset</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you wish to retire this asset?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">No.</button>
+                    <button type="button" class="btn btn-success">Yes, do it now.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="button-li"><p class="navbar-btn"><a href='{{public_base}}Audit/Asset/Create' class="btn btn-success">Add Asset</a></p></li>
+                <li class="button-li"><p class="navbar-btn"><a href='{{public_base}}Audit/Audit/TakeAudit/{{data.default}}' class="btn btn-primary">Take Default Audit</a></p></li>
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Assets for...">
+            </form>
+        </div>
+    </nav>
+    <div class="row">
+        <table id="table" class="order-table table table-hover table-responsive paginated">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">id</th>
+                    <th>Name</th>
+                    <th class="hidden-xs">Type</th>
+                    <th class="hidden-xs">Location</th>
+                    <th class="hidden-xs">Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset in data.assets %}
+
+                    <tr>
+                        <td class="hidden-xs">{{asset.id}}</td>
+                        <td>{{asset.forename}} {{ asset.middlename}} {{ asset.surname }}</td>
+                        <td class="hidden-xs">{{asset.group_name}} / {{asset.type_name}}</td>
+                        <td class="hidden-xs">{{asset.address1}}, {{asset.address2}}, {{asset.county}}, {{asset.country}}, {{asset.postcode}}.</td>
+                        <td><img class="img-thumbnail img-responsive img-table hidden-xs" src="{{asset.image}}"></td>
+                        <td>
+                            <div class="btn-group btn-xs">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">View</a></li>
+                                    <li><a href="#">Edit</a></li>
+                                    <li><button class="btn btn-block btn-info btn-xs" data-asset="{{asset.id}}" data-assetName="{{asset.forename ~ ' ' ~ asset.surname}}" data-toggle="modal" data-target="#assignmentModal">Assign Audits</button></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><button class="btn btn-block btn-warning btn-xs" data-toggle="modal" data-target="#myModal" href="#">Retire</button>
+                                    </li>
+                                </ul>
+                            </div>                                        
+                            <div class="btn-group btn-xs">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Take Audit <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+
+                                    {% for audit in asset.Audits %}
+                                        <li><a href="{{public_base}}Audit/Audit/TakeAudit/{{audit.id}}/{{asset.id}}">{{audit.name}}</a></li>
+                                        {% endfor %}
+
+                                    <li role="separator" class="divider"></li>
+                                    <li><button class="btn btn-block btn-info btn-xs" data-asset="{{asset.id}}" data-assetName="{{asset.forename ~ ' ' ~ asset.surname}}" data-toggle="modal" data-target="#assignmentModal">Assign Audits</button></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan='10'>
+                        <nav id="pagi" class='text-center'>
+                            <ul class="pagination pagination-lg">
+
+                            </ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock audit_body %}
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="{{public_base}}js/audit/table-filter.js"></script>
+    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+    <script>
+
+        $("#audits").select2({
+            tags: true,
+            placeholder: "Select audits.."
+        });
+        $('body').on('click', '#saveAssignments', function (e) {
+
+            $selectData = $('body').find('#audits').val();
+            $asset = $('body').find('#assetID').val();
+            var formData = {
+                "Audits": $selectData,
+                "Asset": $asset
+            };
+
+
+            $.ajax({
+                type: 'POST',
+                url: "{{public_base}}Audit/Assignment/setAssignments",
+                data: formData,
+                dataType: 'json',
+                encode: true
+            })
+                    .then(function () {
+                        $('#assignmentModal').modal('hide');
+                        $('#table').load(document.URL + ' #table', function () {
+
+                            paginate();
+
+                        });
+                    });
+        });
+
+        $('#assignmentModal').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var assetName = button.attr('data-assetName'); // Extract info from data-* attributes
+            var assetId = button.attr('data-asset'); // Extract info from data-* attributes
+            $("#audits").empty();
+            modal.find('#leadText i').empty().remove();
+            modal.find('#inUse li').empty().remove();
+            $.ajax({
+                type: 'GET',
+                url: "{{public_base}}Audit/Assignment/getAuditsNotAssigned/" + assetId,
+                dataType: 'json',
+                encode: true
+            })
+                    .done(function (data) {
+
+                        if (data.data.notIn.length === 0) {
+                            $('body').find('#saveAssignments').hide();
+                            var newOption = new Option("All audits have been assigned", null, true, true);
+                            $("#audits").append(newOption).trigger('change');
+                            $("#audits").prop("disabled", true);
+                        } else {
+                            $('body').find('#saveAssignments').show();
+                            $.each(data.data.notIn, function (i, item) {
+                                var newOption = new Option(item.Name, item.Value, false, false);
+                                $("#audits").append(newOption).trigger('change');
+                                $("#audits").prop("disabled", false);
+                            });
+                        }
+
+
+                        if (data.data.inUse.length === 0) {
+                            modal.find('#inUse').append("<li class='list-group-item list-group-item-warning'>Currently nothing assigned.</li>");
+                        } else {
+                            $.each(data.data.inUse, function (i, item) {
+                                modal.find('#inUse').append("<li class='list-group-item list-group-item-info'>" + item.name + "</li>");
+                            });
+                        }
+
+                    });
+            modal.find('.modal-title').text('Assign audits to ' + assetName);
+            modal.find('#leadText').append("<i>" + assetName + "</i>");
+            modal.find('#assetID').val(assetId);
+        });
+
+        function paginate() {
+            $('body').find('#table.paginated').each(function () {
+                var currentPage = 0;
+                var numPerPage = 5;
+                var $table = $('body').find('#table');
+                $table.bind('repaginate', function () {
+                    $table.find('tbody tr').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();
+                });
+                $table.trigger('repaginate');
+                var numRows = $table.find('tbody tr').length;
+                var numPages = Math.ceil(numRows / numPerPage);
+                var $pager = $('<ul class="pagination pagination-lg"></ul>');
+                for (var page = 0; page < numPages; page++) {
+                    $('<li class="page-number"></li>').html("<a href='#'>" + (page + 1) + "</a>").bind('click', {
+                        newPage: page
+                    }, function (event) {
+                        currentPage = event.data['newPage'];
+                        $table.trigger('repaginate');
+                        $(this).addClass('active').siblings().removeClass('active');
+                    }).appendTo($pager).addClass('clickable');
+                }
+                $('body').find('#pagi').empty();
+                $('body').find('#pagi').append($pager).find('.page-number:first').addClass('active');
+            });
+        }
+        ;
+
+
+    </script>
+
+{% endblock extra_js %}

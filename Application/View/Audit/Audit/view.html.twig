@@ -1,0 +1,22 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'audit' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Audit/Asset">Asset Manager</a></li>
+    <li><a href="{{public_base}}Audit/Audit">Audit Home</a></li>
+    <li class="active">View Audit</li>
+    <li class="active">{{data.audit.name}}</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    View Audit
+{% endblock h1 %}
+
+{% block audit_body %}
+    
+    <pre>
+        
+{{ dump(data)}}
+
+    </pre>
+    
+{% endblock audit_body %}

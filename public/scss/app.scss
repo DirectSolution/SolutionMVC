@@ -1,0 +1,12 @@
+/*@import "bootstrap.scss";
+@import "Portal/custom.scss";
+@import "Portal/dashboard.scss";
+*/
+@import "Portal/customVariables.scss";
+
+@import "bootstrap.scss";
+@import "Portal/custom.scss";
+@import "Portal/portal_navbar.scss";
+@import "Portal/dashboard.scss";
+@import "Portal/weather.scss";
+@import "Portal/offcanvas.scss";

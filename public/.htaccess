@@ -4,6 +4,10 @@ Header always set Access-Control-Max-Age "1000"
 Header always set Access-Control-Allow-Headers "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
 Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
 
+
+
+RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt|\.woff|\.ttf|\.otf)$ [NC]
+
 # Necessary to prevent problems when using a controller named "index" and having a root index.php
 # more here: http://httpd.apache.org/docs/2.2/content-negotiation.html
 Options -MultiViews

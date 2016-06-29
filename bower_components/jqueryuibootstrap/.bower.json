@@ -1,0 +1,13 @@
+{
+  "name": "jqueryuibootstrap",
+  "homepage": "https://github.com/jquery-ui-bootstrap/jquery-ui-bootstrap",
+  "_release": "12ab811b1a",
+  "_resolution": {
+    "type": "branch",
+    "branch": "masterbs3",
+    "commit": "12ab811b1a05ea15affbda61332b60647acf692f"
+  },
+  "_source": "git://github.com/jquery-ui-bootstrap/jquery-ui-bootstrap.git",
+  "_target": "masterbs3",
+  "_originalSource": "jquery-ui-bootstrap/jquery-ui-bootstrap"
+}

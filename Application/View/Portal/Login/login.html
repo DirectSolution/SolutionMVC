@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> <!-- load jquery via CDN -->
+    </head>
+    <body>
+
+        <div class="col-md-4">        
+            <div class="inner cover box-with-border heighted">
+                <div class="panel-heading text-center">
+                    <img class='img-responsive img-responsive-center-fill' src='https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png' alt='SolutionHost'/>
+                </div>
+                <form action="https://www.google.com/search" target='_top' method="GET">
+                    <div id="" class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" name="q" placeholder="Search Google from here...">
+                            <span class="input-group-addon" id="basic-addon5"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-success center-block" value="Search Google">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="inner cover box-with-border heighted">           
+                <form action="http://doug.portal.solutionhost.co.uk/apps2/public/Login" method="POST" name="form_login" id="form_login">
+                    <div id="client_group" class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon"><i class="fa fa-ellipsis-h"></i></span>
+                            <input class="form-control" placeholder="Client Number" maxlength="5" aria-describedby="basic-addon3" value="" name="_client" id="client">
+                            <span class="input-group-addon" id="basic-addon5"><i class="fa fa-unlock changed"></i></span>
+                        </div>
+                        <span id="client_error" class="help-block" style="display:none;">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span> Your client number must only contain numbers.
+                        </span>
+                    </div>
+                    <div id="username_group" class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1"><i class="fa fa-user"></i></span>
+                            <input type="text" class="form-control" required placeholder="Username or Email" aria-describedby="basic-addon1" value="" name="_username" id="username">
+                            <span class="input-group-addon" id="basic-addon2"><i class="fa fa-unlock changed"></i></span>
+                        </div>
+                    </div>
+                    <div id="password_group" class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon3"><i class="fa fa-sign-in"></i></span>
+                            <input type="password" class="form-control" required placeholder="Password" aria-describedby="basic-addon2" name="_password" id="password">
+                            <span class="input-group-addon" id="basic-addon4"><i class="fa fa-unlock changed"></i></span>
+                        </div>
+                    </div>  
+                    <div>
+                        <button type="submit" name="login" id="logmein" class="btn btn-success center-block">Log in <i class='fa fa-sign-in'> </i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="inner cover box-with-border heighted">
+                <div id='newsFeed'>
+                    <ul id="newsFeedUL">
+
+                        <!-- News will be loaded in here like this form:
+                            <li class='item'>
+                                <h3><span style="background-color:color;" class="ticker-badge">BBC or HSE</span>
+                                    <a href='url'>Title</a>
+                                </h3>
+                                <p>Description<time>Time</time></p>
+                            </li>-->
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="./js/portal/login.js"></script>
+        <script src="./js/portal/newsfeed.js"></script>
+
+
+
+        <script src="login.js"></script>        
+        <script src='getNewsFeed.js'></script>
+
+    </body>
+</html>
+
+

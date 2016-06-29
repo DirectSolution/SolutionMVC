@@ -1,0 +1,181 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'audit' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Audit/Asset">Asset Manager</a></li>
+    <li><a href="{{public_base}}Audit/Audit">Audit Home</a></li>
+    <li class="active">Copy Audit</li>
+    <li class="active">{{data.audit.name}}</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Copy Audit - {{data.audit.name}}
+{% endblock h1 %}
+
+{% block audit_body %}
+{#{{ dump(data.audit)}}#}
+
+{% if not errors %}
+       
+    <form name='addAudit' action='{{public_base}}Audit/Audit/insert' method='POST'>
+        <input type="hidden" name="id" value="{{data.audit.id}}">
+        <section class="row">
+
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label>Audit Name</label>
+                    <input type="text" class="form-control" name='name' placeholder="Name your audit" required value="{{data.audit.name}}">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="form-control" name='description' placeholder="Name your audit" value="{{data.audit.description}}">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label>Audit Type</label>
+                    <select class="form-control" name='auditTypes'>
+                        {% for type in data.auditTypes %}
+                            <option value='{{type.id}}'>{{type.name}}</option>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label>Grading Type/Pass Rate</label>
+                    <select class="form-control" name='auditGradings'>
+                        {% for type in data.auditGradings %}
+                            <option value='{{type.Aid}}'>{{type.name}}</option>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div> 
+        </section>
+        
+            <section class='page-container'>
+                {% for group in data.audit.groups %}
+                <section class="panel panel-info container-fluid multi-field-wrapper question-group" data-groupid='{{group.id}}'>
+                    
+                    <header class="panel-heading row">
+                        <div class="panel-title">
+                            <div class="form-group col-sm-8 col-md-9 col-lg-10">
+                                <label>Question Group Name:</label>
+                                <input type="text" name='groups[{{group.id}}][name]' id="1name1" class="form-control" value="{{group.name}}">  
+                            </div>                
+                            <div class="col-sm-4 col-md-3 col-lg-2">
+                                <button type="button" class="btn btn-danger btn-xs pull-right removeGroup" value="{{group.id}}">Remove Group <span class="fa fa-minus-square"></span>&nbsp;</button>
+                            </div>
+                        </div>
+                    </header>
+
+
+
+                    <section class="panel-body question-row-{{group.id}}">
+                        <input type="hidden" value="{{group.id}}" class="groupIndexHidden">
+                        {% for question in group.questions %}
+                            <div class="row clonedInput clonedInput{{question.id}}" data-el-count='{{question.id}}' style="position:relative;">
+                                <div class="col-lg-4">
+                                    <label>Question</label>
+                                    <textarea name='groups[{{group.id}}][questions][{{question.id}}][question]' id="{{group.id}}question{{question.id}}" class="textarea form-control" rows="3">{{question.question}}</textarea>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label class="switch-label">Answer Type</label>                            
+                                        <select name='groups[{{group.id}}][questions][{{question.id}}][QuestionTypes_id]' id="{{group.id}}QuestionTypes_id{{question.id}}" class="group_question_type form-control">
+                                            {% for questionType in data.questionTypes %}
+                                                <option value="{{questionType.id}}">{{ questionType.typeName}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 col-lg-1">
+                                    <label class="control-label switch-label text-center">Add Expiry</label>
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="groups[{{group.id}}][questions][{{question.id}}][add_expiry]" class="onoffswitch-checkbox" id="{{group.id}}add_expiry{{question.id}}" value="1" {% if question.addExpiry %}checked{% endif %}>
+                                        <label class="onoffswitch-label add-expiry" for="{{group.id}}add_expiry{{question.id}}">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-3 col-lg-1">
+                                    <label class="control-label switch-label text-center">Expiry Required</label>
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="groups[{{group.id}}][questions][{{question.id}}][expiry_required]" class="onoffswitch-checkbox" value="1" id="{{group.id}}expiry_required{{question.id}}" {% if question.expiryRequired %}checked{% endif %}>
+                                        <label class="onoffswitch-label expiry-required" for="{{group.id}}expiry_required{{question.id}}">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-3 col-lg-1">
+                                    <label class="control-label switch-label text-center">Add Evidence</label>
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="groups[{{group.id}}][questions][{{question.id}}][add_evidence]" class="onoffswitch-checkbox" value="1" id="{{group.id}}add_evidence{{question.id}}" {% if question.addEvidence %}checked{% endif %}>
+                                        <label class="onoffswitch-label add-evidence" for="{{group.id}}add_evidence{{question.id}}">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 col-lg-1">
+                                    <label class="control-label switch-label text-center">Add Expiry</label>
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="groups[{{group.id}}][questions][{{question.id}}][evidence_required]" class="onoffswitch-checkbox" value="1" id="{{group.id}}evidence_required{{question.id}}"{% if question.evidenceRequired %}checked{% endif %}>
+                                        <label class="onoffswitch-label evidence-required" for="{{group.id}}evidence_required{{question.id}}">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="question-del-cont">  
+                                    <div class="question-del-positioner">
+                                        <button type="button" class="removeQuestion btn btn-md btn-danger center-block btn-round pull-right" value='{{group.id}}'>
+                                            <span class="fa fa-trash"></span>&nbsp;
+                                        </button>
+                                    </div>
+                                </div>                    
+                            </div>
+                        {% endfor %}
+                    </section>
+
+                    <div class="col-xs-12" style="margin-bottom: 10px;">
+
+                        <button type="button" value="{{group.id }}" class="btn btn-info addQuestion">
+                            Add Question 
+                            <i class="fa fa-plus-circle" aria-hidden="true"> </i>
+                        </button>
+
+                    </div>
+                </section>
+                {% endfor %}                
+            </section>
+
+                                     
+        <button type="button" class="addGroup btn btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true"> </i>
+            Add Group
+        </button>
+
+        <button class="btn btn-success" type='submit'>Submit</button>
+    </form>
+
+    {% include '/Audit/Audit/template/group-template.html.twig' %}
+
+    {% else %}
+        <h1>Audit does not exist</h1>
+        {% endif %}
+    
+    
+{% endblock audit_body %}
+
+
+
+
+{% block extra_js %}
+    <script src="{{public_base}}js/audit/dynamic-audit-form.js"></script>
+{% endblock extra_js %}

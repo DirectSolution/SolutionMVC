@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container">
+        <div class="row row-offcanvas row-offcanvas-right">
+            <div class="col-xs-12 col-sm-9" style="background-color: #fff; border-radius: 4px; border: 1px solid grey; padding: 20px;">
+                <ol class="breadcrumb text-left">
+                    {% block breadcrumbs %}
+                    {% endblock breadcrumbs %}
+                    <li class="pull-right visible-xs">
+                        <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Menu</button>
+                    </li>
+                </ol>
+                <h1>
+                    {% block h1 %}          
+                    {% endblock h1 %}
+                </h1>
+                {% block audit_body %}
+                {% endblock audit_body %}
+            </div>
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+                <div class="list-group">
+                    {% if token.status == "success" %}                    
+                        <a href="{{public_base}}Portal/Logout" class="list-group-item">Logout</a>
+                        <a href="{{public_base}}Audit/Asset" class="list-group-item {% if menu_selected|default('asset') == 'asset' %}active{% endif %} ">Asset Manager</a>
+                        <a href="{{public_base}}Audit/Audit" class="list-group-item {% if menu_selected == 'audit' %}active{% endif %}">Audit Control</a>
+                        {% if '3' in token.user.auth.Auth %}                            
+                            <a href="./settings.html" class="list-group-item {% if menu_selected == 'settings' %}active{% endif %}">Settings</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="./login.html" class="list-group-item {% if menu_selected == 'login' %}active{% endif %}">Login</a>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <footer>
+            <p>&copy; 2015 Company, Inc.</p>
+        </footer>
+    </div>
+{% endblock body %}
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('.row-offcanvas').toggleClass('active')
+            });
+        });
+    </script>
+
+{% endblock %}
+

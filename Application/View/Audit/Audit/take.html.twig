@@ -1,0 +1,249 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'audit' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Audit/Asset">Asset Manager</a></li>
+    <li><a href="{{public_base}}Audit/Audit">Audit Home</a></li>
+    <li class="active">Take Audit</li>
+    <li class="active">{{data.audit.name}}</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    {{data.audit.name}}
+{% endblock h1 %}
+
+{% block audit_body %}
+
+
+
+    <pre>
+        {#        {{ dump(MISC)}}#}
+    </pre>
+    <form action='{{public_base}}Audit/Audit/takeAudit/{{data.auditID}}{% if asset != "new" %}/{{asset}}{%endif%}' method='POST'>
+        <h1>Take audit.</h1>
+        {% if asset == "new" %}
+        <div  class="row group">
+            <h1>Asset Details</h1>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[forename]">Forename/Model</label>
+                <input type="text" name="asset[forename]" class="form-control" id="forename" placeholder="Forename/Model">
+            </div>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[surname]">Surname/Brand</label>
+                <input type="text" name="asset[surname]" class="form-control" id="surname" placeholder="Surname/Brand">
+            </div>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[contact]">Contact Number / Email</label>
+                <input type="text" name="asset[contact]" class="form-control" id="surname" placeholder="Surname/Brand">
+            </div>        
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[address1]">Address 1</label>
+                <input type="text" name="asset[address1]" class="form-control" id="address1" placeholder="Address 1">
+            </div>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[postcode]">Postcode</label>
+                <input type="text" name="asset[postcode]" class="form-control" id="postcode" placeholder="Postcode">
+            </div>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[county]">County</label>
+                <select id="asscounty" name='asset[county]'>
+                    {% for County in MISC.Counties %}
+                        <option value='{{County.id}}'>{{County.name}}</option>
+                    {% endfor %}                    
+                </select>
+            </div>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[country]">Country</label>
+                <select id='asscountry' name='asset[country]'>
+                    {% for Country in MISC.Countries %}
+                        <option value='{{Country.id}}'>{{Country.name}}</option>
+                    {% endfor %}                    
+                </select>
+                {#                <input type="email" name="asset[country]" class="form-control" id="country" placeholder="Country">#}
+            </div>
+            <div class="form-group col-xs-6 col-md-3">
+                <label for="asset[type]">Asset Type</label>                                
+                <select id='asstype' name='asset[type]'>  
+                    {% for Group, Types in MISC.Groups %}
+                        <optgroup label='{{Group}}'>                            
+                            {% for type in Types %}
+                                <option value='{{type.id}}' data-group='{{type.AssetGroups_id}}'>{{type.name}}</option>
+                            {% endfor %}
+                        </optgroup>                        
+                    {% endfor %}                    
+                </select>
+
+                {#                <input type="email" name="asset[type]" class="form-control" id="type" placeholder="Asset Type">#}
+            </div>
+        </div>
+        {% else %}
+
+            <div  class="row group">
+                <div  class="row">
+                    <h1>Asset Details</h1>
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Forename/Model:</label>
+                        <p>{{asset.forename}}</p>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Surname/Brand:</label>
+                        <p>{{asset.surname}}</p>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Contact Number / Email:</label>
+                        <p>{{asset.contact_number}} / {{asset.contact_email}}</p>
+                    </div>        
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Address 1:</label>
+                        <p>{{asset.address1}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Postcode:</label>
+                        <p>{{asset.postcode}}</p>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>County:</label>
+                        <p>{{asset.county}}</p>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Country:</label>
+                        <p>{{asset.country}}</p>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3">
+                        <label>Asset Type:</label>
+                        <p>{{asset.group_name}} / {{asset.type_name}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+                {#{{ dump(data.data.audit.audit)}}#}
+                <section>
+                    {% for group in data.audit.groups %}
+                        <div  class="row group">
+                            <h3>{{ group.name}}</h3>
+                            {% for question in group.questions %}
+
+                                <div class="col-xs-12 alternate">
+                                    <div class="col-xs-12 col-md-3">
+
+                                        <p> {{ loop.index }}: {{ question.question}}</p>                  
+                                    </div>                
+                                    <div class="col-xs-12 {%if question.addExpiry == 1 %}col-md-2{%else%}col-md-4{%endif%}">
+                                        <label class="small-label">Answer</label>
+                                        {% if question.answerType.name == 'Text'%}
+                                            <p>Please enter notes into the field provided.</p>
+                                        {% elseif question.answerType.name == 'Points' %}
+                                            <div class="text-center">
+                                                <input
+                                                    name='takeAudit[answers][{{question.id}}][score]'
+                                                    type="range"
+                                                    min="0"                    
+                                                    max="100"                  
+                                                    step="1"                   
+                                                    value="50"                 
+                                                    data-orientation="vertical"
+                                                    >
+
+                                                <span class="badge progress-bar-info">50</span>
+                                            </div>
+                                        {% else %}
+                                            <div class='row'>
+                                                <div class="col-xs-12">
+                                                    <div class="btn-group btn-group-horizontal" data-toggle="buttons">
+                                                        {% for option in question.answerType.options %}
+                                                            <label class="btn active">
+                                                                <input name='takeAudit[answers][{{question.id}}][score]' type="radio" value='{{option.id}}' checked><i class="fa fa-circle-o fa-2x"></i><i class="fa fa-check-circle-o fa-2x"></i> <span>  {{option.name}}</span>
+                                                            </label>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div> 
+
+
+                                    {% if question.addExpiry == 1%}
+                                        <div class="col-xs-12 col-md-2 form-group" >
+                                            <label>Expires</label>
+                                            <input type="text" class="form-control expires" id="start_date" name='takeAudit[answers][{{question.id}}][expires]' placeholder="Expires">
+                                        </div>
+                                    {% else %}
+                                        {#<div class="col-xs-12 col-md-2" ng-if="question.addExpiry === 0">
+                                        </div>#}
+                                    {% endif %}
+                                    <div class="col-xs-6 col-md-3 form-group">
+                                        <label>Notes</label>
+                                        <textarea placeholder="Please add any notes you may have, here." class='form-control' name="takeAudit[answers][{{question.id}}][notes]" md-maxlength="150" rows="3"></textarea>                    
+                                    </div>
+                                    {% if question.addEvidence == 1 %}
+                                        <div class="col-xs-6 col-md-2 form-group">
+                                            <label>Evidence</label>
+                                            <div type='file' class="dropzone dropzone{{question.id}}"></div>
+                                            <input id="evidence{{question.id}}" type='hidden' value='' name='takeAudit[answers][{{question.id}}][evidence]'>
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-xs-6 col-md-2" >                    
+                                            <label class="text-center">No evidence required.</label>
+                                        </div>
+                                    {% endif %}
+                                </div> 
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </section>
+
+                <p>Audit Completion %</p>
+                <md-progress-linear md-mode="determinate" value="60"></md-progress-linear>
+
+                <button type='submit'>Save Answers</button>
+            </form>
+            <pre>
+
+            </pre>
+
+
+
+            {% endblock audit_body %}
+
+
+                {% block extra_js %}
+                    {{ parent() }}
+                    <script src='{{public_base}}js/select2/select2.min.js'></script>
+                    <script>
+
+                        $(document).ready(function () {
+
+                            $("#asstype").select2();
+                            $("#asscounty").select2();
+                            $("#asscountry").select2();
+
+
+                        {% for group in data.data.groups %}
+                            {% for question in group.questions %}
+                                {% if question.addEvidence == 1 %}
+                                        $(".dropzone{{question.id}}").dropzone({
+                                            url: "{{public_base}}Portal/Upload/UploadAuditImage/{{data.auditID}}",
+                                            addRemoveLinks: true,
+                                            success: function (data) {
+                                                var response = $($.parseJSON(data.xhr.response));
+                                                $("body").find("#evidence{{question.id}}").val(response[0].FileName);
+                                            }
+                                        });
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+
+                                $('input[type="range"]').rangeslider();
+                                $('input[type="range"]').on('mousemove', function (e) {
+                                    var val = $(this).val();
+                                    $(this).attr('value', val);
+                                    $(this).next("span.badge").html(val);
+                                });
+                                $('.expires').datetimepicker({
+                                    format: 'DD/MM/YYYY'
+                                });
+                            });
+                    </script>
+                {% endblock extra_js %}

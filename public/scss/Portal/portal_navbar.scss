@@ -1,0 +1,161 @@
+//=== Inverted navbar
+// Reset inverted navbar basics
+$navbar-portal-color:                      lighten($gray-light, 15%) !default;
+$navbar-portal-bg:                         #d6e1e5 !default;
+$navbar-portal-border:                     darken($navbar-portal-bg, 10%) !default;
+
+// Inverted navbar links
+$navbar-portal-link-color:                 darken($gray-light, 15%) !default;
+$navbar-portal-link-hover-color:           #fff !default;
+$navbar-portal-link-hover-bg:              transparent !default;
+$navbar-portal-link-active-color:          $navbar-portal-link-hover-color !default;
+$navbar-portal-link-active-bg:             darken($navbar-portal-bg, 10%) !default;
+$navbar-portal-link-disabled-color:        #444 !default;
+$navbar-portal-link-disabled-bg:           transparent !default;
+
+// Inverted navbar brand label
+$navbar-portal-brand-color:                $navbar-portal-link-color !default;
+$navbar-portal-brand-hover-color:          #fff !default;
+$navbar-portal-brand-hover-bg:             transparent !default;
+
+// Inverted navbar toggle
+$navbar-portal-toggle-hover-bg:            #333 !default;
+$navbar-portal-toggle-icon-bar-bg:         #fff !default;
+$navbar-portal-toggle-border-color:        #333 !default;
+
+
+
+// Inverse navbar
+
+.navbar-portal {
+  background-color: $navbar-portal-bg;
+  border-color: $navbar-portal-border;
+
+  .navbar-brand {
+    color: $navbar-portal-brand-color;
+    &:hover,
+    &:focus {
+      color: $navbar-portal-brand-hover-color;
+      background-color: $navbar-portal-brand-hover-bg;
+    }
+  }
+
+  .navbar-text {
+    color: $navbar-portal-color;
+  }
+
+  .navbar-nav {
+    > li > a {
+      color: $navbar-portal-link-color;
+
+      &:hover,
+      &:focus {
+        color: $navbar-portal-link-hover-color;
+        background-color: $navbar-portal-link-hover-bg;
+      }
+    }
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-portal-link-active-color;
+        background-color: $navbar-portal-link-active-bg;
+      }
+    }
+    > .disabled > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-portal-link-disabled-color;
+        background-color: $navbar-portal-link-disabled-bg;
+      }
+    }
+  }
+  
+  // Darken the responsive nav toggle
+  .navbar-toggle {
+    border-color: $navbar-portal-toggle-border-color;
+    &:hover,
+    &:focus {
+      background-color: $navbar-portal-toggle-hover-bg;
+    }
+    .icon-bar {
+      background-color: $navbar-portal-toggle-icon-bar-bg;
+    }
+  }
+
+  .navbar-collapse,
+  .navbar-form {
+    border-color: darken($navbar-portal-bg, 7%);
+  }
+
+  // Dropdowns
+  .navbar-nav {
+    > .open > a {
+      &,
+      &:hover,
+      &:focus {
+        background-color: $navbar-portal-link-active-bg;
+        color: $navbar-portal-link-active-color;
+      }
+    }
+
+    @media (max-width: $grid-float-breakpoint-max) {
+      // Dropdowns get custom display
+      .open .dropdown-menu {
+        > .dropdown-header {
+          border-color: $navbar-portal-border;
+        }
+        .divider {
+          background-color: $navbar-portal-border;
+        }
+        > li > a {
+          color: $navbar-portal-link-color;
+          &:hover,
+          &:focus {
+            color: $navbar-portal-link-hover-color;
+            background-color: $navbar-portal-link-hover-bg;
+          }
+        }
+        > .active > a {
+          &,
+          &:hover,
+          &:focus {
+            color: $navbar-portal-link-active-color;
+            background-color: $navbar-portal-link-active-bg;
+          }
+        }
+        > .disabled > a {
+          &,
+          &:hover,
+          &:focus {
+            color: $navbar-portal-link-disabled-color;
+            background-color: $navbar-portal-link-disabled-bg;
+          }
+        }
+      }
+    }
+  }
+
+  .navbar-link {
+    color: $navbar-portal-link-color;
+    &:hover {
+      color: $navbar-portal-link-hover-color;
+    }
+  }
+
+  .btn-link {
+    color: $navbar-portal-link-color;
+    &:hover,
+    &:focus {
+      color: $navbar-portal-link-hover-color;
+    }
+    &[disabled],
+    fieldset[disabled] & {
+      &:hover,
+      &:focus {
+        color: $navbar-portal-link-disabled-color;
+      }
+    }
+  }
+}
