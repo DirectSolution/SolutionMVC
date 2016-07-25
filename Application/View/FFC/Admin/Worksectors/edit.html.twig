@@ -1,0 +1,151 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'ffc' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Ffc/AdminIndex">First for Contractors</a></li>
+    <li><a href="{{public_base}}Ffc/AdminWorkSector">Work Sectors</a></li>
+    <li class='active'>Edit: {{ sector.description }}</li>       
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Edit: {{sector.description}}
+{% endblock h1 %}
+
+{% block audit_body %}
+
+
+    <form method="post" action="{{public_base}}Ffc/Adminworksector/update/{{sector.id}}" class='form-vertical'>
+        <div class="form-group">
+            <label for="description" class="control-label"><h3>{{sector.description}}</h3></label>
+            <div class="">
+                <input type="text" class="form-control" id="description" placeholder="Description of worksector" name="description" value="{{sector.description}}" required>
+            </div>
+        </div>
+
+        <table id='question-table' class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Question</th>
+                    <th>Field Type</th>
+                    <th class="col-xs-1">Answer Required</th>
+                    <th class="col-xs-1">Automatic Unapprove</th>
+                    <th class="col-xs-1">Add Expiry</th>
+                    <th class="col-xs-1">Expiry Required</th>
+                    <th class="col-xs-1">Add Evidence</th>
+                    <th class="col-xs-1">Evidence Required</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="questions">
+                {% for question in questions %}
+                    <tr class='question-row' data-row-index="{{loop.index}}">
+                        <td>
+                            <textarea class='form-control'  placeholder='Question' name='sector[questions][{{loop.index}}][field_name]' required >{{question.field_name}}</textarea>
+                        <td>
+                            <select name='sector[questions][{{loop.index}}][field_type]' class='form-control'>
+                                <option value='freetext' {% if question.field_type == "freetext"%}selected{%endif%}>Freetext</option>
+                                <option value='yesnona'{% if question.field_type == "yesnona"%}selected{%endif%}>Yes/no/na</option>
+                                <option value='textbox'{% if question.field_type == "textbox"%}selected{%endif%}>Textarea</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][field_req]'  value='1' {% if question.field_req == 1 %}checked{%endif%}>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][field_req]'  value='0'{% if question.field_req == 0 %}checked{%endif%}>
+                                    No
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][automatic_unapprove]'  value='1' {% if question.automatic_unapprove == 1 %}checked{%endif%} >
+                                    Yes
+                                </label>
+                            </div>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][automatic_unapprove]'  value='0' {% if question.automatic_unapprove == 0 %}checked{%endif%}>
+                                    No
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][add_expiry_date]'  value='1' {% if question.add_expiry_date == 1 %}checked{%endif%}>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][add_expiry_date]'  value='0' {% if question.add_expiry_date == 0 %}checked{%endif%}>
+                                    No
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][expiry_required]' value='1' {% if question.expiry_required == 1 %}checked{%endif%}>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][expiry_required]' value='0' {% if question.expiry_required == 0 %}checked{%endif%}>
+                                    No
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][add_evidence]' value='1' {% if question.add_evidence == 1 %}checked{%endif%}>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][add_evidence]' value='0' {% if question.add_evidence == 0 %}checked{%endif%}>
+                                    No
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][evidence_required]' value='1' {% if question.evidence_required == 1 %}checked{%endif%}>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class='radio'>
+                                <label>
+                                    <input type='radio' name='sector[questions][{{loop.index}}][evidence_required]' value='0' {% if question.evidence_required == 0 %}checked{%endif%}>
+                                    No
+                                </label>
+                            </div>
+                        </td>
+                        <td><button type='button' class='btn btn-danger remove-row' value='{{loop.index}}'><i class='fa fa-trash' aria-hidden='true'></i></button></td>
+                    </tr>
+                {% endfor %}            
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan='10'><button type='button' class='btn btn-success addRow pull-right'>Add Question Row <i class="fa fa-plus-circle"></i></button></td>
+                </tr>
+            </tfoot>
+        </table>
+        <button type="submit" class="btn btn-success">Save Coshh</button>   
+    </form>
+
+{% endblock audit_body %}
+
+{% block extra_js %} 
+    <script src="{{public_base}}js/ffc/dynamic-add-row.js"></script>
+{% endblock extra_js %}

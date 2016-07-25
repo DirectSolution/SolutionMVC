@@ -25,6 +25,7 @@ class Controller Extends Security {
         $this->response = new Response();
 //        Twig_Autoloader::register();
         $this->loadTwig();
+        
 //        $this->getSecurity();
 //        $this->responseObject();
         $this->requestObject();

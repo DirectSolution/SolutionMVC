@@ -1,0 +1,27 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li class='active'>Policy</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Policys
+{% endblock h1 %}
+
+{% block audit_body %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">                
+                <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Policy/create" class="btn btn-success">Create Policy</a></p></li>
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Audits for...">
+            </form>
+        </div>
+    </nav>
+{% endblock audit_body %}
+
+{% block extra_js %}   
+{% endblock extra_js %}

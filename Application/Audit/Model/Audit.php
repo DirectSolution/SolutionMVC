@@ -4,6 +4,7 @@ namespace SolutionMvc\Audit\Model;
 
 use SolutionMvc\Model\BaseModel,
     SolutionMvc\Audit\Model\Assignment,
+    SolutionMvc\Audit\Model\QuestionTypeOption,
     SolutionMvc\Audit\Model\Settings;
 
 /**
@@ -13,12 +14,19 @@ use SolutionMvc\Model\BaseModel,
  */
 class Audit extends BaseModel {
 
+    protected $questionTypeOptions;
     /**
      * 
      * @param integer $id
      * @return object
      * @description Get one Audit by $id
      */
+    
+    public function __construct() {
+        parent::__construct();
+        $this->questionTypeOptions = new QuestionTypeOption();
+    }
+    
     public function getAuditDatasById($audit, $client) {
         $result = $this->prod_audit->AuditDatas[array("Audits_id" => $audit, "client_id" => $client, "retired" => 0)];
         if($result == null){
@@ -38,6 +46,14 @@ class Audit extends BaseModel {
 
     public function getAllAudits($client) {
         return $this->prod_audit->AuditDatas->where("client_id", $client)->and("retired", 0)->or("client_id", 000)->and("retired", 0);
+    }
+    
+    public function arrayMapAudits($client){
+                return
+                array_map('iterator_to_array', iterator_to_array(
+                        $this->prod_audit->AuditDatas->where("client_id", $client)->and("retired", 0)->or("client_id", 000)->and("retired", 0)
+                )
+        );
     }
 
     public function getByAssetId($client) {
@@ -79,6 +95,7 @@ class Audit extends BaseModel {
                 "user_id" => (int) $audit['user_id'],
                 "audit_type_id" => (int) $audit['AuditTypes_id'],
                 "audit_type_name" => $audit->AuditTypes['name'],
+                "reviewFrequency" => $audit->ReviewFrequencies['name'],
                 "Audits_id" => (int) $audit['Audits_id'],
                 "AuditGradings_id" => (int) $audit['AuditGradings_id'],
                 "Default" => ($settings->getDefault($client) == $audit['Audits_id']) ? "Default" : null
@@ -136,19 +153,28 @@ class Audit extends BaseModel {
                         $audit, $user, $auditReturn['id']
                 )
         );
+        $totalPossible = 0;
         foreach ($audit['groups'] as $group) {
-
+            
             $groupData = $this->groupArray($group, $user, $auditDataReturn);
             $groupReturn = $this->prod_audit->QuestionGroups->insert($groupData);
             foreach ($group['questions'] AS $question) {
+              $totalPossible += $this->questionTypeOptions->getHighestById($question['QuestionTypes_id']);
+               
                 $questionData = $this->questionArray($question, $user, $groupReturn, $auditDataReturn);
                 $this->prod_audit->Questions->insert($questionData);
             }
         }
+        
+        $auditDataReturn['max_score_possible'] = $totalPossible;
+        $auditDataReturn->update();
+        
+        
         return;
     }
 
     public function updateAudit($audit, $user) {
+        $totalPossible = 0;
         // Retire the old version and set date when it happened.        
         // $audit->data->id is the Original / Parent id 
         $auditExists = $this->prod_audit->AuditDatas[$audit['id']];
@@ -168,10 +194,15 @@ class Audit extends BaseModel {
             $groupData = $this->groupArray($group, $user, $auditReturn);
             $groupReturn = $this->prod_audit->QuestionGroups->insert($groupData);
             foreach ($group['questions'] AS $question) {
+                $totalPossible += $this->questionTypeOptions->getHighestById($question['QuestionTypes_id']);
                 $questionData = $this->questionArray($question, $user, $groupReturn, $auditReturn);
                 $this->prod_audit->Questions->insert($questionData);
             }
         }
+
+        $auditReturn['max_score_possible'] = $totalPossible;
+        $auditReturn->update();
+        
         return;
     }
 
@@ -186,6 +217,7 @@ class Audit extends BaseModel {
 //            "audit_type_name" => $audit->auditTypes->name,
             "Audits_id" => (int) $id,
             "AuditGradings_id" => (int) $audit['auditGradings'],
+            "ReviewFrequencies_id" => (int) $audit['reviewFrequency']
         );
     }
 
@@ -247,4 +279,6 @@ class Audit extends BaseModel {
         }
     }
 
+    
+    
 }

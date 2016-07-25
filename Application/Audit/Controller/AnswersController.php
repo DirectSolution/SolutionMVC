@@ -47,64 +47,54 @@ class AnswersController extends Controller {
         
     }
 
-    public function setAnswersAction($audit, $asset) {
+    public function setAnswers($assignment, $client, $request, $audit) {
         
-//        die(print_r($this->requestObject()));
-        $this->post = $this->requestObject();
+        $answerSetId = $this->answerSet->setAnswersSet($assignment['id'], $client, $assignment['Audits_id'], $audit);
+        $totalScore = array();
+
         
-        $client = $this->token->user->client;
-        $assignment = $this->assignment->isValidAssignmentRequest($asset, $audit, $client);
-        if ($assignment) {
-            $answerSetId = $this->answerSet->setAnswersSet($assignment['id'], $client);
-            foreach ($this->post['takeAudit']['answers'] AS $question => $answer) {
-                if (key($answer) !== 'points') {
-                    $aVal = $this->questionTypeOption->getOne($answer);
-                } else {
-                    $aVal = array(
-                        "name" => ucfirst(key($answer)),
-                        "value" => $answer->points);
-                }
-                $this->answer->insertOne($question, $answer, $answerSetId, $assignment, $this->token->user, $aVal);
+        foreach ($request['takeAudit']['answers'] AS $question => $answer) {
+                   
+
+            
+            if (key($answer) !== 'points') {
+                $aVal = $this->questionTypeOption->getOne($answer);
+            } else {
+                $aVal = array(
+                    "name" => trim(ucfirst(key($answer))),
+                    "value" => $answer->points);
             }
-            return $answerSetId;
-        }else{
+            $this->answer->insertOne($question, $answer, $answerSetId, $assignment, $this->token->user, $aVal);
+//            die($aVal['value']);
+            $totalScore[] = $aVal['value'];
+        }
+//        die((string)array_sum($totalScore));
+        $this->answerSet->update($answerSetId, array_sum($totalScore));
+//             die();   
+        return $answerSetId;
+    }
+
+    public function setAnswersAction($audit, $asset) { 
+        $assignment = $this->assignment->isValidAssignmentRequest($asset, $audit, $client = $this->token->user->client);
+        if ($assignment) {
+            return $this->setAnswers($assignment, $client, $this->requestObject(), $audit);
+        } else {
             return false;
         }
-        
     }
-    
-    public function setAnswersAndAssetAction() {
 
-        //INSERT ASSET
-       
-        $asset = $this->asset->setAsset($this->postdata->asset, $this->token->user->client);
-        
+    public function setAnswersAndAssetAction($audit) {
+        $request = $this->requestObject();
+        //INSERT ASSET        
+        $asset = $this->asset->setAsset($request['asset'], $this->token->user->client);               
         //THEN INSERT ASSIGNMENT
-        $assignment = $this->assignment->setAssignment($this->postdata->audit, $asset, $this->token->user->id, $this->token->user->client);
+
         
-        //THEN INSERT ANSWERS
+        $assignment = $this->assignment->setOneAssignment($audit, $asset, $this->token->user->id, $this->token->user->client);   
         
+
         
-//        $client = $this->token->user->client;
-//        $assignment = $this->assignment->isValidAssignmentRequest($this->postdata->asset, $this->postdata->audit, $client);
-//        if ($assignment) {
-            $answerSetId = $this->answerSet->setAnswersSet($assignment, $this->token->user->client);
-            foreach ($this->postdata->data->answers AS $question => $answer) {
-                if (key($answer) !== 'points') {
-                    $aVal = $this->questionTypeOption->getOne($answer);
-                } else {
-                    $aVal = array(
-                        "name" => ucfirst(key($answer)),
-                        "value" => $answer->points);
-                }
-                $this->answer->insertOne($question, $answer, $answerSetId, $assignment, $this->token->user, $aVal);
-            }
-            $this->response->headers = http_response_code(200);
-            $this->response->message = "WOOP WORKED FIRST TIME";
-            return print (json_encode($this->response));
-//        } else {
-//            $this->response->headers = http_response_code(404);
-//        }
+        return $this->setAnswers($assignment, $this->token->user->client, $this->requestObject(), $audit);
     }
 
 }

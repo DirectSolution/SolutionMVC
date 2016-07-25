@@ -14,72 +14,7 @@
             </header>
             <section class="panel-body question-row">
              <input type="hidden" value="" class="groupIndexHidden">
-                <div class="row clonedInput" style="position:relative;">
-                    <div class="col-lg-4">
-                        <label>Question</label>
-                        <textarea name='groups[][questions][][question]' id='1question1' class="group_question form-control" rows="3"></textarea>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label class="switch-label">Answer Type</label>
-                            <select name='' id="1QuestionTypes_id1" class="group_question_type form-control">
-                                {% for questionType in data.questionTypes %}
-                                    <option value="{{questionType.id}}">{{ questionType.typeName}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-3 col-lg-1">
-                        <label class="control-label switch-label text-center">Add Expiry</label>
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="groups[0][questions][0][add_expiry]" class="onoffswitch-checkbox" value='1' id="1add_expiry1" checked>
-                            <label class="onoffswitch-label add-expiry" for="1add_expiry1">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </div>
-
-                    </div>
-                    <div class="col-xs-3 col-lg-1">
-                        <label class="control-label switch-label text-center">Expiry Required</label>
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="groups[0][questions][0][expiry_required]" class="onoffswitch-checkbox" value='1' id="1expiry_required1">
-                            <label class="onoffswitch-label expiry-required" for="1expiry_required1">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </div>
-
-                    </div>
-                    <div class="col-xs-3 col-lg-1">
-                        <label class="control-label switch-label text-center">Add Evidence</label>
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="groups[0][questions][0][add_evidence]" class="onoffswitch-checkbox" value='1' id="1add_evidence1">
-                            <label class="onoffswitch-label add-evidence" for="1add_evidence1">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-xs-3 col-lg-1">
-                        <label class="control-label switch-label text-center">Evidence Required</label>
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="groups[0][questions][0][evidence_required]" class="onoffswitch-checkbox" value='1' id="1evidence_required1">
-                            <label class="onoffswitch-label evidence-required" for="1evidence_required1">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </div>
-
-                    </div>
-                    <div class="question-del-cont">  
-                        <div class="question-del-positioner">
-                            <button type="button" class="removeQuestion btn btn-md btn-danger center-block btn-round pull-right">
-                                <span class="fa fa-trash"></span>&nbsp;
-                            </button>
-                        </div>
-                    </div>                    
-                </div>
+               
             </section>
             <div class="col-xs-12" style="margin-bottom: 10px;">
                     

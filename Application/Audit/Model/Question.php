@@ -2,7 +2,8 @@
 
 namespace SolutionMvc\Audit\Model;
 
-use SolutionMvc\Model\BaseModel;
+use SolutionMvc\Model\BaseModel,
+    SolutionMvc\Audit\Model\QuestionTypeOption;
 
 /**
  * Description of Question
@@ -10,6 +11,13 @@ use SolutionMvc\Model\BaseModel;
  * @author dhayward
  */
 class Question extends BaseModel {
+
+    protected $questionTypeOption;
+
+    public function __construct() {
+        parent::__construct();
+        $this->questionTypeOption = new QuestionTypeOption();
+    }
 
     /**
      * @param integer $id
@@ -35,12 +43,14 @@ class Question extends BaseModel {
                 "evidenceRequired" => (int) $question['evidence_required'],
                 "addExpiry" => (int) $question['add_expiry'],
                 "expiryRequired" => (int) $question['expiry_required'],
-                "answerType" => array("id" => (int)$question['QuestionTypes_id']),
+                "answerType" => array(
+                                        "id" => (int) $question['QuestionTypes_id'],
+                                        "values" => $this->questionTypeOption->getByQuestionType($question['QuestionTypes_id'])
+                                    ),
                 "group_id" => (int) $question['QuestionGroups_id'],
                 "client_id" => (int) $question['client_id'],
                 "audit_id" => (int) $question['AuditDatas_id'],
             );
-
         }
         return $Questions;
     }

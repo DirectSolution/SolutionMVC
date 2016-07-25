@@ -1,0 +1,66 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li class='active'>Risk Assessments</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+   Risk Assessments
+{% endblock h1 %}
+
+{% block audit_body %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">                
+                <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Risk/create" class="btn btn-success">Create Risk Assessment</a></p></li>
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Audits for...">
+            </form>
+        </div>
+    </nav>
+  <table id="table" class="order-table table table-hover table-responsive paginated">
+        <thead>
+            <tr>
+                <th>Document Name</th>
+                <th>Author</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>            
+            {% for risk in data %}
+                <tr>
+                    <td><a href="{{public_base}}HealthSafety/Risk/view/{{risk.risks.id}}">{{ risk.risks.name }}</a></td>
+                    <td>{{ risk.author.name }} / {{ risk.author.username }}</td>
+                    <td>{{risk.risks.created_at| date('d/m/Y')}}</td>
+                    <td>
+                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Risk/document/{{risk.risks.id}}">View Word Doc</a>
+                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Risk/view/{{risk.risks.id}}">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+                <tr>
+                    <td colspan='10'>
+                        <nav id="pagi" class='text-center'>
+                            <ul class="pagination pagination-lg">
+
+                            </ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
+    </table>                     
+
+
+{% endblock audit_body %}
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="{{public_base}}js/audit/table-filter.js"></script>
+    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+{% endblock extra_js %}

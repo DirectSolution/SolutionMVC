@@ -26,6 +26,7 @@
     "jquery-ui": "^1.11.4",
     "jqueryuibootstrap": "jquery-ui-bootstrap/jquery-ui-bootstrap#masterbs3",
     "rangeslider.js": "^2.1.1",
-    "dropzone": "^4.3.0"
+    "dropzone": "^4.3.0",
+    "ckeditor": "^4.5.9"
   }
 }

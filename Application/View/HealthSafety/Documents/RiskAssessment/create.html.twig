@@ -1,0 +1,51 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Risk">Risk Assessment</a></li>
+    <li class='active'>Create</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Risk Assessment
+{% endblock h1 %}
+
+{% block audit_body %}
+    <form action='{{public_base}}HealthSafety/Risk/Create' method='POST'>
+        <div class="form-group">
+            <label for="name">Risk Assessment Name</label>
+            <input type="text" class="form-control" name='name' placeholder="Method Statement Name">
+        </div>        
+        <section id='hazards'></section>
+        <button type='button' class='btn btn-primary add-hazard'>Add Hazard <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+    
+    <hr>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Risk/'>Cancel <i class="fa fa-ban" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><button type="submit" class="btn btn-success navbar-btn">Save Risk Assessment <i class="fa fa-floppy-o" aria-hidden="true"></i></button></li>
+            </ul>
+        </div>
+    </nav>
+    </form>
+{% endblock audit_body %}
+
+{% block extra_js %}  
+    {{ parent() }}
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+    <script>
+
+        $('body').on('click', '.add-hazard', function (event) {
+        var index = $("body").find('.hazard').length + 1;
+        $(this).parent().find('#hazards').append("<div class='hazard'><div class='form-group'><label for='name'>Hazard Name</label><input type='text' class='form-control' name='hazards[" + index + "][name]' placeholder='Hazard Name'></div><div class='form-group'><label>Control Procedures</label><textarea id='ckeditor" + index + "' name='hazards[" + index + "][description]'></textarea></div><div class='row'><div class='form-group  col-xs-3'><label>Hazard Likelihood</label><input type='number' class='form-control' name='hazards[" + index + "][likelihood]' placeholder='Likelihood'></div><div class='form-group  col-xs-3'><label>Hazard Severity</label><input type='number' class='form-control' name='hazards[" + index + "][severity]' placeholder='Severity'></div><div class='form-group  col-xs-3'><label>Risk Ranking</label><input type='number' class='form-control' name='hazards[" + index + "][risk_ranking]' placeholder='Risk Ranking'></div></div></div>");
+        CKEDITOR.replace("ckeditor" + index);
+        });
+        $('#hazards').on('click', '.remove-method', function (event) {
+        $(this).parent().parent().parent().remove();
+        });
+    </script>
+{% endblock extra_js %}

@@ -6,6 +6,7 @@ use SolutionMvc\Core\Response,
     SolutionMvc\Audit\Controller\AssettypeController,
     SolutionMvc\Audit\Controller\AssetgroupController,
     SolutionMvc\Audit\Model\Asset,
+    SolutionMvc\Audit\Model\Audit,
     SolutionMvc\Audit\Model\Settings,
     SolutionMvc\Library\Helper,
     SolutionMvc\Core\Controller,
@@ -24,11 +25,8 @@ class AssetController Extends Controller {
     public $assetGroup;
     public $assignments;
     public $helpers;
+    protected $audit;
     protected $settings;
-
-//    public $response;
-//    protected $settings;
-//    protected $token;
 
     public function __construct() {
 
@@ -39,23 +37,16 @@ class AssetController Extends Controller {
         $this->helpers = new Helper();
         $this->assetType = new AssettypeController();
         $this->assetGroup = new AssetgroupController();
-        
-//        $this->assignments = new Assignment();
-
-
+        $this->assignments = new Assignment();
         $this->token = $this->getToken();
         $this->security = new Security();
-//        $this->settings = new Settings();
-        //This may need moving, could cause if we ever want to use gets
-//        $this->postdata = json_decode(file_get_contents("php://input"));
-//        $this->token = $this->security->DecodeSecurityToken($this->postdata->token);
-//        $this->response->token = $this->security->EncodeSecurityToken((array) $this->token->user);
+        $this->audit = new Audit();
     }
 
     public function indexAction($message = null) {
         if ($this->security->getToken()) {
-            
-            
+
+
             $this->response->setHeaders(http_response_code(200));
             $return['assets'] = $this->assets->getAllArray($this->token->user->client);
             $return['default'] = $this->settings->getDefault($this->token->user->client);
@@ -74,20 +65,19 @@ class AssetController Extends Controller {
         }
     }
 
-    public function getMisc(){
-     return array(
-                        "Groups" => $this->assetGroup->getGroupsWithTypesOptAction($this->token->user->client),
-//                        "Groups" => $this->assetGroup->indexAction($this->token->user->client),
-//                        "Types" => $this->assetType->indexAction($this->token->user->client),
-                        "Countries" => $this->helpers->getCountries(),
-                        "Counties" => $this->helpers->getCounties(),
-                    );   
+    public function getMisc() {
+        return array(
+            "Groups" => $this->assetGroup->getGroupsWithTypesOptAction($this->token->user->client),
+            "Countries" => $this->helpers->getCountries(),
+            "Counties" => $this->helpers->getCounties(),
+            "Audits" => $this->audit->arrayMapAudits($this->token->user->client)
+        );
     }
-    
+
     public function createAction() {
         if ($this->security->getToken()) {
             $this->response->setHeaders(http_response_code(200));
-            $this->response->setData( $this->getMisc());
+            $this->response->setData($this->getMisc());
             echo $this->twig->render("Audit/Asset/create.html.twig", array(
                 "data" => $this->response->data
             ));
@@ -100,11 +90,17 @@ class AssetController Extends Controller {
         }
     }
 
-    public function getAction($id) {
+    public function viewAction($id) {
         $this->response->headers = http_response_code(200);
-        $this->response->asset = $this->assets->getOneByIdArray($id, $this->token->user->client);
-        $this->response->audits = $this->assignments->getAssetAssignmentsByAsset($id);
-        return print_r(json_encode($this->response));
+        $return = array();
+        $return['asset'] = $this->assets->getOneByIdArray($id, $this->token->user->client);
+        $return['audits'] = $this->assignments->getAssetAssignmentsByAsset($id);
+        $this->response->setData($return);
+        echo $this->twig->render("Audit/Asset/view.html.twig", array(
+            "data" => $this->response
+        ));
+//        
+//        return print_r(json_encode($this->response));
     }
 
     public function getAllByTypeAction($id) {
@@ -124,8 +120,8 @@ class AssetController Extends Controller {
             if ($this->requestType() == "POST") {
                 $this->setAsset($this->requestObject(), $this->token->user->client);
                 $this->setSession("success", "Asset Successfully Created.");
-                $this->response->setHeaders(header('Location: http://doug.portal.solutionhost.co.uk/apps2/public/Audit/Asset/'));                
-            } else {            
+                $this->response->setHeaders(header('Location: http://doug.portal.solutionhost.co.uk/apps2/public/Audit/Asset/'));
+            } else {
                 $this->setSession("error", "You can't access this page.");
                 $this->response->setHeaders(header('Location: http://doug.portal.solutionhost.co.uk/apps2/public/Audit/Asset/'));
             }
@@ -156,13 +152,41 @@ class AssetController Extends Controller {
         }
     }
 
-    public function updateAction() {
-        
+    public function updateAction($id) {
+        if ($this->security->getToken()) {
+
+            if ($this->requestType() == 'GET') {
+                $this->response->setHeaders(http_response_code(200));
+                $return['misc'] = $this->getMisc();
+                $return['asset'] = $this->assets->getOneByID($id);
+                $this->response->setData($return);
+                echo $this->twig->render("Audit/Asset/update.html.twig", array(
+                    "data" => $this->response->data
+                ));
+            } else if ($this->requestType() == 'POST') {
+                $this->assets->update($this->requestObject(), $this->token->user->client, $id);
+                $this->setSession("success", "Asset successfully updated.");
+                $this->response->setHeaders(header('Location: http://doug.portal.solutionhost.co.uk/apps2/public/Audit/Asset/View/'.$id));
+                
+            }
+        } else {
+            echo $this->twig->render("Portal/Login/login.html.twig", array(
+                "project" => "Audit/",
+                "controller" => "Asset/",
+                "action" => "create"
+            ));
+        }
     }
 
     public function retireAction() {
-        $this->response->status = $this->assets->retire($this->postdata->id);
-        return print json_encode($this->response);
+        $request = $this->requestObject();
+        $asset = $this->assets->getOneByID($request['asset']);
+        if (in_array(9, $this->token->user->auth->Auth) && $asset['client_id'] === $this->token->user->client) {
+            $this->assets->retire($request['asset']);
+            return print json_encode("success");
+        } else {
+            return print json_encode("You are not authorised to complete this action");
+        }
     }
 
     public function getAssetsNotInUseAction() {

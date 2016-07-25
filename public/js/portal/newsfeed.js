@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $.ajax({
         type: 'POST',
-        url: '//doug.portal.solutionhost.co.uk/apps2/public/portal/newsfeed/getNews',
+        url: '//portal.solutionhost.co.uk/apps2/public/portal/newsfeed/getNews',
         dataType: 'json',
         encode: true
     })

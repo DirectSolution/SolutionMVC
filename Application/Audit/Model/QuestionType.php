@@ -16,18 +16,32 @@ class QuestionType extends BaseModel {
     }
 
     public function allQuestionTypesArray($client) {
+        
         foreach ($this->getAllQuestionTypes($client) AS $key => $questionType) {
+            $options = $this->getQuestionTypeOptions($questionType['id']);        
             $questionOptions[$key] = array(
-                "typeName" => \implode(" ", $this->getQuestionTypeOptions($questionType['id'])),
+                "typeName" => \implode(" ", $this->concatTypeOptions($options)),
                 "name" => $questionType['name'],
-                "id" => $questionType['id']
+                "id" => $questionType['id'],
+                "options" => $this->questionTypeArray($options)
             );
         }        
         return $questionOptions;        
     }
     
     public function getQuestionTypeOptions($id){
-        $options = $this->prod_audit->QuestionTypeOptions->where('QuestionTypes_id', $id)->order('value ASC');
+        return $this->prod_audit->QuestionTypeOptions->where('QuestionTypes_id', $id)->order('value ASC');
+    }
+    
+    public function questionTypeArray($options){
+        $array = array();
+        foreach($options as $option){
+            $array[] = $option['name']. " (" . $option['value'] . ")";
+        }
+        return $array;
+    }
+    
+    public function concatTypeOptions($options){       
         $array = array();
         foreach($options as $option){
             $array[] = $option['name']. " (" . $option['value'] . ")";

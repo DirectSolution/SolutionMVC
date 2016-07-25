@@ -1,0 +1,270 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Method">Method Statement</a></li>
+    <li class='active'>View: {{ methodStatement.name }}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    {{ methodStatement.name }}
+{% endblock h1 %}
+
+{% block audit_body %}   
+         <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Method/'>Back <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><p class='navbar-btn'><a  class="btn btn-warning" href='{{public_base}}HealthSafety/Method/update/{{methodStatement.id}}'>Edit Document <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></p></li>
+                 
+                <li style='padding-left:5px;'><p class='navbar-btn'><a  class="btn btn-primary" href='{{public_base}}HealthSafety/Method/document/{{methodStatement.id}}'>View Word Document <i class="fa fa-file-text" aria-hidden="true"></i></a></p></li>
+            </ul>
+        </div>
+    </nav>
+    <header>
+        <table class="table table-bordered">
+            <tr class="text-center">
+                <td rowspan="3" ><h3 style="color:blue">LOGO</h3></td>
+                <td><h3 style="color:red">INSERT COMPANY NAME</h3></td>
+            </tr>
+            <tr class="text-center">
+                <td><h3 style="color:blue">METHOD STATEMENT</h3></td>
+            </tr>
+            <tr class="text-center">
+                <td><h3 style="color:red">{{methodStatement.name}}</h3></td>
+            </tr>
+        </table>
+    </header>
+    <section class="page">
+        <article>
+            <div>
+                <strong>
+                    <p>Your company address</p>
+                    <p>Address:</p>
+                    <p>Tel:</p>
+                    <p>Fax:</p>
+                    <p>Mobile:</p>
+                </strong>
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="col-xs-5 bg-warning"><strong>Project/Contract</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-xs-5 bg-warning"><strong>Contractor</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-xs-5 bg-warning"><strong>Site Address</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-xs-5 bg-warning"><strong>Project Start Date</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-xs-5 bg-warning"><strong>Expected Duration</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-xs-5 bg-warning"><strong>Projected Completed Date</strong></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered">
+                <tr class="bg-warning">
+                    <th></th>
+                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Signature</th>
+                    <th>Date</th>
+                </tr>
+                <tr>
+                    <td class="bg-warning"><strong>Document Author</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="bg-warning"><strong>Authorised by</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="bg-warning"><strong>Authorised by</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="bg-warning"><strong>Authorised by (for Client)</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered">
+                <tr>
+                    <th colspan="4">Emergency Contact Details</th>
+                </tr>
+                <tr class="bg-warning">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="bg-warning">Contact</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="bg-warning">Tel</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="bg-warning">Mobile</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            <div>
+                <h4>Data Protection Statement</h4>
+                <p>The information and data provided herein shall not be duplicated, disclosed or disseminated by the recipient in whole or in part for any purpose whatsoever without the prior written permission from <i style="color:red">YOUR COMPANY</i> </p>
+            </div>
+            <div style="color:red">
+                <h3 class="text-center">Disclaimer please delete before use</h3>
+                <p>The details provided in this example method statement are intended as a guide only, the hazards and control procedures listed are not a comprehensive list.  You must ensure that you carry out a risk assessment to determine and control the significant hazards that will be present in your particular circumstance.  All information and advice is given in good faith. We cannot accept any responsibility for your subsequent acts or omissions. If you have any doubts queries or concerns, you should refer to the relevant regulations and take further professional advice.</p>
+                <p>Please delete all red text prior to use.</p>
+            </div>
+        </article>
+    </section>
+
+    {% for sheet in sheets %}
+        <h1>{{sheet.Sheet.name}}</h1>
+        <p>{{sheet.Sheet.description | raw}}</p>
+
+        {% for section in sheet.Sections %}
+            <h3>{{ section.name }}</h3>
+            <p>{{section.description|raw}}</p>
+        {% endfor %}
+    {% endfor %}   
+
+    <h1>Methods</h1>
+    {% for method in methods %}
+        <h3>{{method.name}}</h3>
+        <p>{{method.description | raw }}</p>
+    {% endfor %}
+
+
+
+
+
+    <footer>
+        <table class="table table-bordered">
+            <tr>
+                <td class="col-xs-2">Series:</td>
+                <td class="col-xs-2"></td>
+                <td class="col-xs-2">Series & Number:</td>
+                <td style="color:red">Number System</td>
+                <td class="col-xs-2">Issue Date:</td>
+                <td style="color:red">Enter date here</td>
+            </tr>
+            <tr>
+                <td>Revision Number:</td>
+                <td></td>
+                <td>Revision Date:</td>
+                <td></td>
+                <td class="text-center" colspan="2">Page 1 of #</td>
+            </tr>
+        </table>
+    </footer>
+
+    <hr>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Method/'>Back <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><p class='navbar-btn'><a  class="btn btn-warning" href='{{public_base}}HealthSafety/Method/update/{{methodStatement.id}}'>Edit Document <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></p></li>
+                 
+                <li style='padding-left:5px;'><p class='navbar-btn'><a  class="btn btn-primary" href='{{public_base}}HealthSafety/Method/document/{{methodStatement.id}}'>View Word Document <i class="fa fa-file-text" aria-hidden="true"></i></a></p></li>
+            </ul>
+        </div>
+    </nav>
+{% endblock audit_body %}
+
+{% block extra_js %}   
+{% endblock extra_js %}
+
+
+
+{#    <section>
+        <article>
+            <div>
+                <h3 class="text-center">Staff Information Sheet</h3>
+                <p>The following method statement has been developed to provide a safe system of work and must be adhered to at all times, any significant deviation from this system must first be authorised by your manager or safety representative.</p>
+                <p>Please read the entire sheet before beginning the procedure, if you have any questions please contact your manager or safety representative.</p>
+            </div>
+            <div>
+                <h4>The main hazards to your safety and health are; <i style='color:red;'>(Some examples are shown here; please delete/enter your own)</i></h4> 
+                <ol>
+                    <li>Falling from height.</li>
+                    <li>Injury from incorrect Manual handling.</li>
+                    <li>Injury from slips trips and falls.</li>
+                    <li>Disease from standing/stagnant water and bird fluids.</li>
+                    <li>Injury from the incorrect actions of other contractors on site.</li>
+                    <li>Injury to members of the public during operations.</li>
+                </ol>
+            </div>
+            <div>
+                <h4>Preventative Measures you must take; <i style="color:red">(Some examples are shown here; please delete/enter your own)</i></h4> 
+                <ol>
+                    <li>You must be “competent” to carry out the task.</li>
+                    <li>You must NOT carry out this task alone.</li>
+                    <li>Barriers erected at entrances and around the work area if deemed necessary by the foreman or safety officer to protect members of the public.</li>
+                    <li>You must not lift beyond your capabilities, get help if necessary.</li>
+                    <li>Visitors and other members of staff are prohibited from entry unless accompanied by competent person, all visitors issued with personal protective equipment.</li>
+                </ol>
+            </div>
+            <div>
+                <h4>Personal Protective Equipment you must wear; <i style="color:red">(Some examples are shown here; please delete/enter your own)</i></h4> 
+                <ol>
+                    <li>Safety Glasses</li>
+                    <li>Dust mask</li>
+                    <li>Overalls</li>
+                    <li>Gloves</li>
+                    <li>Safety boots</li>
+                    <li>Hi Vis</li>
+                </ol>
+            </div>
+            <div>
+                <h4>Environmental Protection Measures you must take; <i style="color:red">(Some examples are shown here; please delete/enter your own)</i></h4> 
+                <ol>
+                    <li>All rubbish and waste to be will be segregated into the appropriate waste streams and taken to licensed waste control sites.</li>
+                </ol>
+            </div>
+            <div>
+                <h4>Quality Control; <i style="color:red">(Some examples are shown here; please delete/enter your own)</i></h4> 
+                <ol>
+                    <li>Adhere strictly to the following procedure to ensure quality of service.</li>
+                    <li>If in doubt contact your manager for clarification before proceeding.</li>
+                </ol>
+            </div>
+        </article>                
+    </section>#}

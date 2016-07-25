@@ -1,0 +1,122 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'user' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Portal/User">User Manager</a></li>
+    <li class='active'>Role Manager</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    User Role Manager
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    {% include 'Portal/Role/partials/retire-role.inc.html.twig' %}
+
+    {#    <pre>{{dump(roles)}}</pre>#}
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                {% if 35 in token.user.auth.Auth %}
+                    <li class="button-li"><p class="navbar-btn"><a href='{{public_base}}Portal/Role/Create' class="btn btn-success">Add Role</a></p></li>
+                {% endif %}
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Roles for...">
+            </form>
+        </div>
+    </nav>
+    <div class="row">
+        <table id="table" class="order-table table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                        {#                    <th>User Count</th>#}
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in roles %}                               
+                    <tr>                        
+                        <td class="col-sm-2"><a href="{{public_base}}Portal/Role/View/{{role.id}}">{{role.name}}</a></td>
+                        <td>{{role.description}}</td>
+                        <td>                            
+                            <div class="btn-group btn-xs">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">                                     
+                                    <li><a href='{{public_base}}Portal/Role/View/{{role.id}}'>View Role</a></li>
+                                    <li><a href='{{public_base}}Portal/Role/Update/{{role.id}}'>Edit Role</a></li>
+                                        {% if role.Clients_id != 0 and 36 in token.user.auth.Auth %}
+                                        <li role="separator" class="divider"></li>
+                                        <li><button class="btn btn-block btn-danger btn-xs retire-role" data-role-id="{{role.id}}" data-role-name="{{role.name}}" data-toggle="modal" data-target="#roleModal">Retire Role</button></li>
+                                        {% endif%}
+                                </ul>
+                            </div>
+                        </td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock audit_body %}
+
+
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="{{public_base}}js/audit/table-filter.js"></script>
+    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+
+    <script>
+
+        $('#roleModal').on('show.bs.modal', function (event) {
+
+            var modal = $(this);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var name = button.attr('data-role-name'); // Extract info from data-* attributes
+            var id = button.attr('data-role-id'); // Extract info from data-* attributes
+            $("#audits").empty();
+
+            modal.find('#retireNow').val(id);
+            modal.find('.modal-title').text('Retire ' + name + "?");
+            modal.find('#leadText').append("<i>Are you sure you would like to retire the " + name + " role?</i>");
+            modal.find('#id').val(id);
+        });
+
+        $('body').on('click', '#retireNow', function (e) {
+
+            $.ajax({
+                type: 'POST',
+                url: "//doug.portal.solutionhost.co.uk/apps2/public/Portal/Role/retireRole",
+                dataType: 'json',
+                data: {
+                    "id": $(this).val()
+                },
+                encode: true
+            })
+                    .done(function (data) {
+
+                        if (data === "success") {
+                            $('#table').load(document.URL + ' #table', function () {
+                                paginate();
+                                $(".global-error-inner")
+                                        .append("<div class='alert alert-success alert-dismissible' role='alert'>  <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Succesfully retired asset!</div>");
+                            });
+                        } else {
+                            $(".global-error-inner")
+                                    .append("<div class='alert alert-danger alert-dismissible' role='alert'>  <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" + data + "</div>");
+                        }
+                        $('body').find('#roleModal')
+                                .modal('hide');
+                    });
+        });
+
+    </script>
+
+{% endblock extra_js %}

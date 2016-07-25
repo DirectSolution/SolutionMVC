@@ -68,10 +68,16 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        cwd: 'bower_components/datatables/media/js/',
-                        src: ['dataTables.bootstrap.min.js'],
-                        dest: 'public/js/datatables/'
+                        cwd: 'bower_components/ckeditor/',
+                        src: ['ckeditor.js'],
+                        dest: 'public/js/ckeditor/'
                     },
+//                    {
+//                        expand: true,
+//                        cwd: 'bower_components/datatables/media/js/',
+//                        src: ['dataTables.bootstrap.min.js'],
+//                        dest: 'public/js/datatables/'
+//                    },
                     // Fonts.
                     {
                         expand: true,
@@ -140,10 +146,17 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        cwd: 'bower_components/datatables/media/css/',
-                        src: ['dataTables.bootstrap.min.css'],
+                        cwd: 'bower_components/ckeditor/',
+                        src: ['contents.css'],
                         dest: 'public/css/'
                     }
+                    
+//                    {
+//                        expand: true,
+//                        cwd: 'bower_components/datatables/media/css/',
+//                        src: ['dataTables.bootstrap.min.css'],
+//                        dest: 'public/css/'
+//                    }
                 ]
             }
         },

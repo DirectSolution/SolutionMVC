@@ -69,17 +69,19 @@
                     <th>Audit Name</th>
                     <th>Description</th>
                     <th class="hidden-xs">Type</th>
-                    <th class="hidden-xs">Created At</th>
+                    <th class="hidden-xs">Created</th>
+                    <th class="hidden-xs">Frequency</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for audit in data.audits %}
                     <tr {% if audit.Default %}class="bg-info"{% endif %}>
-                        <td>{{audit.name}} {% if audit.Default %} - <b>Default!</b>{% endif %}</td>
+                        <td><a href="{{public_base}}Audit/Audit/View/{{audit.id}}">{{audit.name}}</a> {% if audit.Default %} - <b>Default!</b>{% endif %}</td>
                         <td>{{audit.description}}</td>
                         <td class="hidden-xs">{{audit.audit_type_name}}</td>
-                        <td class="hidden-xs">{{audit.created_at}}</td>                       
+                        <td class="hidden-xs">{{audit.created_at | date('d/m/Y')}}</td>                       
+                        <td class="hidden-xs">{{audit.reviewFrequency}}</td>                       
                         <td class="max">
                             <div class="btn-group btn-xs btn-block">
                                 <button type="button" class="btn btn-info dropdown-toggle btn btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -91,7 +93,7 @@
                                     <li><a href="{{public_base}}Audit/Audit/Copy/{{audit.id}}">Copy</a></li>
                                     <li><button class="btn btn-block btn-xs btn-info"  data-audit="{{audit.Audits_id}}" data-auditName="{{audit.name}}" data-toggle="modal" data-target="#assignmentModal">Assign to Assets</button></li>
                                     <li role="separator" class="divider"></li>
-                                        {% if audit.Default == NULL %}
+                                        {% if audit.Default is null %}
                                         <li><button type="button" class='btn btn-block btn-info btn-xs setDefault' value="{{audit.Audits_id}}">Set as Default</button></li>
                                         {% endif %}
                                     <li role="separator" class="divider"></li>

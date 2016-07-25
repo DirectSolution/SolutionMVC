@@ -1,0 +1,46 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'ffc' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Ffc/Adminindex">First for Contractors</a></li>
+    <li><a href="{{public_base}}Ffc/Adminworksector">Work Sectors</a></li>
+    <li class='active'>View: {{ sector.description }}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    View: {{ sector.description }}
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Field Type</th>
+                <th>Answer Required</th>
+                <th>Automatic Unapprove</th>
+                <th>Add Expiry</th>
+                <th>Expiry Required</th>
+                <th>Add Evidence</th>
+                <th>Evidence Required</th>                
+            </tr>
+        </thead>
+    {% for question in questions %}
+        <tr>
+            <td>{{ question.field_name }}</td>
+            <td>{{ question.field_type }}</td>
+            <td>{% if question.field_req == 1 %}Yes{%else%} No{% endif %}</td>
+            <td>{% if question.automatic_unapprove == 1 %}Yes{%else%} No{% endif %}</td>
+            <td>{% if question.add_expiry_date == 1 %}Yes{%else%} No{% endif %}</td>
+            <td>{% if question.expiry_required == 1 %}Yes{%else%} No{% endif %}</td>
+            <td>{% if question.add_evidence == 1 %}Yes{%else%} No{% endif %}</td>
+            <td>{% if question.evidence_required == 1 %}Yes{%else%} No{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock audit_body %}
+
+{% block extra_js %}   
+{% endblock extra_js %}

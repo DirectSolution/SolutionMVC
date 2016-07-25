@@ -1,0 +1,322 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Coshh">Coshh</a></li>
+    <li class='active'>View: {{ data.name }}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    View: {{ data.assessment.name }}
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th colspan="4"><h2 class="text-center">General Substance Details</h2></th>
+            </tr>
+        </thead>
+        <tr>
+            <td class="warning col-xs-2"><label>Substance Name</label></td>
+            <td class=" col-xs-4">{{data.assessment.name}}</td>
+            <td class="warning col-xs-2"><label>COSHH Reference</label></td>
+            <td class=" col-xs-4">{{data.assessment.reference}}</td>
+        </tr>
+        <tr>
+            <td class="warning"><label>Supplied By</label></td>
+            <td>{{data.assessment.supplied_by}}</td>
+            <td class="warning"><label>Date Of Assessment</label></td>
+            <td><small>dd/mm/yyyy</small></td>
+        </tr>
+        <tr>
+            <td class="warning"><label>Persons at Risk</label></td>
+            <td>
+                <ul>
+                    {% for person in init.persons_affected %}                        
+                        <li>
+                            {{person.name}}:
+                            {% for c_persons in data.persons_affected %}
+                                {% if person.id == c_persons.id %}  <i class="glyphicon glyphicon-ok"> </i> {% endif %}
+                            {% endfor %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td class="warning">
+                <label>Review Date</label>
+            </td>
+            <td><small>dd/mm/yyyy</small></td>
+        </tr>
+        <tr>
+            <td class="warning">
+                <label>Assessor</label>
+            </td>
+            <td>
+                Print: <br>
+                Signed: <br>
+            </td>
+            <td class="warning">
+                <label>Supervisor</label>
+            </td>
+            <td>
+                Print: <br>
+                Signed: <br>
+            </td>
+        </tr>
+        <tr>
+            <td class="warning">
+                <label>Description:</label>
+            </td>
+            <td>
+                {{data.assessment.description|raw}}
+            </td>
+            <td class="warning">
+                <label>Method of Use</label>
+            </td>
+            <td>
+                {{data.assessment.method_of_use|raw }}
+            </td>
+        </tr>        
+    </table>
+
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th colspan="8">
+                    <h2 class="text-center">Hazards Identification and PPE</h2>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="warning">
+                <td><label>Routes of Entry</label></td>
+                <td colspan="6" class="text-center"><label>Personal Protective Equipment (Tick Required Boxes)</label></td>
+                <td><label>Tick here for none</label></td>
+            </tr>
+            <tr class="text-center">
+                <td>
+                    <table>
+                        {% for route in init.routes_of_entry %}                            
+                            <tr>
+                                <td class="col-xs-1">
+                                    {{route.name}}:
+                                    {% for c_route in data.routes_of_entry %}
+                                        {% if c_route.id  == route.id %} <i class="glyphicon glyphicon-ok"> </i>{%endif%}
+                                    {% endfor %}
+                                </td>
+                            </tr>                                                    
+                        {% endfor %}                        
+                    </table>
+                </td>
+                {% for ppe in init.ppes %} 
+                    <td><img src="{{public_base}}assets/HealthSafety/Coshh/images/ppes/{{ppe.image}}"></td>
+                    {% endfor %}                
+            </tr>
+            <tr class="text-center active">
+                <td><label>Location</label></td>
+                {% for ppe in init.ppes %}
+                    <td>{{ppe.name}}</td>
+                {% endfor %}
+            </tr>
+            <tr class="text-center">
+                <td>
+                    {{data.assessment.location}}
+                </td>
+
+                {% for ppe in init.ppes %}
+                    <td>{% for c_ppes in data.ppes %}{% if ppe.id == c_ppes.id %} <i class="glyphicon glyphicon-ok"> </i>{% endif %}{% endfor %}</td>
+                {% endfor %}
+
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-striped">
+        <tr class="warning text-center">
+            <td class="col-xs-3"><label>Risk Phrases/ Safety Phrases</label></td>
+            <td class="col-xs-3"><label>Occupational Exposure Standard (OES)</label></td>
+            <td class="col-xs-3"><label>Maximum Exposure Limits (MEL)</label></td>
+            <td class="col-xs-3"><label>Workplace Exposure Limits (WEL)</label></td>
+        </tr>
+        <tr>
+            <td>
+                <ul class="list-group">
+                    {% for phrase in data.risk_phrases %}
+                        <li class="list-group-item list-group-item-danger"><strong>{{phrase.RiskPhrases.code}}</strong></li>
+                        <li class="list-group-item">
+                            <ul class="list-group">
+                                <li>{{ phrase.RiskPhrases.description }}</li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul class="list-group">
+                    {% for oes in data.oes %}
+                        <li class="list-group-item list-group-item-danger"><strong>{{oes.Eh40s.substance}}</strong></li>
+                        <li class="list-group-item">
+                            <ul class="list-group">
+                                <li><label>Cas Number:</label> {{ oes.Eh40s.cas_number }}</li>
+                                <li><label>Long Term:</label> {%if oes.Eh40s.long_ppm is not empty %}{{oes.Eh40s.long_ppm }} ppm {% endif %}{%if oes.Eh40s.long_mgm3 is not empty %}{{oes.Eh40s.long_mgm3}} mgm-&sup3;{% endif %}</li>
+                                <li><label>Short Term:</label> {%if oes.Eh40s.short_ppm is not empty %}{{oes.Eh40s.short_ppm }} ppm {% endif %}{%if oes.Eh40s.short_mgm3 is not empty %}{{oes.Eh40s.short_mgm3}} mgm-&sup3;{% endif %}</li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul class="list-group">
+                    {% for mel in data.mel %}
+                        <li class="list-group-item list-group-item-danger"><strong>{{mel.Eh40s.substance}}</strong></li>
+                        <li class="list-group-item">
+                            <ul class="list-group">
+                                <li><label>Cas Number:</label> {{ mel.Eh40s.cas_number }}</li>
+                                <li><label>Long Term:</label> {%if mel.Eh40s.long_ppm is not empty %}{{mel.Eh40s.long_ppm }} ppm {% endif %}{%if mel.Eh40s.long_mgm3 is not empty %}{{mel.Eh40s.long_mgm3}} mgm-&sup3;{% endif %}</li>
+                                <li><label>Short Term:</label> {%if mel.Eh40s.short_ppm is not empty %}{{mel.Eh40s.short_ppm }} ppm {% endif %}{%if mel.Eh40s.short_mgm3 is not empty %}{{mel.Eh40s.short_mgm3}} mgm-&sup3;{% endif %}</li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul class="list-group">
+                    {% for wel in data.wel %}
+                        <li class="list-group-item list-group-item-danger"><strong>{{wel.Eh40s.substance}}</strong></li>
+                        <li class="list-group-item">
+                            <ul class="list-group">
+                                <li><label>Cas Number:</label> {{ wel.Eh40s.cas_number }}</li>
+                                <li><label>Long Term:</label> {%if wel.Eh40s.long_ppm is not empty %}{{wel.Eh40s.long_ppm }} ppm {% endif %}{%if wel.Eh40s.long_mgm3 is not empty %}{{wel.Eh40s.long_mgm3}} mgm-&sup3;{% endif %}</li>
+                                <li><label>Short Term:</label> {%if wel.Eh40s.short_ppm is not empty %}{{wel.Eh40s.short_ppm }} ppm {% endif %}{%if wel.Eh40s.short_mgm3 is not empty %}{{wel.Eh40s.short_mgm3}} mgm-&sup3;{% endif %}</li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th colspan="3">
+                    <h3 class="text-center">Frequency & Duration of Exposure</h3>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="warning">
+                <th>
+                    <label>Amount Used</label>
+                    
+                </th>
+                <th>
+                    <label>How many times per day</label> 
+                </th>
+                <th>
+                    <label>Duration</label>
+                </th>
+            </tr>
+            <tr>
+                <td>{{ data.assessment.AmountUseds.name}}</td>
+                <td>{{ data.assessment.TimePerDays.name}}</td>  
+                <td>{{ data.assessment.Durations.name}}</td>
+                             
+            </tr>            
+        </tbody>
+    </table>    
+    <table class="table table-striped">
+        <thead>
+            <tr class="info"> 
+                <th colspan="9"><h2 class="text-center">Substance Properties</h2></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-center">
+                {% for substance in init.substances %}
+                    <td class="col-xs-1"><img src="{{public_base}}assets/HealthSafety/Coshh/images/substance_properties/{{substance.image}}"></td>
+                    {% endfor %}                
+            </tr>
+            <tr class="text-center">
+                {% for substance in init.substances %}
+                    <td>{{substance.name}}</td>
+                {% endfor %}  
+            </tr>
+            <tr class="text-center">
+                {% for substance in init.substances %}
+                    <td>
+                        {% for c_substance in data.substances %}
+                            {% if substance.id == c_substance.id %}
+                                <i class="glyphicon glyphicon-ok"> </i>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                {% endfor %}  
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th colspan="6"><h2 class="text-center">Control Measures</h2></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="warning">
+                <th colspan="3"><h3 class="text-center">Gerneral Precautions</h3></th>
+                <th colspan="3"><h3 class="text-center">First Aid Measures</h3></th>
+            </tr>
+            <tr>
+                <td colspan="3">{{data.assessment.general_precautions | raw}}</td>
+                <td colspan="3">{{data.assessment.first_aid_measures | raw }}</td>
+            </tr>
+            <tr class="warning">
+                <th colspan="3"><h3 class="text-center">Further Controls Required</h3></th>
+                <th colspan="1"><h3 class="text-center">Responsibility</h3></th>
+                <th colspan="1"><h3 class="text-center">By When</h3></th>
+                <th colspan="1"><h3 class="text-center">Date Done</h3></th>
+            </tr>
+            <tr>
+                <td colspan="3">{{data.assessment.further_controls|raw}}</td>
+                <td colspan="1">{{data.assessment.responsibility}}</td>
+                <td colspan="1">{{data.assessment.by_when}}</td>
+                <td colspan="1"><small>dd/mm/yyyy</small></td>
+            </tr>
+            <tr class="warning">
+                <th colspan="3"><h3 class="text-center">Spillage Procedure</h3></th>
+                <th colspan="3"><h3 class="text-center">Fire Prevention</h3></th>
+            </tr>
+            <tr>
+                <td colspan="3">{{data.assessment.spillage_procedure|raw}}</td>
+                <td colspan="3">{{data.assessment.fire_prevention|raw}}</td>
+            </tr>
+            <tr class="warning">
+                <th colspan="3"><h3 class="text-center">Handling and Storage</h3></th>
+                <th colspan="3"><h3 class="text-center">Disposal Considerations</h3></th>
+            </tr>
+            <tr>
+                <td colspan="3">{{data.assessment.handling_storage|raw}}</td>
+                <td colspan="3">{{data.assessment.disposal_procedure|raw}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th><h2 class="text-center">COSHH Assessment Comments</h2></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><p>{{ data.assessment.comments|raw }}</p></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock audit_body %}
+
+{% block extra_js %}   
+{% endblock extra_js %}

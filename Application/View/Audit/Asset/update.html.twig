@@ -1,0 +1,226 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'asset' %}
+{% set asset = data.asset %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Audit/Asset">Asset Manager</a></li>
+    <li class="active">Update Asset</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Update Asset
+{% endblock h1 %}
+
+{% block audit_body %}
+{#    <pre>
+        {{ dump(data.asset) }}
+    </pre>#}
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#type">Type</a></li>
+        <li><a data-toggle="tab" href="#details">Details</a></li>
+        <li><a data-toggle="tab" href="#location">Location</a></li>
+    </ul>
+    <form action='{{public_base}}Audit/Asset/Update/{{asset.id}}' method="POST" class="form-horizontal">
+        <div class="tab-content">
+            <div id="type" class="tab-pane fade in active">
+                <h3>Asset Type</h3>
+                <div class="form-group">
+                    <label for="AssetTypes_id" class="col-sm-3 control-label">Group</label>
+                    <div class="col-sm-9">
+                        <select name='AssetTypes_id' id='AssetTypes_id' class="form-control">
+                            {% for key, groups in data.misc.Groups %}
+                                <optgroup label='{{key}}'>
+                                    {% for type in groups %}
+                                        <option value='{{type.id}}' {% if asset.AssetTypes_id == type.id %}selected{% endif %} data-group='{{type.AssetGroups_id}}'>{{type.name}}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="AuditDefault_id" class="col-sm-3 control-label">Default Audit</label>
+                    <div class="col-sm-9">
+                        <select name='AuditDefault_id' id='AuditDefault_id' class="form-control">
+                            <option value='0'>None</option>   
+                            {% for audit in data.misc.Audits %}                                                                   
+                                <option value='{{audit.id}}'{% if asset.Audits_id == audit.id %}selected{% endif %} >{{audit.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group pull-left">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        <a type="button" class="btn btn-danger" href='{{public_base}}Audit/Asset/'>Cancel <i class='glyphicon glyphicon-ban-circle'> </i></a>
+                    </div>
+                </div>
+                <div class="form-group pull-right">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        {#                        <button type="button" class="btn btn-success" id='next1' data-toggle='tab'>Next <i class='glyphicon glyphicon-forward'> </i></button>#}
+                        <a data-toggle="tab" class="btn btn-success btnNext" href="#details">Next <i class='glyphicon glyphicon-forward'> </i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="details" class="tab-pane fade">
+                <h3>Details</h3>
+                <div class="form-group">
+                    <label id='fore-label' for="forename" class="col-sm-3 control-label">Forename/Model</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name='forename' id="forename" value='{{asset.forename}}' placeholder="Forename/Model">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id='middle-label' for="middlename" class="col-sm-3 control-label">Middlename/Type</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="middlename" name='middlename' value='{{asset.middlename}}' placeholder="Middlename/Type">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id='sur-label' for="surname" class="col-sm-3 control-label">Surname/Brand</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="surname" name='surname'  value='{{asset.surname}}' placeholder="Surname/Brand">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id='unique-label' for="unique_ref_code" class="col-sm-3 control-label">National Insurance/Unique Reference</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="unique_ref_code" name='unique_ref_code'  value='{{asset.unique_ref_code}}' placeholder="National Insurance/Unique Reference">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id='unique-label' for="dob" class="col-sm-3 control-label">Date of Birth/Build Date</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="dob" name='dob'  value='{{asset.dob}}' placeholder="Date of Birth/Build Date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id='unique-label' for="start_date" class="col-sm-3 control-label">Start Date/Bought Date</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="start_date" name='start_date'  value='{{asset.start_date}}' placeholder="Start Date/Bought Date">
+                    </div>
+                </div>
+
+                <div class="form-group pull-left">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        <a type="button" class="btn btn-danger"  href='{{public_base}}Audit/Asset/'>Cancel <i class='glyphicon glyphicon-ban-circle'> </i></a>
+                    </div>
+                </div>
+                <div class="form-group pull-right">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        <a data-toggle="tab" class="btn btn-success btnNext">Next <i class='glyphicon glyphicon-forward'> </i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="location" class="tab-pane fade">
+                <h3>Location</h3>
+                <div class="form-group">
+                    <label for="address1" class="col-sm-3 control-label">Address 1</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="address1" name='address1'  value='{{asset.address1}}' placeholder="Address line 1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address2" class="col-sm-3 control-label">Address 2</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="address2" name='address2'  value='{{asset.address2}}' placeholder="Address line 2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Counties_id" class="col-sm-3 control-label">County</label>
+                    <div class="col-sm-9">
+                        <select id='Counties_id' name='Counties_id' class="form-control select-2-cont">
+                            <option readonly disabled selected>-- Please Select --</option>
+                            {% for county in data.misc.Counties %}
+                                <option value='{{county.id}}' {% if asset.Counties_id == county.id %} selected {% endif %} >{{county.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="postcode" class="col-sm-3 control-label">Postcode</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name='postcode' value='{{asset.postcode}}' id="postcode" placeholder="Postcode">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Countries_id" class="col-sm-3 control-label">Country</label>
+                    <div class="col-sm-9">
+                        <select  id='Countries_id' name='Countries_id' class="form-control select-2-cont">
+                            {% for country in data.misc.Countries %}
+                                <option value='{{country.id}}' {% if asset.Countries_id == country.id %} selected {% endif %} >{{country.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-3 control-label">Contact Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="contactname" value='{{asset.contact_name}}' name='contactname' placeholder="Contact Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone" class="col-sm-3 control-label">Contact Phone</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name='phone' id="phone" value='{{asset.contact_number}}' placeholder="Contact Phone">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 control-label">Contact Email</label>
+                    <div class="col-sm-9">
+                        <input type="email" class="form-control" id="email" name='email' value='{{asset.contact_email}}' placeholder="Contact Email">
+                    </div>
+                </div>
+                <div class="form-group pull-left">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        <a type="button" href='{{public_base}}Audit/Asset/' class="btn btn-danger">Cancel <i class='glyphicon glyphicon-ban-circle'> </i></a>
+                    </div>
+                </div>
+                <div class="form-group pull-right">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        <button type="submit" class="btn btn-success">Save Asset <i class='glyphicon glyphicon-ok-circle'> </i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+{% endblock audit_body %}
+
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src='{{public_base}}js/audit/asset-label-changer.js'></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#AssetTypes_id").select2();
+            $("#AuditDefault_id").select2();
+            $("#Counties_id").select2();
+            $("#Countries_id").select2();
+            $('#start_date').datetimepicker({
+                format: 'DD/MM/YYYY'
+            });
+            $('#dob').datetimepicker({
+                format: 'DD/MM/YYYY'
+            });
+
+            $('.btnNext').click(function () {
+                $('.nav-tabs > .active').next('li').find('a').trigger('click');
+            });
+
+            $('.btnPrevious').click(function () {
+                $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+            });
+
+
+        });
+
+
+
+    </script>
+
+
+{% endblock extra_js %}

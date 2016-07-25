@@ -1,0 +1,313 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Coshh">Coshh</a></li>
+    <li class='active'>Create</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Coshh
+{% endblock h1 %}
+
+{% block audit_body %}
+
+
+    <form method="post" action="{{public_base}}HealthSafety/Coshh/create" class='form-horizontal'>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Document Name" name="name" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ref" class="col-sm-2 control-label">Reference</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="ref" placeholder="Reference Number" name="reference" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="supplied_by" class="col-sm-2 control-label">Supplied By</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="supplied_by" placeholder="Supplied By" name="supplied_by">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Persons Affected</label>
+            <div class="col-sm-10">
+                {% for person in data.personsAffected %}
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="person{{ person.id }}" value="{{ person.id }}" name="person[]"> {{ person.name }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="assessor" class="col-sm-2 control-label">Assessor</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="assessor" placeholder="Assessor" name="assessor">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="supervisor" class="col-sm-2 control-label">Supervisor</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="supervisor" placeholder="Supervisor" name="supervisor">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="description" placeholder="Description of product" name="description"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="method_of_use" class="col-sm-2 control-label">Method of Use</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="method_of_use" placeholder="How the product is used" name="method_of_use"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="location" class="col-sm-2 control-label">Location</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="location" placeholder="Location" name="location">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Routes of Entry</label>
+            <div class="col-sm-10">               
+                {% for route in data.routes_of_entry %}                
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="route{{route.id}}" name="route[]" value="{{route.id}}"> {{ route.name }}
+                    </label>                    
+                {% endfor %}               
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">PPE Required</label>
+            <div class="col-sm-10">
+                {% for ppe in data.ppes %}
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="ppes[]" id="ppe{{ppe.id}}" value="{{ppe.id}}"> {{ ppe.name }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="risk_phrases" class="col-sm-2 control-label">Risk / Safety Phrases</label>
+            <div class="col-sm-10">
+                <select  class="form-control" multiple id="risk_phrases" name="risk_phrases[]">
+                    {% for phrase in data.phrases %}
+                        <option value="{{ phrase.id }}">{{ phrase.code }} - {{phrase.description}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="oes" class="col-sm-2 control-label">Occupational Exposure Standard (OES)</label>
+            <div class="col-sm-10">
+                <select  class="form-control" multiple id="oes" name="oess[]">
+                    {% for oes in data.eh40s %}
+                        <option value="{{ oes.id }}">{{ oes.substance }} ({{oes.cas_number}}) Long: {{oes.long_ppm}}ppm / {{oes.long_mgm3}}mgm-&sup3; || Short: {{oes.short_ppm}}ppm / {{oes.short_mgm3}}mgm-&sup3;</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="mel" class="col-sm-2 control-label">Maximum Exposure Limits (MEL)</label>
+            <div class="col-sm-10">
+                <select  class="form-control" multiple id="mel" name="mels[]">
+                    {% for mel in data.eh40s %}
+                        <option value="{{ mel.id }}">{{ mel.substance }} ({{mel.cas_number}}) Long: {{mel.long_ppm}}ppm / {{mel.long_mgm3}}mgm-&sup3; || Short: {{mel.short_ppm}}ppm / {{mel.short_mgm3}}mgm-&sup3;</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="wel" class="col-sm-2 control-label">Workplace Exposure Limits (WEL)</label>
+            <div class="col-sm-10">
+                <select  class="form-control" multiple id="wel" name="wels[]">
+                    {% for wel in data.eh40s %}
+                        <option value="{{ wel.id }}">{{ wel.substance }} ({{wel.cas_number}}) Long: {{wel.long_ppm}}ppm / {{wel.long_mgm3}}mgm-&sup3; || Short: {{wel.short_ppm}}ppm / {{wel.short_mgm3}}mgm-&sup3;</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Ammount Used</label>
+            <div class="col-sm-10">                
+                {% for amountUsed in data.amountsUsed %}
+                <label class="radio-inline" for="amountUseds{{amountUsed.id}}">
+                    <input type="radio" name="amountUseds" id="amountUseds{{amountUsed.id}}" value="{{amountUsed.id}}">{{amountUsed.name}}
+                </label>
+                {% endfor %}                
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">How many times per day</label>
+            <div class="col-sm-10">
+                {% for time in data.timesPerDay %}
+                    <label class="radio-inline">
+                        <input type="radio" name="time" id="time{{time.id}}" value="{{time.id}}"> {{time.name}}
+                    </label>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Duration</label>
+            <div class="col-sm-10">
+                {% for duration in data.durations %}
+                    <label class="radio-inline">
+                        <input type="radio" id="duration{{ duration.id }}" name="duration" value="{{ duration.id }}"> {{ duration.name }}
+                    </label>                
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Substances</label>
+            <div class="col-sm-10">
+                {% for substance in data.substances %}
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="substance{{ substance.id }}" name="substances[]" value="{{ substance.id }}"> {{ substance.name }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>            
+
+        <div class="form-group">
+            <label for="general_precautions" class="col-sm-2 control-label">General Precautions</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="general_precautions" placeholder="General Precautions" name="general_precautions"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="first_aid_measures" class="col-sm-2 control-label">First Aid Measures</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="first_aid_measures" placeholder="First Aid Measures" name="first_aid_measures"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="further_controls" class="col-sm-2 control-label">Further Controls Required</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="further_controls" placeholder="Further Controls Required" name="further_controls"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="responsibility" class="col-sm-2 control-label">Responsibility</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="responsibility" placeholder="Responsibility" name="responsibility">
+            </div>
+        </div>            
+
+        <div class="form-group">
+            <label for="by_when" class="col-sm-2 control-label">By When</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="by_when" placeholder="By When" name="by_when">
+            </div>
+        </div>            
+
+{#        <div class="form-group">
+            <label for="date_done" class="col-sm-2 control-label">Date Done</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="date_done" placeholder="Date Done" name="date_done">
+            </div>
+        </div>  #}          
+
+        <div class="form-group">
+            <label for="spillage_procedure" class="col-sm-2 control-label">Spillage Procedure</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="spillage_procedure" placeholder="Spillage Procedure" name="spillage_procedure"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="fire_prevention" class="col-sm-2 control-label">Fire Prevention</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="fire_prevention" placeholder="Fire Prevention" name="fire_prevention"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="handling_storage" class="col-sm-2 control-label">Handling and Storage</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="handling_storage" placeholder="Handling and Storage" name="handling_storage"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="disposal_procedure" class="col-sm-2 control-label">Disposal Procedure</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="disposal_procedure" placeholder="Disposal Procedure" name="disposal_procedure"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="comments" class="col-sm-2 control-label">Comments</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="comments" placeholder="Comments" name="comments"></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Coshh</button>         
+
+
+    </form>
+
+
+{% endblock audit_body %}
+
+{% block extra_js %}
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+    <script>
+        CKEDITOR.replace('description', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('method_of_use', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('general_precautions', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('first_aid_measures', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('further_controls', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('spillage_procedure', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('fire_prevention', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('handling_storage', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('disposal_procedure', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        CKEDITOR.replace('comments', {
+            customConfig: '{{public_base}}js/ckeditor/ckeditor_config.js'
+        });
+        
+        $("#risk_phrases").select2();
+        $("#mel").select2();
+        $("#wel").select2();
+        $("#oes").select2();
+
+    </script>
+
+{% endblock extra_js %}

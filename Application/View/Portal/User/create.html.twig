@@ -1,0 +1,66 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'user' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Portal/User">User Manager</a></li>
+    <li class='active'>Create User</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    User Manager
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    <form method="POST" action="{{public_base}}Portal/User/Create" class="form-horizontal">
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input name="name" type="text" class="form-control" id="name" placeholder="Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">Username</label>
+            <div class="col-sm-10">
+                <input name="username" type="text" class="form-control" id="username" placeholder="Username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">Email address</label>
+            <div class="col-sm-10">
+                <input name="email" type="email" class="form-control" id="email" placeholder="Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="jobtitle" class="col-sm-2 control-label">Jobtitle</label>
+            <div class="col-sm-10">
+                <input name="jobtitle" type="text" class="form-control" id="jobtitle" placeholder="Jobtitle">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telephone" class="col-sm-2 control-label">Telephone</label>
+            <div class="col-sm-10">
+                <input name="telephone" type="text" class="form-control" id="telephone" placeholder="Telephone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="role" class="col-sm-2 control-label">Role</label>
+            <div class="col-sm-10">
+                <select name="role" id="role" class="form-control">
+                    {% for role in roles %}
+                        <option value="{{ role.id }}">{{ role.name }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <a type="submit" class="btn btn-danger" href="{{public_base}}Portal/User"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</a>
+        {% if 15 in token.user.auth.Auth %}
+        <button type="submit" class="btn btn-success pull-right">Submit <i class="fa fa-check" aria-hidden="true"></i></button>
+        {% endif %}
+    </form>
+{% endblock audit_body %}
+
+
+{% block extra_js %}
+    {{ parent() }}
+{% endblock extra_js %}

@@ -1,0 +1,110 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Method">Method Statement</a></li>
+    <li class='active'>Edit: {{methodStatement.name}}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Edit: {{ methodStatement.name }}
+{% endblock h1 %}
+
+{% block audit_body %}
+    <form action='{{public_base}}HealthSafety/Method/Update/{{methodStatement.id}}' method='POST'>
+        <div class="form-group">
+            <label for="name">Method Statement Name</label>
+            <input type="text" class="form-control" name='name' placeholder="Method Statement Name">
+        </div>
+        {% for isheet in initsheets %}
+            <section class='sheets'>
+                <h2>{{isheet.name}}</h2>
+                <p>{{isheet.description|raw}}</p>
+                <article class='sections'>
+                    {% for sheet in sheets if sheet.Sheet.id == isheet.id %}
+                        {% for section in sheet.Sections %}
+                            <div class='section'>
+                                <div class='form-group'>
+                                    <div class='col-xs-10'>
+                                        <label for='methodStatement[sheets][{{isheet.id}}][sections][{{loop.index}}][name]'>Section Name</label>
+                                    </div>
+                                    <div class='col-xs-2'>
+                                        <button type='button' class='btn btn-xs btn-danger pull-right remove-section'><i class='fa fa-trash' aria-hidden='true'></i>
+                                        </button>
+                                    </div>
+                                    <input type='text' class='form-control' name='methodStatement[sheets][{{isheet.id}}][sections][{{loop.index}}][name]' value='{{ section.name }}' placeholder='Section Name'>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='methodStatement[sheets][{{isheet.id}}][sections][{{loop.index}}][description]'>Body Text</label>
+                                    <textarea class='ckeditor' id='ms{{isheet.id}}sect{{loop.index}}' name='methodStatement[sheets][{{isheet.id}}][sections][{{loop.index}}][description]'>{{section.description|raw}}</textarea>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %} 
+                </article>
+                <button class='btn btn-primary add-section' type='button' value='{{isheet.id}}'>Add Section to {{isheet.name}} <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </section>
+        {% endfor %}
+        <section id='methods'>  
+            <h2>Methods</h2>
+            <p>Step by step procedure</p>
+            <div class='method-sections'>
+                {% for method in methods %}
+                    <article class='method'>
+                        <div class='form-group'>
+                            <div class='col-xs-10'>
+                                <label for='methodStatement[methods][{{loop.index}}][name]'>Method Title</label>
+                            </div>
+                            <div class='col-xs-2'>
+                                <button type='button' class='btn btn-xs btn-danger pull-right remove-method'><i class='fa fa-trash' aria-hidden='true'></i></button>
+                            </div>
+                            <input name='methodStatement[methods][{{loop.index}}][name]' type='text' class='form-control' value='{{method.name}}' placeholder='Method Title'>
+                        </div>
+                        <div class='form-group'>
+                            <label for='methodStatement[methods][{{loop.index}}][description]'>Method Description</label>
+                            <textarea class='ckeditor' id='methods{{loop.index}}" + methodsCount + "' name='methodStatement[methods][" + methodsCount + "][description]'>{{method.description | raw }}</textarea>
+                        </div>
+                    </article>
+                {% endfor %}
+
+            </div>
+            <button type='button' class='btn btn-primary add-method'>Add Method <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+        </section>
+        <hr>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar">
+                    <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Method/'>Cancel <i class="fa fa-ban" aria-hidden="true"></i></a></p></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                    <li><button type="submit" class="btn btn-success navbar-btn">Save Method Statement <i class="fa fa-floppy-o" aria-hidden="true"></i></button></li>
+                </ul>
+            </div>
+        </nav>
+    </form>
+{% endblock audit_body %}
+
+{% block extra_js %}  
+    {{ parent() }}
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+    <script>
+        $('.sheets').on('click', '.add-section', function (event) {
+        var sheetID = $(this).val();
+        var sectionCount = $(this).parent().find('.section').length + 1;
+        $(this).parent().find(".sections").append("<div class='section'><div class='form-group'><div class='col-xs-10'><label for='methodStatement[sheets][" + sheetID + "][sections][" + sectionCount + "][name]'>Section Name</label></div><div class='col-xs-2'><button type='button' class='btn btn-xs btn-danger pull-right remove-section'><i class='fa fa-trash' aria-hidden='true'></i></button></div><input type='text' class='form-control' name='methodStatement[sheets][" + sheetID + "][sections][" + sectionCount + "][name]' placeholder='Section Name'></div><div class='form-group'><label for='methodStatement[sheets][" + sheetID + "][sections][" + sectionCount + "][description]'>Body Text</label><textarea class='ckeditor' id='ms" + sheetID + "sect" + sectionCount + "' name='methodStatement[sheets][" + sheetID + "][sections][" + sectionCount + "][description]'></textarea></div></div>");
+        CKEDITOR.replace("ms" + sheetID + "sect" + sectionCount);
+        });
+        $('.sheets').on('click', '.remove-section', function (event) {
+        $(this).parent().parent().parent().remove();
+        });
+        $('#methods').on('click', '.add-method', function(event){
+        var methodsCount = $(this).parent().find('.method').length + 1;
+        $(this).parent().find('.method-sections').append("<article class='method'><div class='form-group'><div class='col-xs-10'><label for='methodStatement[methods][" + methodsCount + "][name]'>Method Title</label></div><div class='col-xs-2'><button type='button' class='btn btn-xs btn-danger pull-right remove-method'><i class='fa fa-trash' aria-hidden='true'></i></button></div><input name='methodStatement[methods][" + methodsCount + "][name]' type='text' class='form-control' placeholder='Method Title'></div><div class='form-group'><label for='methodStatement[methods][" + methodsCount + "][description]'>Method Description</label><textarea class='ckeditor' id='methods" + methodsCount + "' name='methodStatement[methods][" + methodsCount + "][description]'></textarea></div></article>");
+        CKEDITOR.replace("methods" + methodsCount);
+        });
+        $('#methods').on('click', '.remove-method', function(event){
+        $(this).parent().parent().parent().remove();
+        });
+    </script>
+{% endblock extra_js %}

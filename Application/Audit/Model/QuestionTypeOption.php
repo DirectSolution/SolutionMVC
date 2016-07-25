@@ -28,6 +28,20 @@ class QuestionTypeOption extends BaseModel {
         return $this->prod_audit->QuestionTypeOptions[$answer['score']];
     }
 
+    public function getByQuestionType($id) {
+        $result = $this->prod_audit->QuestionTypeOptions->where('QuestionTypes_id', $id)->and('retired', 0)->order("value ASC");
+        $array = array();
+        foreach ($result as $options) {
+            $array[] = array(
+                "id" => $options['id'],
+                "name" => $options['name'],
+                "value" => $options['value'],
+                "QuestionTypes_id" => $options['QuestionTypes_id']
+            );
+        }
+        return $array;
+    }
+
     public function allQuestionTypeOptionsArray($client) {
         foreach ($this->getAllQuestionTypeOptions($client) AS $key => $questionType) {
             $questionTypeOptions[$key] = array(

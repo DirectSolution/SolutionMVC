@@ -1,0 +1,137 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Risk">Risk Assessments</a></li>
+    <li class='active'>{{ Risk.name }}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    {{ Risk.name }} : Risk Assesment
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    <section style='color: red'>
+        <h3>RISK ASSESSMENT INFORMATION</h3>
+        <p>Risk Assessment Examples</p>
+        <p>The following document is an example of a risk assessment carried out for a specific task</p>
+        <p>Please now carefully examine the risk assessment and ensure that you add any further significant hazards associated with the task you are carrying out, these hazards must then be controlled and risk ranked to ensure that the risks of injury and ill health are reduced to a tolerable level.</p>
+        <p>Please remove any hazards and control procedures that do not apply to your task.  Remember, you will be expected to implement all control procedures listed in your risk assessment.</p>
+        <p>This document should then be used in conjunction with the associated method statement to provide a comprehensive set of safety documentation for the task you are carrying out.</p>
+        <p>Please read the document RA_training_183.pdf supplied with this risk assessment or go to <a href='https://www.hsdirect.co.uk/free-info/risk-assessment.html'>www.hsdirect.co.uk/free-info/risk-assessment.html</a> for the web version.  This document will give you comprehensive information on how to complete a risk assessment including risk ranking</p>
+        <p>If you are still unsure and/or you are dealing with tasks of a very hazardous nature we advise that you seek further professional advice.</p>
+        <p>The logo, Task Description, Location, Date of review, Company address, etc are in the document header. </p>
+        <p>To change these details simply double click over the top of the logo which will open the header and footer for editing.</p>
+        <p>The last page of this document should be used to fill in any other hazards and control procedures that become apparent on site.</p>
+        <h3>Disclaimer</h3>
+        <p><strong>All information and advice is given in good faith. We cannot accept any responsibility for your subsequent acts or omissions. If you have any doubts queries or concerns, you should refer to the relevant regulations and take further professional advice.</strong></p>
+        <p><strong>Please delete all red text prior to use.</strong></p>
+    </section>
+
+    <table class='table table-bordered'>
+        <thead>
+            <tr class='bg-warning'>
+                <td>Assessors Name<td>
+                <td>Assessors Signature<td>
+                <td>Persons Affected By This Risk Assessment<td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><td>
+                <td><td>
+                <td><ul>{% for person in Persons %}<li>{{person.PersonRisks.name}}</li>{% endfor %}</ul><td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% for hazard in Hazards %}
+        <table class="table table-bordered">
+            <thead class='bg-warning'>
+                <tr>
+                    <th class='col-xs-3'>Hazard / Consequences</th><th class='col-xs-6'>Control Procedures</th><th class='text-center col-xs-1'>Likelihood (a)</th><th class='text-center col-xs-1'>Severity (b)</th><th class='text-center col-xs-1'>Risk Ranking (a x b)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for control in hazard.controls %}
+                    <tr>
+                        {% if loop.index == 1 %}<td style='vertical-align: middle' rowspan='{{ loop.length }}'><label>{{ hazard.hazard.name }}</label></td>{% endif %}
+                        <td>{{ control.Controls.name }}</td>
+                        {% if loop.index == 1 %}
+                            <td class='text-center' style='vertical-align: middle' rowspan='{{ loop.length }}'><label>{{ hazard.hazard.likelihood }}</label></td>
+                            <td class='text-center' style='vertical-align: middle' rowspan='{{ loop.length }}'><label>{{ hazard.hazard.severity }}</label></td>
+                            <td class='text-center' style='vertical-align: middle' rowspan='{{ loop.length }}'><label>{{ hazard.hazard.risk_ranking }}</label></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+        </table>            
+    {% endfor %}
+    <table class='table table-bordered bg-warning'>
+        <thead>
+            <tr>
+                <th></th><th>Likelihood</th><th></th><th>Severity</th><th></th><th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Highly Unlikely</td>
+                <td>1</td>
+                <td>Trivial</td>
+                <td>1</td>
+                <td style='background-color: #00ff00'>Very Low Priority– No Action required (Risk no 1)</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Unlikely</td>
+                <td>2</td>
+                <td>Minor Injury</td>
+                <td>2</td>
+                <td style='background-color: #ffcc00'>Low Priority – Risk no (2 – 4)</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Possible</td>
+                <td>3</td>
+                <td>Over 3 day Injury</td>
+                <td>3</td>
+                <td style='background-color: #ff9933'>Medium Priority – (Risk no 5 – 9)</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Probable</td>
+                <td>4</td>
+                <td>Major Injury</td>
+                <td>4</td>
+                <td style='background-color: #ff3300'>High Priority – (Risk no 10 – 12)</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Certain</td>
+                <td>5</td>
+                <td>Incapacity or Death</td>
+                <td>5</td>
+                <td style='background-color: #ff0000'>Urgent action – (Risk no 15 – 25)</td>
+            </tr>
+        </tbody>
+    </table>
+    <section>
+        <h3>Further Information</h3>
+        <p>The example document provided by HS Direct Ltd is supplied as a guide to enable you to complete your Risk Assessment. </p>
+        <p>We strongly recommend that you thoroughly read, edit and change your document. Control procedures within the document make reference to the appropriate method statement, and also COSHH assessments. All editing should be made by a competent person. If you are not competent to carry out this task you should seek training or professional assistance to enable you to carry out a suitable and sufficient assessment.</p> 
+        <p>A method statement should be completed for each of the risk assessments you have, enabling you to provide employees with a written safe system of work. </p>
+        <p>All chemicals used must have a corresponding COSHH assessment.</p>
+        <p>If your organisation has 5 or more employees, that includes all staff, not just site workers, then you also require by law a written health and safety policy. </p>
+        <p>HS direct Ltd take great pride in providing help and assistance with all health and safety related paperwork for over 1500 clients throughout the UK using our Safety First Package. </p>
+        <p>To get further information on the entire range of products and services we can assist you with please do not hesitate to call us on 0114 2444461. Our offices are open 8am – 9pm Monday to Friday, and 9am - 5 pm at weekends. </p>
+    </section>
+
+
+{% endblock audit_body %}
+
+{% block extra_js %}   
+{% endblock extra_js %}

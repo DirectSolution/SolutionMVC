@@ -10,7 +10,9 @@
 {% endblock h1 %}
 
 {% block audit_body %}
-
+{#    <pre>
+        {{ dump(data.Audits) }}
+    </pre>#}
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#type">Type</a></li>
         <li><a data-toggle="tab" href="#details">Details</a></li>
@@ -30,6 +32,17 @@
                                         <option value='{{type.id}}' data-group='{{type.AssetGroups_id}}'>{{type.name}}</option>
                                     {% endfor %}
                                 </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="AuditDefault_id" class="col-sm-3 control-label">Default Audit</label>
+                    <div class="col-sm-9">
+                        <select name='AuditDefault_id' id='AuditDefault_id' class="form-control">
+                            <option value='0'>None</option>   
+                            {% for audit in data.Audits %}                                                                   
+                                <option value='{{audit.id}}'>{{audit.name}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -94,7 +107,7 @@
                 </div>
                 <div class="form-group pull-right">
                     <div class="col-sm-offset-2 col-sm-9">
-                         <a data-toggle="tab" class="btn btn-success btnNext">Next <i class='glyphicon glyphicon-forward'> </i></a>
+                        <a data-toggle="tab" class="btn btn-success btnNext">Next <i class='glyphicon glyphicon-forward'> </i></a>
                     </div>
                 </div>
             </div>
@@ -183,6 +196,7 @@
     <script>
         $(document).ready(function () {
             $("#AssetTypes_id").select2();
+            $("#AuditDefault_id").select2();
             $("#Counties_id").select2();
             $("#Countries_id").select2();
             $('#start_date').datetimepicker({

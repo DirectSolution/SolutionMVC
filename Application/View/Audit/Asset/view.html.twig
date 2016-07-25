@@ -1,0 +1,165 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'asset' %}
+{% set asset = data.data.asset %}
+{% set audits = data.data.audits %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Audit/Asset">Asset Manager</a></li>
+    <li class="active">{{ asset.forename }} {{ asset.middlename }} {{ asset.surname }}</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    {{ asset.forename }} {{ asset.middlename }} {{ asset.surname }}
+{% endblock h1 %}
+
+{% block audit_body %}   
+
+    {% include 'Audit/Asset/partials/assignment-modal.inc.html.twig' %}
+    {% include 'Audit/Asset/partials/retire-assignment.inc.html.twig' %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Location <a href="{{public_base}}Audit/Asset/Update/{{asset.id}}"><i class="fa fa-pencil-square pull-right" aria-hidden="true"></i></a>
+                    </h3>
+                </div>
+                <ul class="list-group heighted">
+                    <li class="list-group-item"><b>Address Line 1: </b>{{asset.address1}}</li>
+                    <li class="list-group-item"><b>Address Line 2: </b>{{asset.address2}}</li>
+                    <li class="list-group-item"><b>County: </b>{{asset.county}}</li>
+                    <li class="list-group-item"><b>Country: </b>{{asset.country}}</li>
+                    <li class="list-group-item"><b>Postcode: </b>{{asset.postcode}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Other <a href="{{public_base}}Audit/Asset/Update/{{asset.id}}"><i class="fa fa-pencil-square pull-right" aria-hidden="true"></i></a>
+                    </h3>
+                </div>
+                <ul class="list-group heighted">
+                    <li class="list-group-item"><b>Type: </b>{{asset.group_name}}</li>
+                    <li class="list-group-item"><b>NI/UID: </b>{{asset.unique_ref_code}}</li>
+                    <li class="list-group-item"><b>D.o.b/Man Date: </b>{{asset.dob | date('d/m/Y')}}</li>
+                    <li class="list-group-item"><b>Start/Bought Date: </b>{{asset.start_date| date('d/m/Y')}}</li>
+                    <li class="list-group-item"><b>Added Date: </b>{{asset.created_date| date('d/m/Y')}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Photograph <a href="{{public_base}}Audit/Asset/Update/{{asset.id}}"><i class="fa fa-pencil-square pull-right" aria-hidden="true"></i></a>
+                    </h3>
+                </div>
+                <div class="panel-body heighted">
+                    <img class="img-responsive" src="{{asset.image}}">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">            
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        {#                        <pre>{{dump(data.data.asset)}}</pre>#}
+                        <li class="button-li"><button class="btn navbar-btn btn-info" data-asset="{{asset.id}}" data-assetName="{{asset.forename ~ ' ' ~ asset.surname}}" data-toggle="modal" data-target="#assignmentModal">Assign Audits</button></li>
+                        {% if asset.default %} <li class="button-li"><p class="navbar-btn"><a href='{{public_base}}Audit/Audit/TakeAudit/{{asset.default}}/{{asset.id}}' class="btn btn-primary">Take Default Audit</a></p></li>{% endif %}
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search">
+                        <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Audits for...">
+                    </form>
+                </div>
+            </nav>           
+            <section class="">
+                <table id="table" class="order-table table table-hover paginated">
+                    <thead>
+                        <tr>
+                            <th>Audit Name</th>
+                            <th class="hidden-xs">Last Taken</th>
+                            <th class="hidden-xs">Next Due</th>
+                            <th class="hidden-xs">Last Result</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% if audits|length > 0 %}
+                            {% for audit in audits %}                          
+
+                                <tr>
+                                    <td>
+                                        {#                                    {{ dump(data)}}#}
+                                        <a href="{{public_base}}Audit/Audit/View/{{audit.Audits_id}}">{{audit.name}}</a></td>
+                                    <td class="hidden-xs">{% if audit.answerSet.created_at %}{{audit.answerSet.created_at|date('d/m/Y')}}{% else %}Not yet taken.{% endif %}</td>
+                                    <td class="hidden-xs">{{audit.next_due}}</td>
+                                    <td class="hidden-xs">{% if audit.answerSet.result_mark is defined %}{{ (audit.answerSet.result_mark / audit.max_score_possible) * 100}}% / {{ audit.grade.name}}{% else %} Not yet scored.{% endif %}</td>
+                                    <td>
+                                        <div class="btn-group btn-xs">
+                                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Actions <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                {% if audit.answerSet.id %}
+                                                    <li>
+                                                        <a href="{{public_base}}Audit/Reports/report/{{audit.answerSet.id}}">Lastest Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{public_base}}Audit/Report/History/{{audit.Audits_id}}/{{asset.id}}">Report History</a>
+                                                    </li>
+                                                {% endif %}
+                                                <li>
+                                                    <a href="{{public_base}}Audit/Audit/View/{{audit.Audits_id}}">View Audit</a>
+                                                </li>                                                
+                                                <li>
+                                                    <a href="{{public_base}}Audit/Audit/TakeAudit/{{audit.Audits_id}}/{{asset.id}}">Take Now</a>
+                                                </li>
+                                                <li role="separator" class="divider"></li>
+                                                <li>
+                                                    <button class="btn btn-block btn-warning btn-xs" data-toggle="modal" data-target="#retireAssignmentModal"  data-assignment="{{audit.Assignment_id}}">Retire Assignment</button>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan='10'><h2 class='text-center'>No audits assigned yet!</h2></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                    <tfoot>                    
+                        <tr>
+                            <td colspan='10'>
+                                <nav id="pagi" class='text-center'>
+                                    <ul class="pagination pagination-lg">
+
+                                    </ul>
+                                </nav>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+        </div>
+    </div>
+{% endblock audit_body %}
+
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="{{public_base}}js/audit/table-filter.js"></script>
+    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+    <script src='{{public_base}}js/audit/assignment-modal.js'></script>
+    <script src='{{public_base}}js/audit/retire-assignment.modal.js'></script>
+    <script src="{{public_base}}js/matchHeight/jquery.matchHeight-min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.heighted').matchHeight();
+        });
+
+    </script>
+{% endblock extra_js %}

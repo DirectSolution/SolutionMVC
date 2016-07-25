@@ -37,6 +37,23 @@ class Security {
                 
     }
 
+    public function isAuth($auth){
+        $token = $this->getToken();
+        if(isset($token)){
+            if(in_array($auth, $token->user->auth->Auth)){                               
+                return true;
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+    }
+    
+    public function randomKeyGen(){        
+        return md5(uniqid($_SERVER['SERVER_ADDR']));
+    }
+    
     public function encodePassword($password) {
         return md5($this->config['key']['password'] . $password);
     }
@@ -72,6 +89,30 @@ class Security {
         }
     }
 
+    public function EncodeSecurityTokenSwitch($user, $client) {
+        $key = $this->config['key']['secret_key'];
+        $time = \time();
+        $token = array(
+            "iss" => "https://portal.solutionhost.co.uk",
+            "user" => array(
+                "id" => $user['id'],
+                "username" => $user['username'],
+                "client" => ($client == 0)? (string)$client : ltrim($client),
+                "level" => "admin",
+                "company" => "nothing",
+                "auth" => $this->getAuthObject($user['id'])
+            ),
+            "status" => "success",
+            //Created at "now"
+            "iat" => $time,
+            //Not before now - 10 incase of slight variance.
+            "nbf" => $time,
+            //Set maximum Expiry time currently half hour, this gets refreshed everytime they make a call to the backend.
+            "exp" => $time + (60 * 30)
+        );
+        return $this->jwt->encode($token, $key);
+    }
+    
     public function EncodeSecurityToken($user, $client) {
         $key = $this->config['key']['secret_key'];
         $time = \time();
@@ -115,7 +156,17 @@ class Security {
     }
     
     public function refreshToken($token) {
-        $user = array("id" => $token->user->id, "username" => $token->user->username, "client" => $token->user->client);
+        
+        if($token->user->client == 0){
+            $client = "0";
+        }else{
+            $client = $token->user->client;
+        }
+        
+        $user = array("id" => $token->user->id, "username" => $token->user->username, "client" => (int)$client);
+        
+//        print_R($user);
+        
         $client = array("company" => $token->user->company);        
         return $_SESSION['token'] = $this->EncodeSecurityToken($user, $client);        
     }
@@ -123,8 +174,8 @@ class Security {
     public function getAuthObject($id) {
         $userRoleGroup = $this->user->getUserRole($id);        
         return array(                       
-            "Role" => $userRoleGroup->ACLRoles['name'],
-            "Auth" => $this->getAuthPermissions($userRoleGroup->ACLRoles['id'])
+            "Role" => @$userRoleGroup->ACLRoles['name'],
+            "Auth" => @$this->getAuthPermissions($userRoleGroup->ACLRoles['id'])
         );
     }
 

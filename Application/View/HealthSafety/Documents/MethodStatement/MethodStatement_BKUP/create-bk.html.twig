@@ -1,0 +1,215 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Method">Method Statement</a></li>
+    <li class='active'>Create</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Method Statement
+{% endblock h1 %}
+
+{% block audit_body %}
+    <style>
+        .section-headings{
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin: 4px;
+            padding: 5px 15px;
+        }
+
+        .sheet{
+            padding: 20px;
+            margin: 10px;
+        }
+    </style>
+
+
+
+    <div class="modal fade" id="newSectionModal" role="dialog" aria-labelledby="NewSectionModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h3>Currently avaliable sections.</h3>
+                        <ul class="list-group">
+                            {% for section in data.Sections %}
+                                <li>{{section.name}}</li>
+                                {% endfor %}
+                        </ul>
+                    </div>
+                    <p id='leadText'>Use the following form to create a new page section.</p>  
+                    <form>
+                        <label>Section Name
+                            <input type="text" name="sectionName">
+                        </label>
+                        <label>Body content of section
+                            <textarea name="body"></textarea>
+                        </label>
+                        <label>Section Type
+                            <select>
+                                {% for type in data.Types %}
+                                    <option value="{{type.id}}">{{type.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id='saveAssignments' type="button" class="btn btn-success">Save Assignments</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <form method="post" action="{{public_base}}HealthSafety/Method/create" class='form-horizontal'>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Document Name" name="methodStatement[name]" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" id="description" placeholder="Description of product" name="methodStatement[description]"></textarea>
+            </div>
+        </div>
+        {# This section will get sheet elements appended by jquery #}
+        <section class="sheets"></section>
+        <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="sheetsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Add Sheet
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sheetsDropdown">
+                {% for sheet in Data.Sheets %}
+                    <li>
+                        <p>
+                            <button class="btn btn-primary btn-block add-sheets" type="button" data-sheet-name="{{sheet.name}}" data-sheetbutton-id="{{sheet.id}}" value="{{sheet.id}}">{{sheet.name}}</button>
+                        </p>
+                    </li>
+                {% endfor %}
+                <button type="button" class="btn btn-block btn-info btn-xs" data-asset="1" data-toggle="modal" data-target="#newSectionModal">Create New Section</button>
+            </ul>
+        </div>
+        <section>
+            <h1>Method of Work</h1>
+            {# This article will get method elements appended by jquery #}
+            <article id='methods'></article>
+            <button type='button' class='btn btn-primary addMethod'>Add Method</button>
+        </section>
+        <hr>
+        <button class='btn btn-success' type='submit'>Save Method Statement</button>
+    </form>
+
+
+
+{% endblock audit_body %}
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+    <script></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+    <script>
+
+        $('#newSectionModal').on('show.bs.modal', function (event) {
+
+            var modal = $(this);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var assetId = button.attr('data-asset'); // Extract info from data-* attributes
+
+            modal.find('.modal-title').text("Create new section");
+            modal.find('#assetID').val(assetId);
+        });
+        $(document).on('click', '.add-sheets', function (event) {
+            var id = $(this).val();
+            $(this).hide();
+            $.ajax({
+                type: 'GET',
+                url: "http://doug.portal.solutionhost.co.uk/apps2/public/HealthSafety/Method/getSheetData/" + id,
+                dataType: 'json',
+                encode: true,
+                async: false
+            })
+                    .then(function (data) {
+
+                        var ListArr = [];
+                        $(data.sections).each(function (item, name) {
+                            ListArr.push("<li style='padding:2px;'><button type='button' class='btn btn-xs btn-primary center-block add-section' data-section-options-id='" + name.id + "' data-sheet='" + id + "' value='" + name.id + "'>" + name.name + "</button></li>");
+                        });
+                        $("body").find(".sheets").append("<article class='sheet panel panel-info' data-sheet-id='" + id + "'><input type='hidden' name='methodStatement[sheets][" + data.sheet.id + "]' value='" + data.sheet.id + "'><h2>" + data.sheet.name + "<span class='pull-right' style='padding:5px'><button type='button' class='btn btn-xs btn-danger remove-sheet' value='" + id + "'>Remove Sheet <i class='fa fa-trash' aria-hidden='true'></i></button></span></h2><p>" + data.sheet.description + "</p><div id='Sections" + id + "'></div><div class='dropdown'><button class='btn btn-success dropdown-toggle' type='button' id='sectionsDropdown' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>Add Section<span class='caret'></span></button><ul class='dropdown-menu' aria-labelledby='sectionsDropdown'>" + ListArr.join("") + "</ul></div></article>");
+                    });
+            event.preventDefault;
+        });
+        $(document).on('click', '.add-section', function (event) {
+            $(this).hide();
+            var SheetId = $(this).attr('data-sheet');
+            var SectionId = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "http://doug.portal.solutionhost.co.uk/apps2/public/HealthSafety/Method/getSectionData/" + SectionId,
+                dataType: 'json',
+                encode: true,
+                async: false
+            })
+                    .then(function (data) {
+                        var HeadersArr = [];
+                        $(data.headings).each(function (i, data) {
+                            HeadersArr.push("<option style='width:100%' value='" + data.id + "'>" + data.name + "<br> ( " + data.description + " )</option>");
+                        });
+                        $('body').find("#Sections" + SheetId).append("<article class='section-headings' data-section-id='" + SectionId + "'><input type='hidden' name='methodStatement[sheets][" + SheetId + "][sections][" + SectionId + "]' value='" + SectionId + "'><h3>" + data.section.name + "<span class='pull-right' style='padding:5px'><button type='button' class='btn btn-xs btn-danger remove-section' value='" + SectionId + "'>Remove Section <i class='fa fa-trash' aria-hidden='true'></i></button></span></h3><select name='methodStatement[sheets][" + SheetId + "][sections][" + SectionId + "][headers][]' multiple='true'>" + HeadersArr.join("") + "</select></article>");
+                        $('body').find("select").select2({
+                            placeholder: "Select items to be shown.",
+                        });
+                    });
+            event.preventDefault;
+
+        });
+
+        $('body').on('click', '.remove-sheet', function (event) {
+            var id = $(this).val();
+            $('body').find('[data-sheetbutton-id=' + id + ']').show();
+            $('body').find('[data-sheet-id=' + id + ']').remove();
+        });
+
+        $('body').on('click', '.remove-section', function (event) {
+            var id = $(this).val();
+            $('body').find('[data-section-options-id=' + id + ']').show();
+            $('body').find('[data-section-id=' + id + ']').remove();
+        });
+
+        $('body').on('click', '.addMethod', function () {
+
+            var methodId = $("div[class^=methodsection]").length + 1;
+            $('body').find("#methods").append("<div class='methodsection' data-meth-section-id='"+methodId+"'><button class='btn btn-xs btn-danger remove-method' value='"+methodId+"'>Remove Method</button><div class='form-group'><label for='name' class='col-sm-2 control-label'>Method Header</label><div class='col-sm-10'><input type='text' class='form-control'  placeholder='Document Name' name='methodStatement[methods][" + methodId + "][name]' required></div></div><div class='form-group'><label for='description' class='col-sm-2 control-label'>Method Description</label><div class='col-sm-10'><textarea type='text' id='method" + methodId + "' class='ckeditor form-control methodDescription' placeholder='Description of product' name='methodStatement[methods][" + methodId + "][description]'></textarea></div></div></div>");
+
+            
+            
+            CKEDITOR.replace("method" + methodId, {
+            {#customConfig: '{{public_base}}js/ckeditor/ckeditor_config_ms.js'#}
+        });
+        
+        $('body').on('click', '.remove-method', function(){
+            
+            var id = $(this).val();
+            
+            $('body').find('[data-meth-section-id=' + id + ']').remove();
+            
+        });
+
+        });
+
+
+
+    </script>
+{% endblock extra_js %}

@@ -108,12 +108,12 @@ class Helper {
      *
      * Returns a percent value when passed Score and High
      * 
-     * @param string $raw_sql
-     * @param array $parameters
+     * @param string $small
+     * @param string $large
      * @return string
      */
-    public function getPercent($a, $b) {
-        return($a / ($b)) * 100;
+    public function getPercent($small, $large) {
+        return($small / ($large)) * 100;
     }
 
     public function base64image($path) {

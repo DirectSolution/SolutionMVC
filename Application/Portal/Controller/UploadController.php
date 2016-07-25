@@ -25,15 +25,17 @@ class UploadController Extends Controller {
     public function UploadAuditImageAction($id) {
         
         return $this->upload->image(
+                        "/var/www/html/portal.solutionhost.co.uk/web/Filestore", "images/" . $this->token->user->client . "/Audits/" . $id . "/Assets/", $_FILES
 //                        "/var/www/html/Filestore/", "images/" . $this->token->user->client . "/Audits/" . $_POST['audit_id'] . "/Assets/" . $_POST['asset_id'], $_FILES
-                        "/home/git/htmlp/html/doug/portal.solutionhost.co.uk/web/apps/Audit/Filestore/", "images/" . $this->token->user->client . "/Audits/".$id, $_FILES
+//                        "/home/git/htmlp/html/doug/portal.solutionhost.co.uk/web/apps/Audit/Filestore/", "images/" . $this->token->user->client . "/Audits/".$id, $_FILES
         );
     }
 
     public function UploadAssetImageAction() {
         $this->token = $this->security->DecodeSecurityToken($_POST['token']);
         return $this->upload->image(
-                        "/home/git/htmlp/html/doug/portal.solutionhost.co.uk/web/apps/Audit/Filestore/", "images/" . $this->token->user->client . "/Assets", $_FILES
+//                        "/home/git/htmlp/html/doug/portal.solutionhost.co.uk/web/apps/Audit/Filestore/", "images/" . $this->token->user->client . "/Assets", $_FILES
+                        "/var/www/html/portal.solutionhost.co.uk/web/Filestore/", "images/" . $this->token->user->client . "/Assets", $_FILES
         );
     }
 

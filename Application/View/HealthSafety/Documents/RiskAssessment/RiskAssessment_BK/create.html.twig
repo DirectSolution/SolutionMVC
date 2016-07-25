@@ -1,0 +1,134 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Risk">Risk Assessments</a></li>
+    <li class='active'>Create</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Risk Assessment
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    <form method="post" action="{{public_base}}HealthSafety/Risk/create" class='form-horizontal'>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Document Name" name="name" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Persons Affected</label>
+            <div class="col-sm-10">
+                {% for person in persons %}
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="person{{ person.id }}" value="{{ person.id }}" name="person[]"> {{ person.name }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class='hazards'></div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Add Hazards</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class='col-xs-10'>
+                        <label for="risk_phrases" class="col-sm-2 control-label">Risk / Safety Phrases</label>
+                        <div class="col-xs-10">
+                            <select  class="" id="risk_phrases" name="risk_phrases[]">
+                                {% for hazard in hazards %}
+                                    <option value="{{ hazard.id }}">{{ hazard.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class='col-xs-2'>
+                        <button type="button" class='btn btn-primary add-hazard'>Add Hazard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class='btn btn-success'>Save Risk Assessment</button>
+        </div>                
+
+    </form>
+
+{% endblock audit_body %}
+
+{% block extra_js %}
+
+    {{ parent() }}
+    <script src='{{public_base}}js/audit/asset-label-changer.js'></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+
+    <script>
+        $(document).ready(function () {
+            $("select").select2();
+            $('body').on('click', '.add-hazard', function (event) {
+                var selectedHazardID = $('#risk_phrases').val();
+                var selectedHazardName = $('#risk_phrases option:selected').html();
+                $.ajax({
+                    type: 'POST',
+                    url: "http://doug.portal.solutionhost.co.uk/apps2/public/HealthSafety/Risk/getControls",
+                    dataType: 'json',
+                    encode: true,
+                    async: false
+                }).then(function (data) {
+                    var arr = [];
+                    $.each(data, function (key, value) {
+                        arr.push("<option value='" + value.id + "'>" + value.name + "</option>");
+                    });
+                    $('#risk_phrases').children("option[value=" + selectedHazardID + "]").remove();
+                    $('.hazards').append("<div class='controlsProc panel panel-info text-center'><div class='panel-heading'><h3>" + selectedHazardName + "</h3></div><table class='table table-hover table-striped text-center'><thead class='bg-primary text-center' ><tr><th class='text-center'>Likelihood</th><th class='text-center'>Severity</th><th class='text-center'>Risk Ranking</th></tr><tr><td class='col-xs-4'><input type='number' class='form-control likelihood' data-like='" + selectedHazardID + "' placeholder='Likelihood' name='riskAssessment[hazards][" + selectedHazardID + "][likelihood]' required></td><td class='col-xs-4'><input type='number' class='form-control severity'  data-severity='" + selectedHazardID + "' placeholder='Severity' name='riskAssessment[hazards][" + selectedHazardID + "][severity]' required></td><td class='col-xs-4'><input class='form-control risk-ranking' id='name' placeholder='Risk Ranking' data-rank='" + selectedHazardID + "' name='riskAssessment[hazards][" + selectedHazardID + "][risk_ranking]' readonly disabled></td></tr></thead><tbody></tbody><tfoot class='bg-primary' style='background-color:#333;'><tr><td colspan='10'><label class='col-xs-2'>Select Controls</label><div class='col-xs-8'><select>" + arr.join() + "</select></div><div class='col-xs-2'><button type='button' class='add-control btn btn-success' value='" + selectedHazardID + "'>Add Control</button></div></td></tr></tfoot></table></div>");
+                    $('body').find("select").select2();
+                });
+            });
+
+            $('body').on('change keyup keydown keypress blur', '.severity', function (event) {
+                var dataSev = $(this).attr('data-severity');
+                var sev = $(this).val();
+                var like = $('body').find("[data-like='" + dataSev + "']").val();
+                calculateRiskRanking(sev, like, dataSev);
+            });
+
+            $('body').on('change keyup keydown keypress blur', '.likelihood', function (event) {
+                var dataLike = $(this).attr('data-like');
+                var sev = $('body').find("[data-severity='" + dataLike + "']").val();
+                var like = $(this).val();
+                calculateRiskRanking(sev, like, dataLike);
+            });
+
+            function calculateRiskRanking(sev, like, id) {
+                $('body').find("[data-rank='" + id + "']").val(like * sev);
+            };
+
+
+            $('body').on('click', '.add-control', function (event) {
+                var selectedControl = $(this).parent().parent().find("select option:selected");
+                var hazzardID = $(this).val();
+                var controlVal = selectedControl.val();
+                $(this).parent().parent().parent().parent().parent().append("<tr><td class='col-xs-11' colspan='2'><h4>" + selectedControl.text() + "<input type='hidden' class='form-control' name='riskAssessment[hazards][" + hazzardID + "][controls][" + controlVal + "]' required></h4></td><td class='col-xs-1'><button type='button' class='btn btn-danger removeControl pull-right'><i class='fa fa-trash' aria-hidden='true'></i></button></td></tr>")
+
+                selectedControl.remove();
+                event.preventDefault;
+            });
+
+            $('body').on('click', '.removeControl', function (event) {
+                $(this).parent().parent().remove();
+            });
+
+        });
+
+
+
+    </script>
+
+
+
+{% endblock extra_js %}

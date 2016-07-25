@@ -1,0 +1,64 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'ffc' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Ffc/AdminIndex">First for Contractors</a></li>
+    <li><a href="{{public_base}}Ffc/AdminWorkSector">Work Sectors</a></li>
+    <li class='active'>Create</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Coshh
+{% endblock h1 %}
+
+{% block audit_body %}
+
+
+    <form method="post" action="{{public_base}}Ffc/Adminworksector/create" class='form-vertical'>
+        <div class="form-group">
+            <label for="description" class="control-label"><h3>Work Sector Name</h3></label>
+            <div class="">
+                <input type="text" class="form-control" id="description" placeholder="Description of worksector" name="description" required>
+            </div>
+        </div>
+
+
+
+        <table id="question-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-xs-4">Question</th>
+                    <th>Field Type</th>
+                    <th class="col-xs-1">Answer Required</th>
+                    <th class="col-xs-1">Automatic Unapprove</th>
+                    <th class="col-xs-1">Add Expiry</th>
+                    <th class="col-xs-1">Expiry Required</th>
+                    <th class="col-xs-1">Add Evidence</th>
+                    <th class="col-xs-1">Evidence Required</th>                
+                </tr>
+            </thead>
+            <tbody id="questions">
+                <tr id='init'><td colspan='10'><h3 class="text-center">No questions yet, Click "Add Question Row" to begin.</h3></td></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan='10'><button type='button' class='btn btn-success addRow pull-right'>Add Question Row <i class="fa fa-plus-circle"></i></button></td>
+                </tr>
+            </tfoot>
+        </table>
+
+
+
+
+        <button type="submit" class="btn btn-success">Save Coshh</button>         
+
+
+    </form>
+
+
+{% endblock audit_body %}
+
+{% block extra_js %}
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+    <script src="{{public_base}}js/ffc/dynamic-add-row.js"></script>
+{% endblock extra_js %}

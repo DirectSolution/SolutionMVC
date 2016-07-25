@@ -36,8 +36,8 @@ class SecurityController extends Controller {
         $this->passwordResetRequest = new TransPasswordResetRequest();
     }
 
-    public function loginAction() {
-                
+    public function loginAction($_POST) {
+        $this->request = $_POST;
         $username = $this->request['_username'];
         if ($this->request['_client'] != null) {
             $users = $this->user->getOneUserByUsernameAndClient($username, $this->request['_client']);
@@ -69,11 +69,10 @@ class SecurityController extends Controller {
                 }
             }
         }
-                        
-        return print (json_encode($this->response));
+
+        return json_encode($this->response);
     }
 
-    
     public function setLoginActivity($user, $client, $address) {
         $newexpiry = date('U') + 14400;
         $hash = $this->security->hasherAction($user['username']);
@@ -82,11 +81,23 @@ class SecurityController extends Controller {
 //        return $this->helper->setCookies($user, $client);
     }
 
+    public function switchclientAction() {
+        $request = $this->requestObject();
+        $token = $this->getToken();
+        $user = $this->user->getUserById($token->user->id);
+
+
+
+        $this->setCookieAction($this->security->EncodeSecurityTokenSwitch($user, $request['client']), "ClientSwitch");
+    }
+
     public function setCookieAction($encodedToken, $redirect = null) {
-        $replaceRedirect = strtr ($redirect, array ('-' => '/'));        
+        $replaceRedirect = strtr($redirect, array('-' => '/'));
         //Sets cookies and session in one go. S legacy apps, php apps and js 
         //apps can all use the same function, needs localstorage adding but not needed quite yet.
         $token = $this->security->DecodeSecurityToken($encodedToken);
+
+//        die(print_R($encodedToken));
         //Legacy
         setcookie("shostuk", $token->user->id, "0", "/");
         setcookie("shostukclient", str_pad($token->user->client, 5, 0, STR_PAD_LEFT) . ":" . $token->user->company, strtotime("+5 years"), "/");
@@ -94,11 +105,10 @@ class SecurityController extends Controller {
         //New
         $_SESSION['token'] = $encodedToken;
 
-        error_log("RR" . $replaceRedirect,0);
-        
-        
         if ($replaceRedirect == null || $replaceRedirect == '') {
             header('Location: ' . SERVER_ROOT . '/portalmain.php');
+        } else if ($redirect == "ClientSwitch") {
+            header('Location: ' . SERVER_ROOT . '/apps2/public/Portal/User');
         } else {
             header('Location: ' . SERVER_ROOT . '/apps2/public/' . $replaceRedirect);
         }

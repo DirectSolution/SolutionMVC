@@ -1,0 +1,42 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'user' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Portal/User">User Manager</a></li>
+        <li><a href="{{public_base}}Portal/Role">Role Manager</a></li>
+    <li class='active'>View Role</li>
+    <li class='active'>{{ role.name }}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    User Role: <small>{{role.name}}</small>
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    
+    
+    <div class="row">
+        <table id="table" class="order-table table table-hover table-responsive paginated">
+            <thead>
+                <tr>
+                    <th>Right Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for right in rights %}                               
+                    <tr>                        
+                        <td>{{right.ACLPermissions.name}}</td>
+                        <td><button class="btn btn-warning">Remove Ability</button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock audit_body %}
+
+
+
+{% block extra_js %}
+    {{ parent() }}
+{% endblock extra_js %}

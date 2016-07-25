@@ -25,6 +25,9 @@ function paginate() {
             }).appendTo($pager).addClass('clickable');
         }
         $('body').find('#pagi').append($pager).find('.page-number:first').addClass('active');
+        
+        
+        
     });
 }
 

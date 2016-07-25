@@ -7,6 +7,7 @@ use SolutionMvc\Audit\Model\Audit,
     SolutionMvc\Audit\Controller\AssignmentController,
     SolutionMvc\Audit\Controller\AnswersController,
     SolutionMvc\Audit\Model\Asset,
+    SolutionMvc\Audit\Model\ReviewFrequencies,
     SolutionMvc\Audit\Model\Settings,
     SolutionMvc\Audit\Model\AuditType,
     SolutionMvc\Audit\Model\QuestionType,
@@ -40,6 +41,7 @@ class AuditController extends Controller {
     protected $answers;
     protected $asset;
     protected $assetCnt;
+    protected $reviewFrquencies;
 
     public function __construct() {
         parent::__construct();
@@ -59,6 +61,7 @@ class AuditController extends Controller {
         $this->auditGradings = new AuditGradings();
         $this->asset = new Asset();
         $this->assetCnt = new AssetController();
+        $this->reviewFrequencies = new ReviewFrequencies();
 //        $this->postdata = json_decode(file_get_contents("php://input"));
 //        $this->token = $this->security->DecodeSecurityToken($this->postdata->token);
 //        $this->response->token = $this->security->EncodeSecurityToken((array) $this->token->user);
@@ -72,6 +75,9 @@ class AuditController extends Controller {
                 break;
             case "2":
                 $m = "Audit succesffully deleted!";
+                break;
+            default:
+                $m = NULL;
                 break;
         }
         return $m;
@@ -114,6 +120,7 @@ class AuditController extends Controller {
         $this->response->questionTypeOptions = $this->questionTypeOptions->allQuestionTypeOptionsArray($client);
         $this->response->auditGradings = $this->auditGradings->allAuditGradingsReturnArray($client);
         $this->response->auditTypes = $this->auditTypes->allAuditTypesArray($client);
+        $this->response->frequencies = $this->reviewFrequencies->getAll($client);
         return $this->response;
 //        return\ print json_encode($this->response);
     }
@@ -137,10 +144,15 @@ class AuditController extends Controller {
         return print json_encode($this->response);
     }
 
-    public function doPostAudit($id, $asset){
+    public function doPostAudit($id, $asset = null){
+//        print "<PRE>";
+//        print_R($this->requestObject());
+//        print "</PRE>";
         if ($asset != null) { // Asset set so save the audit for it,
+            
                 $result = $this->answers->setAnswersAction($id, $asset);
             } else { // No asset so We'll have to create the audit first, create an assignment then finally save the aduti :/
+                
                 $result = $this->answers->setAnswersAndAssetAction($id);
             }
             if ($result !== false) {
@@ -208,8 +220,10 @@ class AuditController extends Controller {
                 ),
                 "groups" => $questionGroups->getAllQuestionGroupsByAuditIdArray($auditData['id']),
             );
+            $totalSum = array();
 //            foreach ($this->response->data['groups'] as $gkey => $group) {
             foreach ($return['audit']['groups'] as $gkey => $group) {
+                
                 foreach ($group['questions'] as $qkey => $question) {
                     $question['answerType']['name'] = $this->helpers->searchForId($question['answerType']['id'], $this->questionTypes->allQuestionTypesArray($client));
 
@@ -236,7 +250,10 @@ class AuditController extends Controller {
 //                    $this->response->data['groups'][$gkey]['questions'][$qkey] = $question;
                     $return['audit']['groups'][$gkey]['questions'][$qkey] = $question;
                 }
+                $totalSum[] = $group['group_total_possible'];
+                
             }
+            $return['MaximumTotalScore'] = array_sum($totalSum);
         }
         return $return;
     }
@@ -271,6 +288,12 @@ class AuditController extends Controller {
     }
 
     public function update() {
+//        
+//        print "<PRE>";
+//        print_r($this->requestObject());
+//        print "</PRE>";
+//        die();
+        
         $this->audit->updateAudit($this->requestObject(), $this->token->user);
         $this->response->result = "Audit Updated";
         $this->response->status = "success";
@@ -341,16 +364,20 @@ class AuditController extends Controller {
         $return['auditGradings'] = $this->auditGradings->allAuditGradingsReturnArray($this->token->user->client);
         $return['auditTypes'] = $this->auditTypes->allAuditTypesArray($this->token->user->client);
         $return['questionTypes'] = $this->questionTypes->allQuestionTypesArray($this->token->user->client);
+        $return['frequencies'] = $this->reviewFrequencies->getAll($this->token->user->client);
         $auditData = $this->audit->getAuditById($id, $this->token->user->client);
-        if ($auditData === null || $auditData['retired'] == 1) {
-            $this->response->setHeaders(http_response_code(404));
-            $this->response->setMessage("Audit not found!");
-        } else {
+//        if ($auditData === null || $auditData['retired'] == 1) {
+//            $this->response->setHeaders(http_response_code(404));
+//            $this->response->setMessage("Audit not found!");
+//        } else {
             $this->response->setHeaders(http_response_code(200));
+            $groups = $this->questionGroups->getAllQuestionGroupsByAuditIdArray($id);
+                      
             $return['audit'] = array(
                 "id" => $auditData['id'],
                 "name" => $auditData['name'],
                 "description" => $auditData['description'],
+                "frequency" => $auditData['ReviewFrequencies_id'],
                 "auditTypes" => array(
                     "id" => $auditData['AuditTypes_id'],
                     "name" => $auditData->AuditTypes['name'],
@@ -359,13 +386,23 @@ class AuditController extends Controller {
                     "Aid" => $auditData['AuditGradings_id'],
                     "name" => $auditData->AuditGradings['name'],
                 ),
-                "groups" => $this->questionGroups->getAllQuestionGroupsByAuditIdArray($id),
+                "groups" => $groups,
+                "MaximumTotal"=> $this->getMaximumTotal($groups)
             );
-        }
+//        }
         $this->response->setData($return);
         return;
     }
 
+    public function getMaximumTotal($groups){
+        $total = 0;
+        foreach($groups as $group){
+            $total += $group['group_total_possible'];
+        }
+        return $total;
+    }
+    
+    
     public function retireAction() {
         $request = $this->requestObject();
         if ($this->requestType() == "ajax" && $this->security->getToken() && $this->audit->retireAudit($request['id'], $this->token->user->client) == "success") {

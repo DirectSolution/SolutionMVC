@@ -31,41 +31,32 @@ class LoginController Extends Controller {
             if (isset($item)) {
                 $redirect .= $item."-";
             }
-            //$redirect = $project . ($controller)?"/".$controller:null . ($action)? "/".$action : null;
-            
-//        } else if(isset($dash) && $dash != "P1") {
-//            $redirect = $dash;
-//        } 
+
         }else{
             $redirect = null;           
         }
-//        error_log("R var type = " . $requestType, 0);
-//        error_log("Dash type = " . $dash, 0);
-//        error_log("Project type = " . $project, 0);
-//        error_log("Controller type = " . $controller, 0);
-//        error_log("Action type = " . $action, 0);
-//        error_log("R func type = " . $this->requestType(), 0);
-//        die();
+
         if ($this->requestType() != 'GET') {
             $fire = $this->loginFire();
-            if ($this->requestType() == "ajax") {
-                if ($fire['status'] == "success") {
+
+            if ($requestType == "ajax") {
+                if ($fire->status == "success") {
                     return print json_encode(array(
                         "status" => "success",
-                        "url" => HTTP_ROOT . "portal/security/setcookie/" . $fire['token'] . "/$redirect"
+                        "url" => HTTP_ROOT . "portal/security/setcookie/" . $fire->token . "/$redirect"
                     ));
                 } else {
                     return print json_encode(array(
                         "status" => "error",
-                        "message" => $fire['message']
+                        "message" => $fire->message
                     ));
                 }
             } else {
                 if ($fire['status'] == "success") {
-                    header("Location: " . HTTP_ROOT . "portal/security/setcookie/" . $fire['token'] . "/$redirect");
+                    header("Location: " . HTTP_ROOT . "portal/security/setcookie/" . $fire->token . "/$redirect");
                 } else {
                     echo $this->twig->render('Portal/Login/login.html.twig', array(
-                        "errors" => $fire['message'],
+                        "errors" => $fire->message,
                         "form" => $this->requestObject()));
                 }
             }
@@ -75,12 +66,28 @@ class LoginController Extends Controller {
     }
 
     public function loginFire() {
-        $_POST['_address'] = $_SERVER['REMOTE_ADDR'];
-        $url = "http:" . HTTP_ROOT . 'portal/security/login';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $_POST);
-        return $result = json_decode(curl_exec($ch), true);
+        $security = new \SolutionMvc\Portal\Controller\SecurityController();
+                $_POST['_address'] = $_SERVER['REMOTE_ADDR'];
+               
+        return json_decode($security->loginAction($_POST));
+        
+        
+        
+        
+//        $url = 'http://doug.portal.solutionhost.co.uk/apps2/public/portal/security/login';
+////        $url = "http:" . HTTP_ROOT . 'portal/security/login';
+//        $ch = curl_init($url);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, $_POST);
+//        return $result = json_decode(curl_exec($ch), true);
+        
+        
+//        $_POST['_address'] = $_SERVER['REMOTE_ADDR'];
+//        $url = "http:" . HTTP_ROOT . 'portal/security/login';
+//        $ch = curl_init($url);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, $_POST);
+//        return $result = json_decode(curl_exec($ch), true);
     }
 
     public function ForgottenpasswordAction($requestType = null) {

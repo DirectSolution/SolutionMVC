@@ -1,0 +1,45 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'user' %}
+{% block breadcrumbs %}
+        <li><a href="{{public_base}}Portal/User">User Manager</a></li>
+        <li class='active'>View User</li>
+        <li class='active'>{{user.name}}</li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    {{user.name}}
+{% endblock h1 %}
+
+{% block audit_body %}
+    <div class='col-sm-6'>
+    <div class="panel panel-primary">
+        <div class="panel-heading">{{user.name}} Details</div>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Name:</strong> {{user.name}}</li>
+            <li class="list-group-item"><strong>Jobtitle:</strong> {{user.jobtitle}}</li>
+            <li class="list-group-item"><strong>Email:</strong> {{user.email}}</li>
+            <li class="list-group-item"><strong>Created By:</strong> {{user.createdby_id}}</li>
+            <li class="list-group-item"><strong>Created On:</strong> {{user.timestamp|date('d/m/Y')}}</li>
+            <li class="list-group-item"><strong>Telephone:</strong> {{user.telephone}}</li>
+            <li class="list-group-item"><strong>Signature:</strong> {{user.siglogo}}</li>
+        </ul>
+    </div>
+</div>
+    <div class='col-sm-6'>
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{user.name}} Signature</div>
+            <div class="panel-body">
+{#                {% if user.siglogo %}#}
+<img class='img img-responsive' src='https://portal.solutionhost.co.uk/images/custom/{{user.client}}/{{user.siglogo}}'>
+{#                {% else %}#}
+{#                    <h4>No Signature Found</h4>#}
+{#                {% endif %}#}
+            </div>            
+        </div>
+    </div>
+{% endblock audit_body %}
+
+
+{% block extra_js %}
+    {{ parent() }}
+{% endblock extra_js %}

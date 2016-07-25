@@ -102,7 +102,17 @@ class Application {
             } else {
                 $error->errorType404Action("Error - No action found, and indexAction not defined.");
             }
-        } else if ($this->project) { //ELSE IF Redirect to Portal Home Dash
+        }
+        else if ($this->project != null && file_exists(APP . $this->project . '/IndexController.php')) { //ELSE IF 'Project' has an index page.
+            require APP . $this->project . '/Controller/IndexController.php';
+            $base = "\\SolutionMvc\\" . $this->project . "\\Controller\IndexController";
+            $this->controller = new $base;
+            if (strlen($this->action) == 0) {
+                $this->controller->indexAction();
+            } else {
+                $error->errorType404Action("Error - No action found, and indexAction not defined.");
+            }
+        }else if ($this->project) { //ELSE IF Redirect to Portal Home Dash
             $page = new \SolutionMvc\Controller\IndexController();
             $page->indexAction($this->project . " - Page not found.");
         } else {

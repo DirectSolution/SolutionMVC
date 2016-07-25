@@ -1,0 +1,90 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'user' %}
+{% block breadcrumbs %}
+    <li class='active'><a href="{{public_base}}Portal/User">User Manager</a></li>
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    User Manager
+{% endblock h1 %}
+
+{% block audit_body %}
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                {% if 15 in token.user.auth.Auth %}
+                    <li class="button-li"><p class="navbar-btn"><a href='{{public_base}}Portal/User/Create' class="btn btn-success">Add User</a></p></li>
+                    {% endif %}
+                    {% if 39 in token.user.auth.Auth %}
+                    <li class="button-li"><p class="navbar-btn"><a href='{{public_base}}Portal/Role' class="btn btn-primary">Manage Roles</a></p></li>
+                    {% endif %}
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Users for...">
+            </form>
+        </div>
+    </nav>
+    <div class="row">
+        <table id="table" class="order-table table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Job Title</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}                               
+                    <tr>
+                        <td>
+                            {% if 13 in token.user.auth.Auth %}
+                                <a href='{{public_base}}Portal/User/View/{{user.user.id}}'>{{user.user.name}}</a>
+                            {% else %}
+                                {{user.user.name}}
+                            {% endif %}
+                        </td>
+                        <td>{% if user.user.jobtitle %}{{user.user.jobtitle}}{% endif %}</td>
+                        <td>{{user.user.username}}</td>
+                        <td>{{user.user.email}}</td>
+                        <td>{% if user.auth.ACLRoles.name %}{{user.auth.ACLRoles.name}}{% else %}No role set{% endif %}</td>
+                        <td>
+                            {% if 13 in token.user.auth.Auth %}
+                                <div class="btn-group btn-xs">
+                                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        {% if 13 in token.user.auth.Auth %}
+                                            <li><a href='{{public_base}}Portal/User/View/{{user.user.id}}'>View User</a></li>
+                                            {% endif %}
+                                            {% if 14 in token.user.auth.Auth %}
+                                            <li><a href='{{public_base}}Portal/User/Update/{{user.user.id}}'>Edit User</a></li>
+                                            {% endif %}
+                                            {% if 40 in token.user.auth.Auth %}
+                                            <li role="separator" class="divider"></li>
+                                            <li><button class="btn btn-block btn-danger btn-xs">Retire User</button></li>
+                                            {% endif %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock audit_body %}
+
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="{{public_base}}js/audit/table-filter.js"></script>
+    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+    <script src='{{public_base}}js/select2/select2.min.js'></script>
+
+{% endblock extra_js %}

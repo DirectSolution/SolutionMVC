@@ -16,6 +16,10 @@ class User extends BaseModel {
         parent::__construct();
     }
 
+    public function getAllByClient($id) {
+        return array_map('iterator_to_array', iterator_to_array($this->prod_portal->mast_users->where("client", $id)));
+    }
+
     public function getOneUserById($id) {
         return $this->prod_portal->mast_users->limit(1)->where("client LIKE ?", "%" . $id);
     }
@@ -24,8 +28,12 @@ class User extends BaseModel {
         return $this->prod_portal->mast_users[array("id" => $id)];
     }
 
+    public function getUser($id) {
+        return $this->prod_portal->mast_users->where("id", $id);
+    }
+
     public function getOneUserByUsernameAndClient($username, $client) {
-        return $this->prod_portal->mast_users->where("username", $username)->and("client", $client);
+        return $this->prod_portal->mast_users->where("username", $username)->and("client", $client)->or("email", $username)->and("client", $client);
     }
 
     public function getOneUserByUsername($username) {
@@ -72,12 +80,55 @@ class User extends BaseModel {
     }
 
     public function getUserRole($id) {
-        error_log("getuserrole id = ". $id,0);
+//        error_log("getuserrole id = ". $id,0);
         return $this->prod_audit->ACLRoleMembers[array("Users_id" => $id)];
     }
 
     public function getRoleRights($id) {
         return $this->prod_audit->ACLRoleRights->where("ACLRoles_id", $id);
+    }
+
+    public function setNew($request, $client, $current) {
+        return $this
+                        ->prod_portal
+                        ->mast_users
+                        ->insert(
+                                $this->userArray($request, $client, $current
+                                )
+        );
+    }
+
+    public function setUpdate($request, $client, $id) {
+        
+        $user = $this->prod_portal->mast_users[array('id' => $id)];
+        if($user){
+            
+            $user->update(array(
+                "name" => $request['name'],
+                "email" => $request['email'],
+                "jobtitle" => $request['jobtitle'],
+                "telephone" => $request['telephone']
+            ));
+            
+        }
+        return;
+        
+    }
+
+    public function userArray($request, $client, $current) {
+        return array(
+            "client" => $client,
+            "username" => $request['username'],
+            "password" => md5(\time()),
+            "name" => $request['name'],
+            "email" => $request['email'],
+            "retired" => 0,
+            "createdby_id" => $current,
+            "timestamp" => \time(),
+            "jobtitle" => $request['jobtitle'],
+            "telephone" => $request['telephone'],
+            "siglogo" => ""
+        );
     }
 
 }

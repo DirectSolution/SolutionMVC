@@ -157,9 +157,8 @@ class ReportsController extends Controller {
                 "AnswerEvidence" => $evidence
             );
         }
-
-
-
+        $answerset = $this->answerSet->getAssetByAnswerSet($id);
+        $grades = $this->gradingValues->allGradingValuesReturnArray($answer->Questions->AuditDatas['AuditGradings_id']);
         //Php <= 5.3 :(      
         $user = $this->user->getUserById((int) $answer['answered_by']);
         $client = $settings->getClient($this->token->user->client);
@@ -184,7 +183,8 @@ class ReportsController extends Controller {
             //"PassLevel" => $answer->Questions->AuditDatas['Pass_level'],
             "TotalScore" => $score,
             "Possible" => $high,
-            "PercentScore" => $this->helpers->getPercent($score, $high),
+            "PercentScore" => $percent = $this->helpers->getPercent($score, $high),
+            "PassFail" => $this->helpers->getClosest($percent, $grades),
 //            "PassFail" => ($score > $answer->Questions->AuditDatas['Pass_level']) ? "Pass" : "Fail",
             "code" => md5($id),
         );
@@ -192,6 +192,7 @@ class ReportsController extends Controller {
 
         $return['QuestionAnswer'] = $qaReturn;
         $return['Misc'] = $miscReturn;
+        $return['Asset'] = $answerset;
 
 //        $this->response->data->QuestionAnswer = $qaReturn;
 //        $this->response->data->misc = $miscReturn;
@@ -201,6 +202,24 @@ class ReportsController extends Controller {
 
         return $return;
 //        return print json_encode($this->response);
+    }
+
+    public function historyAction($audit, $asset) {
+
+        if ($this->security->getToken()) {
+//            $this->response->setData($this->getReportAction());
+
+//        $this->response->setData($return);
+            echo $this->twig->render("Audit/Report/history-by-audit-asset.html.twig", array(
+                "data" => $this->response
+            ));
+        } else {
+            echo $this->twig->render("Portal/Login/login.html.twig", array(
+                "project" => "Audit/",
+                "controller" => "Reports/",
+                "action" => "History/$audit/$asset"
+            ));
+        }
     }
 
 }

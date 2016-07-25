@@ -12,9 +12,9 @@
 {% endblock h1 %}
 
 {% block audit_body %}
-{#    <pre>
-        {{ dump(data)}}
-    </pre>#}
+    {#    <pre>
+            {{ dump(data)}}
+        </pre>#}
 
     {% if not errors %}
 
@@ -22,19 +22,19 @@
             <input type="hidden" name="id" value="{{data.audit.id}}">
             <section class="row">
 
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-6 col-md-6">
                     <div class="form-group">
                         <label>Audit Name</label>
                         <input type="text" class="form-control" name='name' placeholder="Name your audit" required value="{{data.audit.name}}">
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-6 col-md-6">
                     <div class="form-group">
                         <label>Description</label>
                         <input type="text" class="form-control" name='description' placeholder="Name your audit" value="{{data.audit.description}}">
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-6 col-md-4">
                     <div class="form-group">
                         <label>Audit Type</label>
                         <select class="form-control" name='auditTypes'>
@@ -48,7 +48,7 @@
                         </select>                
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-6 col-md-4">
                     <div class="form-group">
                         <label>Grading Type/Pass Rate</label>
                         <select class="form-control" name='auditGradings'>
@@ -57,6 +57,20 @@
                                     <option value='{{type.Aid}}' selected>{{type.name}}</option>
                                 {% else %}
                                     <option value='{{type.Aid}}'>{{type.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>                
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">    
+                        <label>Review Frequency</label>
+                        <select class="form-control" id='reviewFrequency' name='reviewFrequency'>
+                            {% for frequency in data.frequencies %}
+                                {% if data.audit.frequency == frequency.id %}
+                                    <option value='{{frequency.id}}' selected>{{frequency.name}}</option>
+                                {% else %}
+                                    <option value='{{frequency.id}}'>{{frequency.name}}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>                
@@ -96,9 +110,9 @@
                                             <select name='groups[{{group.id}}][questions][{{question.id}}][QuestionTypes_id]' id="{{group.id}}QuestionTypes_id{{question.id}}" class="group_question_type form-control">
                                                 {% for questionType in data.questionTypes %}
                                                     {% if questionType.id == question.answerType.id %}
-                                                    <option value="{{questionType.id}}" selected>{{ questionType.typeName}}</option>
+                                                        <option value="{{questionType.id}}" selected>{{ questionType.typeName}}</option>
                                                     {% else %}
-                                                    <option value="{{questionType.id}}">{{ questionType.typeName}}</option>
+                                                        <option value="{{questionType.id}}">{{ questionType.typeName}}</option>
                                                     {% endif %}
                                                 {% endfor %}
                                             </select>
@@ -137,7 +151,7 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-lg-1">
-                                        <label class="control-label switch-label text-center">Add Expiry</label>
+                                        <label class="control-label switch-label text-center">Evidence Required</label>
                                         <div class="onoffswitch">
                                             <input type="checkbox" name="groups[{{group.id}}][questions][{{question.id}}][evidence_required]" class="onoffswitch-checkbox" value="1" id="{{group.id}}evidence_required{{question.id}}"{% if question.evidenceRequired %}checked{% endif %}>
                                             <label class="onoffswitch-label evidence-required" for="{{group.id}}evidence_required{{question.id}}">

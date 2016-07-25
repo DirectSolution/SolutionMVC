@@ -1,0 +1,79 @@
+{% extends "Audit/audit_base.html.twig" %}
+{% set menu_selected = 'user' %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Portal/User">User Manager</a></li>
+    <li><a href="{{public_base}}Portal/Role">Role Manager</a></li>
+    <li class='active'>Create Role</li>  
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Role
+{% endblock h1 %}
+
+{% block audit_body %}
+    
+{#    <pre> {{ dump(permissions)}}</pre>#}
+    
+    
+    <div class="row">
+        <div class="col-sm-6" >
+            <h2>Avaliable Permissions</h2>        
+            <form action="#">
+                <input type="text" class="filterinput form-control" data-table="order-table" onkeyup="filter(this)" placeholder="Search Permissions for..."></form>
+            <hr>
+            
+                {% for key, perm in permissions %}
+                    <ul class="list-group gallery ui-helper-reset ui-helper-clearfix order-table" id="gallery"> 
+                    <li class="list-group-item active">{{ key }}</li>
+{#                    <pre>{{ dump(perm)}}</pre>#}
+                    
+                    {% for permission in perm %}
+{#                        {{ dump(permission)}}#}
+                    <li class="list-group-item ui-widget-content ui-corner-tr">
+                        <label><input type='hidden' name="permissions[]" value="{{ permission[0].id }}">{{ permission[0].name }}</label>
+                        <span class="pull-right">
+                            <a class="ui-icon-trash lead " href="#">
+                                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"> </i>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+                    </ul>
+                {% endfor %}
+            
+        </div>
+        <div class="col-sm-6"  id="trash">
+            <h2>Permissions Assigned</h2>
+            <form action="{{public_base}}Portal/Role/Create" method="POST">
+
+                <div class="form-group">
+                    <label for="name">Role Name</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Name the role">
+                </div>
+                <div class="form-group">
+                    <label for="description">Role description</label>
+                    <input type="text" name="description" class="form-control" id="description" placeholder="Describe the role in enough detail to make it easy to chose the right one.">
+                </div>
+                <ul class="list-group ui-widget-content ui-state-default">
+                    <li class="list-group-item disabled">Drag and drop permissions here.</li>
+                </ul>
+                <button class="btn btn-success btn-block" type="submit">Save Role <i class="fa fa-check" aria-hidden="true"></i></button>
+            </form>
+        </div>
+    </div>
+{% endblock audit_body %}
+
+
+
+{% block extra_js %}
+    {{ parent() }}
+
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="{{public_base}}js/portal/dragdrop-roles.js"></script>
+    <script src="{{public_base}}js/portal/filter-list.js"></script>
+
+    <script>
+        
+    </script> 
+
+{% endblock extra_js %}

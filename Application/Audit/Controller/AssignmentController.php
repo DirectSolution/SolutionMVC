@@ -33,11 +33,9 @@ class AssignmentController extends Controller {
         $this->assignment = new Assignment();
         $this->asset = new Asset();
         $this->audit = new Audit();
-        
+
         $this->helpers = new \SolutionMvc\Library\Helper();
         $this->response = new Response();
-
-        
     }
 
     public function indexAction() {
@@ -61,28 +59,33 @@ class AssignmentController extends Controller {
     public function setAssignment($audit, $asset, $user, $client) {
         return $this->assignment->setAssignment($audit, $asset, $user, $client);
     }
+
+    public function setOneAssignment($audit, $asset, $user, $client) {
+        return $this->assignment->setOneAssignment($audit, $asset, $user, $client);
+    }
+
     public function setAssignmentsAction() {
-        $request = $this->requestObject();        
+        $request = $this->requestObject();
         $this->assignment->setAssignment($request['Audits'], $request['Asset'], $this->token->user->id, $this->token->user->client);
         $this->response->setStatus(200);
         $this->response->setMessage("Succesfully saved assignments");
         return print json_encode($this->response);
     }
 
-    public function setAssignmentsAuditToAssetsAction(){
-        $request = $this->requestObject();        
+    public function setAssignmentsAuditToAssetsAction() {
+        $request = $this->requestObject();
         $this->assignment->setAssignmentAuditToAssets($request['Audit'], $request['Assets'], $this->token->user->id, $this->token->user->client);
         $this->response->setStatus(200);
         $this->response->setMessage("Succesfully saved assignments");
         return print json_encode($this->response);
     }
-    
+
     public function getAuditsNotAssignedAction($assetID) {
         $return = array();
         $list = $this->assignment->getAuditInUseList($assetID);
         $return["inUse"] = $list;
         $return["notIn"] = $this->audit->allAuditsNotInUse($this->token->user->client, $list);
-                        
+
         $this->response->setData($return);
         return print json_encode($this->response);
     }
@@ -93,9 +96,27 @@ class AssignmentController extends Controller {
 //        die(print_r($list));
         $return["inUse"] = $list;
         $return["notIn"] = $this->asset->allAssetsNotInUse($this->token->user->client, $list);
-                        
+
         $this->response->setData($return);
         return print json_encode($this->response);
+    }
+
+    public function retireAssignmentAction() {
+        $request = $this->requestObject();
+        $assignment = $this->assignment->getAssignmentByID($request['id']);
+        
+//        die(print_R($this->token));
+        
+        if (in_array(1123, $this->token->user->auth->Auth) && $assignment['client_id'] === $this->token->user->client) {
+            $this->assignment->setRetireOne($request['id']);
+            if ($this->assignment->setRetireOne($request['id']) == true) {
+                return print json_encode("success");
+            } else {
+                return print json_encode("Assignment does not exist");
+            }
+        } else {
+            return print json_encode("You are not authorised to complete this action");
+        }
     }
 
 }

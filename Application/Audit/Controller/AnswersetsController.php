@@ -23,21 +23,18 @@ class AnswersetsController extends Controller {
     protected $AnswerSet;
 
     public function __construct() {
-        $this->security = new Security();
-        $this->AnswerSet = new AnswersSet();
-        //Most controllers require this as it is used to instantiate a Response 
-        //object which you add to before encoding and sending to the frontend. 
-        //Initiate it here so each action doesnt have to do it again and again.             
-        $this->helpers = new \SolutionMvc\Library\Helper();
+        parent::__construct();
+        $this->AnswerSet = new AnswersSet();          
         $this->response = new Response();
-
-        $this->postdata = json_decode(file_get_contents("php://input"));
-        $this->token = $this->security->DecodeSecurityToken($this->postdata->token);
-        $this->response->token = $this->security->EncodeSecurityToken((array) $this->token->user);
+        $this->token = $this->getToken();
     }
     
     public function getAnswerSetsAction(){
         return $this->AnswerSet->getAnswersSet($this->postdata->data->assignment_id);
     }
-        
+       
+    
+    public function overUnderDueAuditsAction(){
+        return print json_encode($this->AnswerSet->getOverUnder($this->token->user->client));
+    }
 }

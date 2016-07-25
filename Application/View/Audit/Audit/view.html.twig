@@ -8,15 +8,92 @@
     {% endblock breadcrumbs %}
 
 {% block h1 %} 
-    View Audit
+    View Audit : {{data.audit.name}}
 {% endblock h1 %}
 
 {% block audit_body %}
-    
-    <pre>
-        
-{{ dump(data)}}
+    {#
+        <pre>
+             {{ dump (data) }}
+        </pre>#}
 
-    </pre>
+
+    {% for group in data.audit.groups %}
+        <div class='table-responsive group'>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan='5'><h2>{{group.name}}</h2></th>
+                    </tr>
+                    <tr>
+                        <th class='text-center'>Question</th>
+                        <th class='text-center'>Answer</th>
+                        <th class='text-center'>Expiry Date</th>
+                        <th class='text-center'>Evidence</th>
+                        <th class='text-center'>Notes</th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    {% for question in group.questions %}
+                        <tr>
+                            <td class='col-xs-3'>{{question.question}}</td>
+                            <td class='col-xs-2'>
+                                {% for ansType in data.questionTypes %}                        
+                                    {% if ansType.id == question.answerType.id %}
+                                        {% for option in ansType.options %} 
+                                            <p class='text-center'><small>{{option}}</small> <input type="checkbox" readonly></p>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                            </td>
+                            {% if question.addExpiry == 1 %}
+                                <td class='col-xs-2'><small>DD / MM / YYYY</small> {% if question.expiryRequired == 1%}<i> Required</i>{% endif %}</td>
+                            {% else %}
+                                <td class='col-xs-2' style="background-color:#e9e9e9;"></td>
+                            {% endif %}
+                            {% if question.addEvidence == 1 %}
+                                <td class='col-xs-2 text-center'><small>Please attach evidence to document. {% if question.evidenceRequired == 1%}<i><strong>Required</strong></i></small>{% endif %}</td>
+                            {% else %}
+                                <td class='col-xs-2' style="background-color:#e9e9e9;"></td>
+                            {% endif %}
+                            <td class='col-xs-3'><textarea style='min-height: 100px; min-width: 100%;'></textarea></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td><label>Score:</label> _____ / {{group.group_total_possible}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>   
+                </tfoot>
+            </table>
+            </div>
+    {% endfor %}
+<div class="col-xs-8">
+    <h1>Notes</h1>
     
+    </div>
+<div class="col-xs-4">
+    <h1>Total Score and Grade</h1>
+    <h3 class='text-right'><small>Total: ______ &#xF7; {{ data.audit.MaximumTotal}} x 100</small></h3>
+
+    <ul class="list-group">  
+            {% for gradings in data.auditGradings %}
+                {% if gradings.Aid == data.audit.auditGradings.Aid %}
+                    {% for grading in gradings.values %}
+                        <li class="list-group-item">
+                            <span class="badge"> > {{grading.value}}%</span>
+                            {{grading.name}}
+                      </li>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+    </ul>
+</div>
+
+
+
 {% endblock audit_body %}

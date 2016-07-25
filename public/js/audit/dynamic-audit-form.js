@@ -14,12 +14,12 @@ $(document).ready(function () {
 
     var regex = /(\d+)(.+?)(\d+)$/i;
     function cloneQuestion(vi) {
-        alert(vi);
+//        alert(vi);
         var cloneIndex1 = $(".question-row-" + vi).find(".clonedInput").length;
         var a = $("body").find(".question-row-" + vi);
                
         var aplus = a.find('.groupIndexHidden').val();
-        alert(aplus);
+//        alert(aplus);
         var aaplus = (aplus);
         var cloneIndex2 = cloneIndex1 + 1;
         $(".clonedInput:last").clone()
@@ -88,9 +88,9 @@ $(document).ready(function () {
         $(item).find('.evidence-required').attr('for', aaplus + 'evidence_required' + cloneIndex2);
         $(item).find('.question-row').attr('class', 'panel-body question-row-' + aaplus);
         $(item).find('.addQuestion').val(aaplus);
-        $(item).find('.group_name').attr('name', "groups[" + (--aaplus) + "][name]");
-        $(item).find('.group_question').attr('name', "groups[" + (--aaplus) + "][questions][0][question]");
-        $(item).find('.group_question_type').attr('name', "groups[" + (--aaplus) + "][questions][0][QuestionTypes_id]");
+        $(item).find('.group_name').attr('name', "groups[" + (aaplus) + "][name]");
+        $(item).find('.group_question').attr('name', "groups[" + (aaplus) + "][questions][0][question]");
+        $(item).find('.group_question_type').attr('name', "groups[" + (aaplus) + "][questions][0][QuestionTypes_id]");
         $('.page-container').append(item);
 //                .on('click', 'button.addQuestion', cloneQuestion);
 //                .on('click', 'button.removeGroup', removeGroup)

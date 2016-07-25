@@ -12,13 +12,7 @@
 {% endblock h1 %}
 
 {% block audit_body %}
-
-
-
-    <pre>
-        {#        {{ dump(MISC)}}#}
-    </pre>
-    <form action='{{public_base}}Audit/Audit/takeAudit/{{data.auditID}}{% if asset != "new" %}/{{asset}}{%endif%}' method='POST'>
+    <form action='{{public_base}}Audit/Audit/takeAudit/{{data.auditID}}{% if asset != "new" %}/{{asset.id}}{%endif%}' method='POST'>
         <h1>Take audit.</h1>
         {% if asset == "new" %}
         <div  class="row group">
@@ -33,7 +27,7 @@
             </div>
             <div class="form-group col-xs-6 col-md-3">
                 <label for="asset[contact]">Contact Number / Email</label>
-                <input type="text" name="asset[contact]" class="form-control" id="surname" placeholder="Surname/Brand">
+                <input type="text" name="asset[contact]" class="form-control" id="surname" placeholder="Contact Number / Email">
             </div>        
             <div class="form-group col-xs-6 col-md-3">
                 <label for="asset[address1]">Address 1</label>
@@ -44,25 +38,24 @@
                 <input type="text" name="asset[postcode]" class="form-control" id="postcode" placeholder="Postcode">
             </div>
             <div class="form-group col-xs-6 col-md-3">
-                <label for="asset[county]">County</label>
-                <select id="asscounty" name='asset[county]'>
+                <label for="asset[Counties_id]">County</label>
+                <select id="asscounty" name='asset[Counties_id]'>
                     {% for County in MISC.Counties %}
                         <option value='{{County.id}}'>{{County.name}}</option>
                     {% endfor %}                    
                 </select>
             </div>
             <div class="form-group col-xs-6 col-md-3">
-                <label for="asset[country]">Country</label>
-                <select id='asscountry' name='asset[country]'>
-                    {% for Country in MISC.Countries %}
-                        <option value='{{Country.id}}'>{{Country.name}}</option>
+                <label for="asset[Countries_id]">Country</label>
+                <select id='asscountry' name='asset[Countries_id]'>
+                    {% for country in MISC.Countries %}
+                        <option value='{{country.id}}' {% if country.id == 229 %}selected{% endif %}>{{country.name}}</option>
                     {% endfor %}                    
                 </select>
-                {#                <input type="email" name="asset[country]" class="form-control" id="country" placeholder="Country">#}
             </div>
             <div class="form-group col-xs-6 col-md-3">
-                <label for="asset[type]">Asset Type</label>                                
-                <select id='asstype' name='asset[type]'>  
+                <label for="asset[AssetTypes_id]">Asset Type</label>                                
+                <select id='asstype' name='asset[AssetTypes_id]'>  
                     {% for Group, Types in MISC.Groups %}
                         <optgroup label='{{Group}}'>                            
                             {% for type in Types %}
@@ -71,12 +64,9 @@
                         </optgroup>                        
                     {% endfor %}                    
                 </select>
-
-                {#                <input type="email" name="asset[type]" class="form-control" id="type" placeholder="Asset Type">#}
             </div>
         </div>
         {% else %}
-
             <div  class="row group">
                 <div  class="row">
                     <h1>Asset Details</h1>
@@ -117,17 +107,14 @@
                 </div>
             </div>
             {% endif %}
-                {#{{ dump(data.data.audit.audit)}}#}
                 <section>
                     {% for group in data.audit.groups %}
                         <div  class="row group">
                             <h3>{{ group.name}}</h3>
                             {% for question in group.questions %}
-
                                 <div class="col-xs-12 alternate">
                                     <div class="col-xs-12 col-md-3">
-
-                                        <p> {{ loop.index }}: {{ question.question}}</p>                  
+                                        <p> <strong>{{ loop.index }}</strong>: {{ question.question}}</p>                  
                                     </div>                
                                     <div class="col-xs-12 {%if question.addExpiry == 1 %}col-md-2{%else%}col-md-4{%endif%}">
                                         <label class="small-label">Answer</label>
@@ -144,7 +131,6 @@
                                                     value="50"                 
                                                     data-orientation="vertical"
                                                     >
-
                                                 <span class="badge progress-bar-info">50</span>
                                             </div>
                                         {% else %}
@@ -160,17 +146,12 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                    </div> 
-
-
+                                    </div>
                                     {% if question.addExpiry == 1%}
                                         <div class="col-xs-12 col-md-2 form-group" >
                                             <label>Expires</label>
                                             <input type="text" class="form-control expires" id="start_date" name='takeAudit[answers][{{question.id}}][expires]' placeholder="Expires">
                                         </div>
-                                    {% else %}
-                                        {#<div class="col-xs-12 col-md-2" ng-if="question.addExpiry === 0">
-                                        </div>#}
                                     {% endif %}
                                     <div class="col-xs-6 col-md-3 form-group">
                                         <label>Notes</label>
@@ -193,23 +174,24 @@
                         </div>
                     {% endfor %}
                 </section>
-
-                <p>Audit Completion %</p>
-                <md-progress-linear md-mode="determinate" value="60"></md-progress-linear>
-
-                <button type='submit'>Save Answers</button>
+                <button class='btn btn-danger'type='button' onclick='goBack()'><i class='glyphicon glyphicon-remove-circle'></i>Cancel</button>
+                <button class='btn btn-success pull-right' type='submit'>Save Answers <i class='glyphicon glyphicon-ok'> </i></button>
             </form>
-            <pre>
-
-            </pre>
-
-
-
             {% endblock audit_body %}
 
 
                 {% block extra_js %}
                     {{ parent() }}
+
+                    <script>
+                        function goBack() {
+                            $(this).preventDefault;
+                            window.history.back();
+                        }
+                        ;
+                    </script>
+
+
                     <script src='{{public_base}}js/select2/select2.min.js'></script>
                     <script>
 
@@ -220,7 +202,7 @@
                             $("#asscountry").select2();
 
 
-                        {% for group in data.data.groups %}
+                        {% for group in data.audit.groups %}
                             {% for question in group.questions %}
                                 {% if question.addEvidence == 1 %}
                                         $(".dropzone{{question.id}}").dropzone({

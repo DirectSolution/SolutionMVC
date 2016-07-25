@@ -19,6 +19,8 @@ class BaseModel {
     public $db;
     public $prod_portal;
     public $prod_audit;
+    public $prod_humanresources;
+    public $prod_documents;
     public $prod_healthandsafety;
     /** @var string */
     private $tableName;
@@ -40,7 +42,9 @@ class BaseModel {
         //These are each table in the db, or will be. Should probably be moved else where but no urgent.
         $this->getProdAudit();
         $this->getProdPortal();
+        $this->getProdDocuments();
         $this->getProdHS();
+        $this->getProdHR();
         //Haven't used this yet but it loads a table based on the class name so class mast_users{} would load the mast_users table.
         $this->tableName = $this->tableNameByClass(get_class($this));
     }
@@ -48,18 +52,26 @@ class BaseModel {
     public function getProdPortal(){        
         $this->prod_portal = $this->openDatabaseConnection("prod_portal");
     }
+    
+    public function getProdDocuments(){        
+        $this->prod_documents = $this->openDatabaseConnection("prod_documents");
+    }
     public function getProdAudit(){        
         $this->prod_audit = $this->openDatabaseConnection("prod_audit");        
     }
     public function getProdHS(){
         $this->prod_healthandsafety = $this->openDatabaseConnection("prod_healthandsafety");
     }
+    public function getProdHR(){
+        $this->prod_humanresources = $this->openDatabaseConnection("prod_human_resources");
+    }
     
     //Start connection
     private function openDatabaseConnection($database) {
         $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING);
         $this->dbcon = new PDO($this->db['type'] . ':host=' . $this->db['host'] . ';dbname=' . $database . ';charset=' . $this->db['charset'], $this->db['user'], $this->db['pass'], $options);
-         return new SolutionORM($this->dbcon);
+         return new SolutionORM($this->dbcon, NULL, new \SolutionORM\Controllers\Cache\CacheSessionController());
+//         return new SolutionORM($this->dbcon);
        }
 
     /**
