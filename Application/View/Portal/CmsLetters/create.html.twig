@@ -1,0 +1,282 @@
+{% extends "base.html.twig" %}
+{% set menu_selected = 'cms_admin' %}
+{% block title %}| CMS Admin{% endblock title %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Portal/Cmsletters/index">Letter Index</a></li>
+    <li class='active'>Create Letter</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Create Letter Head
+{% endblock h1 %}
+
+{% block body %}
+    <style>
+        table{
+            width: 660px;
+        }
+        .in-table{
+            width:800px;
+        }
+        td{
+            width: auto;
+        }
+        .bordered-box-outer{
+            width: calc(800px + 36px);
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px auto;
+        }
+        .bordered-box-inner{
+            width: calc(800px - 56px);
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px auto;
+        }
+        .bordered-box-small{
+            vertical-align: middle;
+            text-align: center;
+            padding: 3px;
+            width: 30px;
+            height: 30px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+            overflow:visible;
+        }
+
+    </style>
+    <form method="post" action="{{public_base}}Portal/Cmsletters/create" class='form-horizontal main'>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="Template Name" id='template_name' name="name" required>
+            </div>
+        </div>
+        <div  class="bordered-box-outer">
+            <header class="bordered-box-inner header-section">
+                <div class="center-block text-center">
+                    <h2>Template Header</h2>
+                    {#                    <button type="button" class="add-header btn btn-primary">Add Header</button>#}
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Add Header <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="width: 240px;">
+                            {% for header in headers %}
+                                <li>
+                                    <p>
+                                        <button type="button" class="header-insert btn btn-info btn-sm btn-block" value="{{header.id}}">{{ header.name }}</button>
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            <section id="template-body">
+                <div id="content-description" class="text-center"><h2>Template Body</h2><p>Use the blue buttons below to start adding content to this section. </p></div>
+                {#THIS IS WHERE WE DYNAMICALLY ADD STUFF#}
+            </section>
+            <footer class="bordered-box-inner footer-section">
+                <div class="center-block text-center">
+                    <h2>Page Footer</h2>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Template Footer <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for footer in footers %}
+                                <li>
+                                    <p>
+                                        <button type="button" class="footer-insert btn btn-info btn-sm btn-block" value="{{footer.id}}">{{ footer.name }}</button>
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <div id="button-holder">
+            <button type="button" class="btn btn-xs btn-info add-big-title">Add Big Title <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-xs btn-info add-sub-title">Add Sub Title <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-xs btn-info add-paragraph">Add Paragraph <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-xs btn-info add-list">Add List <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+
+            <button class="btn btn-xs btn-info add-table" type="button">Add Table</button>
+            <input type="text" id='cols' class="form-control" style='margin-left: -5px; width: 75px; height: 23px; display: inline-block;' placeholder="Columns">
+            <input type="text" id='rows' class="form-control" style='margin-left: -5px; width: 75px; height: 23px; display: inline-block;' placeholder="Rows">
+
+            {#            <button type="button" class="btn btn-xs btn-info add-table">Add Table <i class="fa fa-plus-circle" aria-hidden="true"></i></button>#}
+            <button type="button" class="btn btn-xs btn-primary add-address">Add Address Token <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-xs btn-primary add-name">Add Name Token <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+        </div>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar">
+                    <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}Portal/Cmsletters'>Cancel <i class="fa fa-ban" aria-hidden="true"></i></a></p></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                    <li><button type="button" class="btn btn-success navbar-btn save-template">Save Template <i class="fa fa-floppy-o" aria-hidden="true"></i></button></li>
+                </ul>
+            </div>
+        </nav>
+    </form>
+{% endblock body %}
+{% block extra_js %}
+    {{ parent() }}
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="{{asset_base}}js/ColResize/col-resizer.js"></script>
+    <script>
+        $(function () {
+
+            var $templateBody = $('#template-body');
+            $($templateBody).sortable({cancel: ':input,.contenteditable'});
+            $('#button-holder').on('click', '.add-big-title', function () {
+                $('#content-description').remove();
+                $templateBody.append("<div class='sortable'><div class='bordered-box-small'><i class='fa fa-arrows-v' aria-hidden='true'></i></div><h2 style='display:inline-block' class='contenteditable' contenteditable='true'>Type Big Title Content Here</h2> <button type='button' class='remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button>\n</div>");
+            });
+            $('#button-holder').on('click', '.add-sub-title', function () {
+                $('#content-description').remove();
+                $templateBody.append("<div class='sortable'><div class='bordered-box-small'><i class='fa fa-arrows-v' aria-hidden='true'></i></div><h4 style='display:inline-block' class='contenteditable' contenteditable='true'>Type Sub Title Content Here</h4> <button type='button' class='remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button>\n</div>");
+            });
+            $('#button-holder').on('click', '.add-paragraph', function () {
+                $('#content-description').remove();
+                $templateBody.append("<div class='sortable'><div class='bordered-box-small'><i class='fa fa-arrows-v' aria-hidden='true'></i></div><p style='display:inline-block' class='contenteditable' contenteditable='true'>Type Paragraph Content Here</p> <button type='button' class='remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button>\n</div>");
+            });
+            $('#button-holder').on('click', '.add-table', function () {
+
+                var $tableCount = $($templateBody).find('table').length;
+
+                $('#content-description').remove();
+
+                var $colCount = $('#cols').val();
+                var $rowCount = $('#rows').val();
+                var $width = 630 / $colCount;
+
+                var $tableArray = "<div style='position:relative'><button type='button' style='position:absolute;right:0; top:0;' class='remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button><table class='in-table' border=1; width=800px>";
+                for (var $rowIter = 0; $rowIter < $rowCount; $rowIter++) {
+
+                    $tableArray += "<tr>";
+                    for (var $colIter = 0; $colIter < $colCount; $colIter++) {
+                        $tableArray += "<td contenteditable='true' class='contenteditable'><p>Col</p><div contenteditable='false' class='dropdown'><button class='btn btn-default btn-xs pull-right dropdown-toggle' type='button' id='" + $tableCount + $colIter + $rowIter + "' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'><span class='caret'></span></button><ul class='dropdown-menu'><li><button type='button' class='add-table-bold btn btn-xs btn-default '>Add Bold Field</button></li><li><button type='button' class='btn btn-xs btn-default add-table-italics'>Add Italics Field</button></li><li><button type='button' class='add-table-name btn btn-xs btn-default '>Add Name</button></li><li><button type='button' class='add-table-address btn btn-xs btn-default '>Add Address</button></li></ul></div></td>";
+                    }
+                    $tableArray += "</tr>";
+                }
+                $tableArray += "</table></div>";
+                $templateBody.append($tableArray);
+                $('body').find("table").colResizable();
+            });
+
+            $($templateBody).on('click', '.add-table-bold', function () {
+                $(this).parent().parent().parent().parent().find('p').last().append(" <strong> Bold Text </strong> ");
+            });
+            $($templateBody).on('click', '.add-table-italics', function () {
+                $(this).parent().parent().parent().parent().find('p').last().append(" <em> Italic Text </em> ");
+            });
+            $($templateBody).on('click', '.add-table-name', function () {
+                $(this).parent().parent().parent().parent().find('p').last().append(" <b> [[NAME-TOKEN]] </b> ");
+            });
+            $($templateBody).on('click', '.add-table-address', function () {
+                $(this).parent().parent().parent().parent().find('p').last().append(" <b> [[ADDRESS-TOKEN]] </b> ");
+            });
+
+            $('#button-holder').on('click', '.add-list', function () {
+                $('#content-description').remove();
+                $templateBody.append("<div class='sortable'><div class='bordered-box-small'><i class='fa fa-arrows-v' aria-hidden='true'></i></div><ul class='list' style='display:inline-block' class='contenteditable' contenteditable='true'><li class='contenteditable'>Type List Content Here, press enter to add a new item.</li></ul> <button type='button' class='remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button>\n</div>");
+            });
+            $('#button-holder').on('click', '.add-address', function () {
+                $templateBody.children().find('p').last().append(" <b> [[ADDRESS-TOKEN]] </b> ");
+            });
+            $('#button-holder').on('click', '.add-name', function () {
+                $templateBody.children().find('p').last().append(" <b> [[NAME-TOKEN]] </b> ");
+            });
+            $($templateBody).on('click', '.remove', function () {
+                $(this).parent().remove();
+            });
+
+            $('.header-insert').click(function () {
+                var $id = $(this).val();
+                $('.header-section').children().hide();
+                $.ajax({
+                    type: 'POST',
+                    url: "{{public_base}}Portal/Cmsletters/getHeader/",
+                    data: {
+                        "id": $id
+                    }
+                }).done(function (data) {
+                    var $Obj = jQuery.parseJSON(data);
+                    $('.header-section').append("<input type='hidden' id='headType' name='headerType' value='" + $id + "'>");
+                    $('.header-section').append("<div class='header-inner' style='width: 660px; position:relative'>" + $Obj.html + "<button style='position: absolute; top:0; right:0;' type='button' class='pull-right header-remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button></div>");
+
+                });
+            });
+
+            $('.footer-insert').click(function () {
+                var $id = $(this).val();
+                $('.footer-section').children().hide();
+                $.ajax({
+                    type: 'POST',
+                    url: "{{public_base}}Portal/Cmsletters/getFooter/",
+                    data: {
+                        "id": $id
+                    }
+                }).done(function (data) {
+                    var $Obj = jQuery.parseJSON(data);
+                    $('.footer-section').append("<input type='hidden' id='footType' name='footerType' value='" + $id + "'>");
+                    $('.footer-section').append("<div class='footer-inner' style='width: 660px; position:relative'>" + $Obj.html + "<button style='position: absolute; top:0; right:0;' type='button' class='pull-right footer-remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button></div>");
+
+                });
+            });
+
+            $('.header-section').on('click', '.header-remove', function () {
+                $('.header-section').children().show();
+                $('.header-section').find('.header-inner').remove();
+            });
+        {#$('.footer-insert').click(function () {
+            $('.footer-section').children().hide();
+            $('.header-section').append("<input type='hidden' id='footType' name='footerType' value='" + $(this).val() + "'>");
+            $('.footer-section').append("<div style='position: relative;' class='footer-inner'><h1>Some Page Header</h1><ul><li>Some address</li><li>Some address</li><li>Some address</li></ul> <button style='position: absolute; top:0; right:0;' type='button' class='pull-right footer-remove btn btn-xs btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></button>\n</div>")
+        });#}
+                    $('.footer-section').on('click', '.footer-remove', function () {
+                        $('.footer-section').children().show();
+                        $('.footer-section').find('.footer-inner').remove();
+                    });
+                    $('.save-template').click(function (e) {
+                        var $content = $('#template-body').html();
+
+
+        {#                var $postArray = [];
+                        $postArray['content'] = $content;
+                        $postArray['name'] = $('#template_name').val();
+                        $postArray['header_type'] = $('#headType').val();
+                        $postArray['footer_type'] = $('#footType').val();
+                        console.log($postArray);#}
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "{{public_base}}Portal/Cmsletters/create/",
+                                        data: {
+                                            "content": $content,
+                                            "name": $('#template_name').val(),
+                                            "header_type": $('#headType').val(),
+                                            "footer_type": $('#footType').val()
+                                        },
+                                    }).done(function (data) {
+                                        var $datareturn = jQuery.parseJSON(data);
+                                        console.log("{{public_base}}" + $datareturn.location);
+
+                                        window.location = "{{public_base}}" + $datareturn.location;
+                                    });
+
+                                });
+                            });
+    </script>
+
+
+{% endblock extra_js %}

@@ -1,7 +1,8 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Method Statements{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li class='active'>Method Statement</li>   
     {% endblock breadcrumbs %}
@@ -11,7 +12,8 @@
 {% endblock h1 %}
 
 {% block audit_body %}
-
+  
+    
     <div class="modal fade" id="retireMethod" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -33,6 +35,7 @@
         <div class="container-fluid">
             <ul class="nav navbar-nav">                
                 <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Method/create" class="btn btn-success">Create Method</a></p></li>
+                <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Method/awaiting" class="btn btn-primary">{{awaiting}} Awaiting Review</a></p></li>
             </ul>
             <form class="navbar-form navbar-right" role="search">
                 <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search for...">
@@ -55,10 +58,10 @@
                     <td>{{ method.author.name }} / {{ method.author.username }}</td>
                     <td>{{coshh.created_at| date('d/m/Y')}}</td>
                     <td>
-                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Method/document/{{method.statement.id}}">View Word Doc</a>
-                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Method/view/{{method.statement.id}}">View</a>
-                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Method/update/{{method.statement.id}}">Update</a>
-                        <button class="btn btn-danger setRetire" type='button' data-toggle="modal" data-target="#retireMethod" data-method-id='{{method.statement.id}}' data-method-name='{{method.statement.name}}' value="{{method.statement.id}}">Retire</button>
+                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Method/documentbyid/{{method.statement.id}}">View Word Doc <i class="fa fa-file-word-o" aria-hidden="true"></i></a>
+                        <a class="btn btn-primary" href="{{public_base}}HealthSafety/Method/view/{{method.statement.id}}">View <i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a class="btn btn-warning" href="{{public_base}}HealthSafety/Method/update/{{method.statement.id}}">Update <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <button class="btn btn-danger setRetire" type='button' data-toggle="modal" data-target="#retireMethod" data-method-id='{{method.statement.id}}' data-method-name='{{method.statement.name}}' value="{{method.statement.id}}">Retire <i class="fa fa-trash" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             {% endfor %}
@@ -78,8 +81,8 @@
 
 {% block extra_js %}
     {{ parent() }}
-    <script src="{{public_base}}js/audit/table-filter.js"></script>
-    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+    <script src="{{asset_base}}js/audit/table-filter.js"></script>
+    <script src="{{asset_base}}js/audit/table-pagination.js"></script>
 
 
     <script>
@@ -98,7 +101,7 @@
             var id = $(this).val();
             $.ajax({
                 type: 'GET',
-                url: "{{public_base}}HealthSafety/Method/Update/" + id,
+                url: "{{public_base}}HealthSafety/Method/Retire/" + id,
                 dataType: 'json',
                 encode: true
             }

@@ -33,7 +33,7 @@ class Answer extends BaseModel {
                             "answer_value" => $aVal['value'],
                             "answer_text" => $aVal['name'],
                             "expiry" => isset($answer['expires']) ? $answer['expires'] : null,
-                            "evidence" => isset($answer['evidence']) ? $answer['evidence'] : null,
+                            //"evidence" => isset($answer['evidence']) ? $answer['evidence'] : null,
                             "Assignments_id" => $assignment['id'],
                             "client_id" => $token->client,
                             "Questions_id" => $question,

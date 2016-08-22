@@ -1,0 +1,165 @@
+{% extends "HealthSafety/hs_base.html.twig" %}
+{% set menu_selected = 'document' %}
+{% block title %}| Coshh - Awaiting{% endblock title %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
+    <li><a href="{{public_base}}HealthSafety/Coshh">Coshh Assessments</a></li>
+    <li class='active'>Awaiting Approval</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    All Coshh
+{% endblock h1 %}
+
+{% block audit_body %}
+
+
+    <div class="modal fade" id="retireCoshh" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" value=''  id='retireNow'>Yes, do it.</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="acceptCoshh" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" value=''  id='retireNow'>Yes, do it.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">          
+            <form class="navbar-form navbar-right" role="search">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search for...">
+            </form>
+        </div>
+    </nav>
+
+    <table id="table" class="order-table table table-hover table-responsive paginated">
+        <thead>
+            <tr>
+                <th>Document Name</th>
+                <th>Author</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coshh in data %}
+                <tr>
+                    <td><a href="{{public_base}}HealthSafety/Coshh/view/{{coshh.assessment.id}}">{{ coshh.assessment.name }}</a></td>
+                    <td>{{ coshh.author.name }} / {{ coshh.author.username }}</td>
+                    <td>{{coshh.assessment.created_at| date('d/m/Y')}}</td>
+                    <td>
+                        <a class="btn btn-xs btn-info" href="{{public_base}}HealthSafety/Coshh/documentbyid/{{coshh.assessment.id}}">View Word Doc <i class="fa fa-file-word-o" aria-hidden="true"></i></a>
+                        <a class="btn btn-xs btn-primary" href="{{public_base}}HealthSafety/Coshh/view/{{coshh.assessment.id}}">View <i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a class="btn btn-xs btn-warning" href="{{public_base}}HealthSafety/Coshh/update/{{coshh.assessment.id}}">Update <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <button class="btn btn-xs btn-success setAccept" type='button' data-toggle="modal" data-target="#acceptCoshh" data-coshh-id='{{coshh.assessment.id}}' data-coshh-name='{{coshh.assessment.name}}' value="{{coshh.assessment.id}}">Accept (make live) <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                        <button class="btn btn-xs btn-danger setRetire" type='button' data-toggle="modal" data-target="#retireCoshh" data-coshh-id='{{coshh.assessment.id}}' data-coshh-name='{{coshh.assessment.name}}' value="{{coshh.assessment.id}}">Reject <i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="bg-success"><td colspan="4"><h2 class="text-center">Great news! There are no documents in need of review. Time to make a brew.</h2></td></tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan='10'>
+                    <nav id="pagi" class='text-center'>
+                        <ul class="pagination pagination-lg">
+
+                        </ul>
+                    </nav>
+                </td>
+            </tr>
+        </tfoot>
+    </table>            
+{% endblock audit_body %}
+
+{% block extra_js %}
+    {{ parent() }}
+    <script src="{{asset_base}}js/audit/table-filter.js"></script>
+    <script src="{{asset_base}}js/audit/table-pagination.js"></script>
+
+
+    <script>
+
+        $('#retireCoshh').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var methodName = button.attr('data-coshh-name'); // Extract info from data-* attributes
+            var methodId = button.attr('data-coshh-id'); // Extract info from data-* attributes
+            modal.find('.modal-title').text('Are you sure you wish to reject ' + methodName);
+            modal.find('#leadText').append("<i>" + methodName + "</i>");
+            modal.find('#retireNow').val(methodId);
+        });
+
+
+        $('body').on('click', '#retireNow', function () {
+            var id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{public_base}}HealthSafety/Coshh/Retire/" + id,
+                dataType: 'json',
+                encode: true
+            }
+            ).done(function (data) {
+                $('#table').load(document.URL + ' #table', function () {
+                    paginate();
+                    $(".global-error-inner")
+                            .append("<div class='alert alert-success alert-dismissible' role='alert'>  <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Succesfully rejected coshh assessment revision!</div>");
+                });
+            });
+        });
+
+
+
+        $('#acceptCoshh').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var methodName = button.attr('data-coshh-name'); // Extract info from data-* attributes
+            var methodId = button.attr('data-coshh-id'); // Extract info from data-* attributes
+            modal.find('.modal-title').text('Are you sure you wish to accept and make live ' + methodName);
+            modal.find('#leadText').append("<i>" + methodName + "</i>");
+            modal.find('#acceptNow').val(methodId);
+        });
+
+
+        $('body').on('click', '#acceptNow', function () {
+            var id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{public_base}}HealthSafety/Coshh/accept/" + id,
+                dataType: 'json',
+                encode: true
+            }
+            ).done(function (data) {
+                $('#table').load(document.URL + ' #table', function () {
+                    paginate();
+                    $(".global-error-inner")
+                            .append("<div class='alert alert-success alert-dismissible' role='alert'>  <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Succesfully reviewed coshh assessment!</div>");
+                });
+            });
+        });
+
+    </script>
+{% endblock extra_js %}

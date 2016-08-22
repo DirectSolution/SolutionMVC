@@ -42,8 +42,7 @@ class UserController Extends Controller {
     }
 
     public function viewAction($id) {
-        if (in_array(13, $this->token->user->auth->Auth) && $this->getToken()) {
-
+        if ($this->isAuth(13)) {
             $userArray = $this->userArray($id);
             echo $this->twig->render("Portal/User/view.html.twig", array(
                 "user" => $userArray
@@ -58,15 +57,16 @@ class UserController Extends Controller {
     }
 
     public function createAction() {
-        if (in_array(15, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(15)) {
             if ($this->requestType() == 'GET') {
+
                 echo $this->twig->render("Portal/User/create.html.twig", array(
                     "roles" => $this->roles->getRoles($this->token->user->client)
                 ));
             } elseif ($this->requestType() == 'POST') {
                 $user = $this->users->setNew($this->requestObject(), $this->token->user->client, $this->token->user->id);
                 if ($user != null) {
-                    $email = new \SolutionMvc\Portal\Controller\EmailController();                    
+                    $email = new \SolutionMvc\Portal\Controller\EmailController();
                     $this->roles->setUserRole($user, $this->requestObject());
                     $this->setSession("success", "Successfully added user.");
                     $email->newUserEmail($user, $this->token, $this->requestObject());
@@ -86,7 +86,7 @@ class UserController Extends Controller {
     }
 
     public function updateAction($id) {
-        if (in_array(14, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(14)) {
             if ($this->requestType() == 'GET') {
                 $userArray = $this->userArray($id);
                 echo $this->twig->render("Portal/User/update.html.twig", array(
@@ -124,15 +124,24 @@ class UserController Extends Controller {
             "createdby_id" => $createdBy['username'],
         );
     }
-    
-    
-    public function activateAction($key){
-        
-         echo $this->twig->render("Portal/User/activate.html.twig", array(
-                
-            ));
-        
-    }
 
+    public function activateAction($key) {
+        $isValidKey = $this->users->checkKey($key);
+        if ($this->requestType() == "GET" && $isValidKey === true) {
+            echo $this->twig->render("Portal/User/activate.html.twig", array(
+                "user" => $this->users->getUserByKey($key),
+                "key" => $key
+            ));
+        } elseif ($this->requestType() == "POST" && $isValidKey === true) {
+            $user = $this->users->getUserByKey($key);
+            $this->users->setActivateUser($user, $this->requestObject());
+            $this->users->retireKey($key);
+            $this->redirect("Portal/Login", "Congratulations, you have now activated your account and can use the detail ");
+        } else {
+            echo $this->twig->render("Portal/Login/login.html.twig", array(
+                "errors" => $isValidKey
+            ));
+        }
+    }
 
 }

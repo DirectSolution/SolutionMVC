@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+
+
+
+        <p>[[ADDRESS-BLOCK]]</p>
+        <p style='text-align:right'>[[TODAYS-DATE]]</p>
+        <p>Dear [[CLIENT-SALUTATION]] [[CLIENT-NAME]],</p>
+
+        <p>Your Safety First Package is due for renewal. Please read this letter as it includes important information about receiving a continuous service. </p>
+        <p>HS Direct Ltd is pleased to announce the inclusion of Legal Expenses insurance as part of your Safety First Package. This insurance covers you for a number of legal issues which are outlined in the included policy summary. You can also download the Policy Document from your Safety First Package in the "Custom Downloads" section.</p>
+
+        <ul>
+            <li>A free invoicing application</li>
+            <li>Additional documents in the "Custom Downloads" area</li>
+        </ul>
+
+        <p>We are available to help you with your Health and Safety issues between 8am and 9pm, Monday to Friday and 9am to 5pm at weekends, so please call our support number 0114 244 4411 when you require assistance.</p>
+        <p style='color:red'>Your renewal payment is only &pound;[[RENEWAL-PRICE]] plus VAT. To ensure you receive continuous service and insurance cover this amount will be taken from credit/debit card ************[[CLIENT-CARD-LAST4]] within 7 days of [[TODAYS-DATE]] unless you contact us to cancel your subscription.</font></p>
+        <p>This reduced rate is valid for 30 days from the renewal due date. If for any reason the above card is no longer valid, please contact our accounts department on 0114 244 4461 to discuss new payment details. Once you renew your Safety First Package a new certificate will be posted to you within 7 days.</p>
+
+        <p>Yours sincerely,</p>
+        <p><img src = "http://doug.portal.solutionhost.co.uk/apps2/public/img/Signatures/nick_murphy.gif" alt=''></p>
+        <p><strong>Nick Murphy</strong></p>
+        <p><em>Managing Director</em></p>
+        <p style="font-size: 8pt">HS Direct Ltd is an Appointed Representative of James Hallam Ltd who are authorised and regulated by the Financial Conduct Authority.</p>
+
+        <!-- NEW SHEET -->
+        <br pagebreak="true"/>
+        
+        <h2 style='text-align: center;'>Pro Forma Invoice</h2>
+        <table style="width:630px;" border="1">
+            <tr>
+                <td style="vertical-align: top;">
+                    <p><strong>Invoice To:</strong></p>
+                    <p>[[ADDRESS-BLOCK]]</p>
+                </td>
+                <td style="vertical-align: top;">
+                    <p><strong>Invoice No:</strong> SFPR-[[CLIENT-NUMBER]]-[[CLIENT-POSTCODE]]-PF</p>
+                    <p><strong>Tax Date:</strong> [[TODAYS-DATE]]</p>
+                    <p><strong>VAT Registration No:</strong> 829864475</p>
+                    <p><strong>Sort Code:</strong> 20-76-89</p>
+                    <p><strong>Account No:</strong> 43812782</p>
+                </td>
+            </tr>
+        </table>
+        
+        <table style="width:630px; text-align: center;" border ="1" cellpadding="2" cellspacing="0" >
+            <tr>
+                <td>
+                    <strong>QTY</strong>
+                </td>
+                <td>
+                    <strong>Description</strong>
+                </td>
+                <td>
+                    <strong>Price</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Safety First Package renewal - 12 Months supported Service</td>
+                <td>&pound;[[RENEWAL-PRICE]]</td>
+            </tr>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;">
+                        <strong>Subtotal:</strong>&pound;[[RENEWAL-PRICE]]<br>                        
+<!--                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: right;">-->
+                        <strong>VAT Total (20%):</strong>&pound;[[VAT-TOTAL]]<br>                        
+<!--                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: right;">-->
+                        <strong>Total:</strong>&pound;[[RENEWAL-TOTAL]]<br>                                  
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+                           
+        
+<!--        <table style="border: none; float: right;" border="" cellpadding="2" cellspacing="0" >
+            <tr>
+                <td width="80%" align="right"><strong >Subtotal:</strong ></td>
+                <td width="20%">&pound;[[RENEWAL-PRICE]]</td>
+            </tr>
+            <tr>
+                <td width="80%" align="right"><strong >VAT Total (20%):</strong ></td>
+                <td width="20%">&pound;[[VAT-TOTAL]]</td>
+            </tr>
+            <tr>
+                <td width="80%" align="right"><strong >Total:</strong ></td>
+                <td width="20%">&pound;[[RENEWAL-TOTAL]]</td>
+            </tr>
+        </table>-->
+
+</body>
+</html>

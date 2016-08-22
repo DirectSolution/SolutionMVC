@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+{% set menu_selected = 'cms_admin' %}
+{% block title %}| CMS Admin - View {{ data.template.name }}{% endblock title %}
+{% block breadcrumbs %}
+    <li><a href="{{public_base}}Portal/Cmsletters/index">Letter Index</a></li>
+    <li class='active'>View {{ data.template.name }}</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    View {{ data.name }}
+{% endblock h1 %}
+
+{% block body %}
+    
+    <div>
+        {{ body|raw }}
+        
+    </div>
+            
+{% endblock body %}
+
+{% block extra_js %}
+    {{ parent() }}
+{% endblock extra_js %}

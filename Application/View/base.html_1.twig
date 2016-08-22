@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Solution Host {% block title %}{% endblock title %}</title>
+        {# All of these need combining, once the dev process is over #}
+        <link href="{{public_base}}css/dropzone.css" rel="stylesheet">        
+        <link href="{{public_base}}css/app.css" rel="stylesheet">
+        <link href="{{public_base}}css/select2.min.css" rel="stylesheet">
+        <link href="{{public_base}}css/select2-bootstrap.min.css" rel="stylesheet">
+        <link href="{{public_base}}css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{public_base}}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <link href="{{public_base}}css/bootstrap-switch.min.css" rel="stylesheet">
+        <link href="{{public_base}}css/rangeslider.css" rel="stylesheet">
+        {# <link href="{{public_base}}css/contents.css" rel="stylesheet">#}
+        <script src="{{public_base}}js/jquery/jquery.min.js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+
+        {#{% if 33 in token.user.auth.Auth %}
+            <nav class="navbar navbar-inverse navbar-fixed-bottom">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Admin Toolbar</a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">                            
+                        </ul>                        
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="active"><a>Username: {{token.user.username}}</a></li>
+                            <li class="active"><a>Current Client: {{token.user.client}}</a></li>
+                        </ul>
+                        <form class="navbar-form navbar-right" role="search" method="POST" action="{{public_base}}Portal/Security/switchclient">
+                            <div class="form-group">                                
+                                <input type="text" class="form-control" name="client" placeholder="Client #">
+                            </div>
+                            <button type="submit" class="btn btn-default">Switch Client</button>
+                        </form>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>   
+        {% endif %}#}
+
+        {% if token %}
+            <nav class="navbar navbar-default main-nav">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header col-sm-2">
+                        <a class="navbar-brand" href="portalmain.php">portal.Solutionhost.co.uk</a>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav nav-container">
+                            <li class="nav-tab">
+                                <a href="#" class='support-button'>Support</a>
+                            </li>
+                            <li class="nav-tab">
+                                <a href="#" class='settings-button'>Settings</a>
+                            </li>
+                            <li class="nav-tab">
+                                <a href="#" class='userguide-button'>Userguide</a>
+                            </li>
+                        </ul>
+                        <div class="nav navbar-nav navbar-right nav-container">
+                            <strong>{% if token.user.client == 0 %}000{%else%}{{ token.user.client }}{% endif %} || {{ token.user.username }} || <a class="btn btn-xs btn-danger" href="{{public_base}}Portal/Logout">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></a></strong>
+                        </div>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        {% endif %}
+
+
+
+        <div class="site-wrapper heighted">
+            {% if token %}
+                <div class="row row-offcanvas row-offcanvas-right">
+                    <div class="sidebar-nav">
+                        <div class='col-sm-2 col-md-2 col-lg-2 heighted' style='background-color: #f8f8f8;'>
+                            <ul class="nav nav-pills nav-stacked" style='margin-top: 30px;'>
+                                <li class="{% if menu_selected|default('asset') == 'asset' %}active{% endif %}" role="presentation">
+                                    <a href="{{public_base}}Audit/Asset">Asset Manager <i class="fa fa-car" aria-hidden="true"></i></a>
+                                </li>
+                                <li class="{% if menu_selected == 'audit' %}active{% endif %}" role="presentation">
+                                    <a href="{{public_base}}Audit/Audit">Audit Control <i class="fa fa-file-text" aria-hidden="true"></i></a>
+                                </li>                                
+                                <li class="{% if menu_selected == 'user' %}active{% endif %}" role="presentation">
+                                    <a href="{{public_base}}Portal/User">User Manager <i class="fa fa-users" aria-hidden="true"></i></a>
+                                </li>
+                                <li class="{% if menu_selected == 'document' %}active{% endif %}" role="presentation">
+                                    <a href="{{public_base}}HealthSafety/Document">Safety Document Manager <i class="fa fa-users" aria-hidden="true"></i></a>
+                                </li>
+                                <li class="{% if menu_selected == 'ffc' %}active{% endif %}" role="presentation">
+                                    <a href="{{public_base}}Ffc/AdminIndex">FFC Admin <i class="fa fa-users" aria-hidden="true"></i></a>
+                                </li>                      
+                            </ul>
+                            {% if (menu_selected == 'audit' or menu_selected == 'asset') %}
+                            <section class='overdue-container'>
+                                <span class="badge">4</span>
+                                <div id="overDue"></div>
+                            </section>
+                            <script src="{{public_base}}js/audit/getOverUnder.js"></script>
+                            <script>
+                                $(document).ready(function () {
+                                    $('[data-toggle="offcanvas"]').click(function () {
+                                        $('.row-offcanvas').toggleClass('active')
+                                    });
+                                });
+                            </script>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+                <div class='{% if token %}col-sm-10 col-md-10 col-lg-10{% endif %} heighted'  style='border-left: 1px solid #b3cce6;border-top: 1px solid #b3cce6;'>
+                    <div class="row global-error-outer" id="message-outer">
+                        <div class="global-error-inner">
+                            {% if (errors or session.error ) %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ errors }}{{ session.error }}</div>      
+                                {% endif %}
+                                {% if (success or session.success ) %}
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ success }}{{ session.success }}</div>      
+                                {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="body-block" {% if not token %}style='margin-top: 10%'{% endif %}>
+
+                        {% block body %}
+                        {% endblock body %}
+
+                    </div>
+                    <footer style="position:absolute; bottom:0;">
+                        <p>&copy; {{ "now"|date('Y')}} SolutionHost.</p>
+                    </footer>  
+                </div>
+
+            </div>
+
+
+            <script src="{{public_base}}js/jquery-ui/jquery-ui.min.js"></script>
+            <script src="{{public_base}}js/bootstrap/bootstrap.min.js"></script>
+            <script src="{{public_base}}js/moment/moment.min.js"></script>
+            <script src="{{public_base}}js/datepicker/bootstrap-datetimepicker.min.js"></script>
+            <script src="{{public_base}}js/bootstrap-switch/bootstrap-switch.min.js"></script>
+            <script src="{{public_base}}js/rangeslider/rangeslider.min.js"></script>
+            <script src="{{public_base}}js/dropzone/dropzone.js"></script>
+            <script src="{{public_base}}js/matchHeight/jquery.matchHeight-min.js"></script>
+
+            <script>
+                                $(document).ready(function () {
+                                    $('.heighted').matchHeight();
+                                });
+
+            </script>
+
+            {#        <script src="{{public_base}}js/ckeditor/ckeditor.js"></script>#}
+
+
+            {#        <script src="{{public_base}}js/bootstrap-slider/bootstrap-slider.js"></script>#}
+            {#        This block is for including JS on pages but ensuring it comes after bootstrap and jquery#}
+            {% block extra_js %}
+            {% endblock extra_js %}
+        </body>
+    </html>

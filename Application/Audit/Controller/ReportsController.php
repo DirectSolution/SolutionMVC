@@ -7,6 +7,7 @@ use SolutionMvc\Audit\Model\Audit,
     SolutionMvc\Audit\Model\GradingValues,
     SolutionMvc\Audit\Model\Answer,
     SolutionMvc\Audit\Model\AnswersSet,
+    SolutionMvc\Audit\Model\AuditEvidence,
     SolutionMvc\Audit\Model\QuestionTypeOption,
     SolutionMvc\Audit\Controller\AssignmentController,
     SolutionMvc\Audit\Controller\PdfController,
@@ -29,6 +30,7 @@ class ReportsController extends Controller {
     protected $security;
     protected $response;
     protected $user;
+    protected $auditEvidence;
 //    protected $pdf;
     protected $gradingValues;
 
@@ -40,6 +42,7 @@ class ReportsController extends Controller {
         $this->assignment = new AssignmentController();
         $this->questionTypeOptions = new QuestionTypeOption();
         $this->answer = new Answer();
+        $this->auditEvidence = new AuditEvidence();
         $this->answerSet = new AnswersSet();
         $this->audit = new Audit();
         $this->helpers = new \SolutionMvc\Library\Helper();
@@ -137,24 +140,28 @@ class ReportsController extends Controller {
 
         foreach ($this->answer->getAnswers($id) AS $answer) {
 
-            if ($answer['evidence'] != null && $answer['evidence'] != '' && $set['hide_images'] != 1) {
-
-//                $path = "/var/www/html/Filestore/images/" . $answer->Assignments['client_id'] . "/Audits/" . $answer->Assignments['Audits_id'] . "/Assets/" . $answer->Assignments['Assets_id'] . "/" . $answer['evidence'];
-                $path = FILESTORE . "images/" . $answer->Assignments['client_id'] . "/Audits/" . $answer->Assignments['Audits_id'] . "/" . $answer['evidence'];
-//                $path = 'myfolder/myimage.png';
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-                $evidence = 'data:image/' . $type . ';base64,' . base64_encode($data);
-            } else {
-                $evidence = null;
-            }
+//            if ($answer['evidence'] != null && $answer['evidence'] != '' && $set['hide_images'] != 1) {
+//
+////                $path = "/var/www/html/Filestore/images/" . $answer->Assignments['client_id'] . "/Audits/" . $answer->Assignments['Audits_id'] . "/Assets/" . $answer->Assignments['Assets_id'] . "/" . $answer['evidence'];
+//                $path = FILESTORE . "images/" . $answer->Assignments['client_id'] . "/Audits/" . $answer->Assignments['Audits_id'] . "/" . $answer['evidence'];
+////                $path = 'myfolder/myimage.png';
+//                $type = pathinfo($path, PATHINFO_EXTENSION);
+//                $data = file_get_contents($path);
+//                $evidence = 'data:image/' . $type . ';base64,' . base64_encode($data);
+//            } else {
+//                $evidence = null;
+//            }
+            
+            
+            
+            
             $high += $this->questionTypeOptions->getHighestById($answer->Questions['QuestionTypes_id']);
             $score += $answer['answer_value'];
             $qaReturn[$answer->Questions->QuestionGroups['name']][] = array(
                 "Question" => $answer->Questions['question'],
                 "Answer" => ($answer['answer_text'] === 'Points') ? null : $answer['answer_text'],
                 "AnswerScore" => $answer['answer_value'],
-                "AnswerEvidence" => $evidence
+                "AnswerEvidence" => $this->auditEvidence->getEvidence($answer['id'])
             );
         }
         $answerset = $this->answerSet->getAssetByAnswerSet($id);
@@ -166,7 +173,7 @@ class ReportsController extends Controller {
             //PHP >= 5.4  :)
             // "Auditor" => $this->user->getUserById((int)$answer['answered_by'])['name'],
             "Auditor" => $user['name'],
-            "ClientLogo" => $this->helpers->base64image($settings->getLogo($this->token->user->client)),
+//            "ClientLogo" => $this->helpers->base64image($settings->getLogo($this->token->user->client)),
             "Client" => array(
                 "Company" => $client['company'],
                 "Address1" => $client['address1'],
@@ -180,6 +187,7 @@ class ReportsController extends Controller {
             "id" => $id,
             "CompletedAt" => $answer['answered_at'],
             "AuditName" => $answer->Questions->AuditDatas['name'],
+            "AuditId" => $answer->Questions->AuditDatas['Audits_id'],
             //"PassLevel" => $answer->Questions->AuditDatas['Pass_level'],
             "TotalScore" => $score,
             "Possible" => $high,
@@ -198,8 +206,13 @@ class ReportsController extends Controller {
 //        $this->response->data->misc = $miscReturn;
 //        $this->pdf->buildPdfAction($this->response->data);
         //return $this->pdf->buildPdfAction("123 here i am");
-//        die(print_R($return));
+//        print "<pre>";
+//        print_R($return);
+//        print"</pre>";
+//        die();
 
+        
+        
         return $return;
 //        return print json_encode($this->response);
     }

@@ -16,34 +16,28 @@ class LoginController Extends Controller {
         $this->response = new Response();
     }
 
-    public function indexAction($requestType = null, $project = null, $controller = null, $action = null, $item = null) {
-        $dash = null;
+    public function getRedirect($project = null, $controller = null, $action = null, $item = null){
         if (isset($project)) {
-            if (isset($project)) {
-                $redirect = $project . "-";
-            }
-            if (isset($controller)) {
-                $redirect .= $controller . "-";
-            }
-            if (isset($action)) {
-                $redirect .= $action . "-";
-            }
-            if (isset($item)) {
-                $redirect .= $item."-";
-            }
-
+            if (isset($project)) { $redirect = $project . "-"; }
+            if (isset($controller)) { $redirect .= $controller . "-"; }
+            if (isset($action)) { $redirect .= $action . "-"; }
+            if (isset($item)) { $redirect .= $item."-"; }
         }else{
             $redirect = null;           
         }
-
-        if ($this->requestType() != 'GET') {
+        return $redirect;
+    }
+    
+    public function indexAction($requestType = null, $project = null, $controller = null, $action = null, $item = null) {
+        $dash = null;       
+        if ($this->requestType() != 'GET' && !$this->getToken()) {
             $fire = $this->loginFire();
 
             if ($requestType == "ajax") {
                 if ($fire->status == "success") {
                     return print json_encode(array(
                         "status" => "success",
-                        "url" => HTTP_ROOT . "portal/security/setcookie/" . $fire->token . "/$redirect"
+                        "url" => HTTP_ROOT . "portal/security/setcookie/" . $fire->token . "/".$this->getRedirect($project, $controller, $action, $item)
                     ));
                 } else {
                     return print json_encode(array(
@@ -52,14 +46,17 @@ class LoginController Extends Controller {
                     ));
                 }
             } else {
-                if ($fire['status'] == "success") {
-                    header("Location: " . HTTP_ROOT . "portal/security/setcookie/" . $fire->token . "/$redirect");
+//                $conFire = json_decode(json_encode($fire), true);
+                if ($fire->status == "success") {
+                    $this->redirect("portal/security/setcookie/" . $fire->token . "/".$this->getRedirect($project, $controller, $action, $item));
                 } else {
                     echo $this->twig->render('Portal/Login/login.html.twig', array(
                         "errors" => $fire->message,
                         "form" => $this->requestObject()));
                 }
             }
+        }elseif ($this->getToken()){
+            $this->redirect("Portal/Index", "You are already logged in!");
         } else {
             echo $this->twig->render('Portal/Login/login.html.twig');
         }

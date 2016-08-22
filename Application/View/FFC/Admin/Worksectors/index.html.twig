@@ -6,7 +6,7 @@
     {% endblock breadcrumbs %}
 
 {% block h1 %} 
-    All Coshh
+    FFC Admin
 {% endblock h1 %}
 
 {% block audit_body %}
@@ -66,8 +66,8 @@
 
 {% block extra_js %}
     {{ parent() }}
-    <script src="{{public_base}}js/audit/table-filter.js"></script>
-    <script src="{{public_base}}js/audit/table-pagination.js"></script>
-    <script src="{{public_base}}js/ffc/retire-modal.js"></script>
+    <script src="{{asset_base}}js/audit/table-filter.js"></script>
+    <script src="{{asset_base}}js/audit/table-pagination.js"></script>
+    <script src="{{asset_base}}js/ffc/retire-modal.js"></script>
 
 {% endblock extra_js %}

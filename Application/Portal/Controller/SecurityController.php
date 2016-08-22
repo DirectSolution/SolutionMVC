@@ -108,9 +108,9 @@ class SecurityController extends Controller {
         if ($replaceRedirect == null || $replaceRedirect == '') {
             header('Location: ' . SERVER_ROOT . '/portalmain.php');
         } else if ($redirect == "ClientSwitch") {
-            header('Location: ' . SERVER_ROOT . '/apps2/public/Portal/User');
+            header('Location: ' . SERVER_ROOT . '/apps2/Portal/User');
         } else {
-            header('Location: ' . SERVER_ROOT . '/apps2/public/' . $replaceRedirect);
+            header('Location: ' . SERVER_ROOT . '/apps2/' . $replaceRedirect);
         }
     }
 

@@ -3,7 +3,7 @@
 namespace SolutionMvc\Portal\Model;
 
 use SolutionMvc\Model\BaseModel,
-    SolutionMvc\Core\Security;
+    SolutionMvc\Core\Password;
 
 /**
  * Description of User
@@ -11,9 +11,12 @@ use SolutionMvc\Model\BaseModel,
  * @author doug
  */
 class User extends BaseModel {
-
+    
+    protected $password;
+    
     public function __construct() {
         parent::__construct();
+        $this->password = new Password();
     }
 
     public function getAllByClient($id) {
@@ -43,9 +46,11 @@ class User extends BaseModel {
     public function setActivity($user, $client, $newexpiry, $hash, $address) {
 
         $user1 = str_pad($user['id'], 11, 0, STR_PAD_LEFT);
+        
+        $count = count($this->prod_portal->user_activity->where("user_id", $user1));
         $activity = $this->prod_portal->user_activity->where("user_id", $user1);
 
-        if ($activity) {
+        if ($count > 0) {
 
             $activity->update(array(
                 "hash" => $hash,
@@ -53,7 +58,8 @@ class User extends BaseModel {
                 "expiry" => $newexpiry
             ));
         } else {
-            $this->prod_portal->user_activity->insert(array(
+           $this->prod_portal->user_activity->insert(array(               
+                
                 "user_id" => $user['id'],
                 "client" => $user['client'],
                 "terminal_addr" => $address,
@@ -99,20 +105,28 @@ class User extends BaseModel {
     }
 
     public function setUpdate($request, $client, $id) {
-        
+
         $user = $this->prod_portal->mast_users[array('id' => $id)];
-        if($user){
-            
+        if ($user) {
+
             $user->update(array(
                 "name" => $request['name'],
                 "email" => $request['email'],
                 "jobtitle" => $request['jobtitle'],
                 "telephone" => $request['telephone']
             ));
-            
         }
         return;
-        
+    }
+    
+    public function setActivateUser($userId, $password){
+        $user = $this->prod_portal->mast_users[$userId];
+        if($user){
+            $user->update(array(
+               "retired" => 0,
+                "password" => $this->password->encodePassword($password)
+            ));
+        }
     }
 
     public function userArray($request, $client, $current) {
@@ -122,7 +136,7 @@ class User extends BaseModel {
             "password" => md5(\time()),
             "name" => $request['name'],
             "email" => $request['email'],
-            "retired" => 0,
+            "retired" => 1,
             "createdby_id" => $current,
             "timestamp" => \time(),
             "jobtitle" => $request['jobtitle'],
@@ -130,5 +144,63 @@ class User extends BaseModel {
             "siglogo" => ""
         );
     }
+
+    public function setKey($key, $userid) {
+
+        return $this->prod_audit->NewUserKey->insert(array(
+                    "privatekey" => $key,
+                    "created_at" => new \SolutionORM\Controllers\LiteralController("NOW()"),
+                    "MastUsers_id" => $userid
+        ));
+    }
+    
+    public function retireKey($key){
+       $result = $this->prod_audit->NewUserKey[array("privatekey" => $key)];
+       if($result){
+           $result->update(array(
+               "retired" => 1,
+               "used_at" => new \SolutionORM\Controllers\LiteralController("NOW()")
+           ));
+           return true;
+       }else{
+           return "Key does not exist.";
+       }
+    }
+
+    public function getUserByKey($key){
+        $NewUserKey = $this->prod_audit->NewUserKey[array("privatekey" => $key)];
+        return $this->prod_portal->mast_users[$NewUserKey['MastUsers_id']];
+    }
+    
+    
+    // Function to check the time is less than 7 days ago. Mihgt need a fiddle depnding n the times we acutally want to use in the future
+    public function checkTime($time) {
+        $created_at = new \DateTime($time);
+        $today = new \DateTime();
+        if ($today->modify("-1 week") < $created_at) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkKey($key) {
+        $check = $this->prod_audit->NewUserKey[array("privatekey" => $key)];      
+        if ($check && $check['retired'] == 0 && $check['used_at'] === NULL && $this->checkTime($check['created_at'])) {
+            return true;
+        } else if (!$check || $check == null) {
+            return "The activation Key supplied does not match an existing record.";
+        } else if ($check['retired'] == 1) {
+            return "The activation Key supplied has previously been retired.";
+        } else if ($check['used_at'] !== NULL) {
+            return "The activation Key supplied has already been used.";
+        } else if ($this->checkTime($check['created_at']) != true) {
+            return "The activation Key supplied has expired.";
+        } else {
+            return "Unknown Error";
+        }
+    }
+    
+    
 
 }

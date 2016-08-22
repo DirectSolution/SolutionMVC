@@ -1,7 +1,8 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Method - Update - {{ methodStatement.name|title }}{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li><a href="{{public_base}}HealthSafety/Method">Method Statement</a></li>
     <li class='active'>Edit: {{methodStatement.name}}</li>    
@@ -15,15 +16,17 @@
     <form action='{{public_base}}HealthSafety/Method/Update/{{methodStatement.id}}' method='POST'>
         <div class="form-group">
             <label for="name">Method Statement Name</label>
-            <input type="text" class="form-control" name='name' placeholder="Method Statement Name">
+            <input type="text" class="form-control" name='name' value='{{ methodStatement.name }}' placeholder="Method Statement Name">
         </div>
         {% for isheet in initsheets %}
             <section class='sheets'>
                 <h2>{{isheet.name}}</h2>
                 <p>{{isheet.description|raw}}</p>
                 <article class='sections'>
-                    {% for sheet in sheets if sheet.Sheet.id == isheet.id %}
-                        {% for section in sheet.Sections %}
+                    
+                    {% for key, sheet in sheets %}
+                        {% if key == isheet.id %}
+                        {% for  section in sheet.Sections %}
                             <div class='section'>
                                 <div class='form-group'>
                                     <div class='col-xs-10'>
@@ -41,6 +44,7 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        {% endif %}
                     {% endfor %} 
                 </article>
                 <button class='btn btn-primary add-section' type='button' value='{{isheet.id}}'>Add Section to {{isheet.name}} <i class="fa fa-plus-circle" aria-hidden="true"></i></button>

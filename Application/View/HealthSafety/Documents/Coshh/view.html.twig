@@ -1,7 +1,8 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Coshh - View - {{ data.assessment.name|title }}{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li><a href="{{public_base}}HealthSafety/Coshh">Coshh</a></li>
     <li class='active'>View: {{ data.name }}</li>    
@@ -12,6 +13,20 @@
 {% endblock h1 %}
 
 {% block audit_body %}
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Coshh/'>Back <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><p class='navbar-btn'><a  class="btn btn-warning" href='{{public_base}}HealthSafety/Coshh/update/{{data.assessment.id}}'>Edit Document <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></p></li>
+
+                <li style='padding-left:5px;'><p class='navbar-btn'><a  class="btn btn-primary" href='{{public_base}}HealthSafety/COshh/documentbyid/{{data.assessment.id}}'>View Word Document <i class="fa fa-file-text" aria-hidden="true"></i></a></p></li>
+            </ul>
+        </div>
+    </nav>
+
 
     <table class="table table-striped">
         <thead>
@@ -39,7 +54,7 @@
                         <li>
                             {{person.name}}:
                             {% for c_persons in data.persons_affected %}
-                                {% if person.id == c_persons.id %}  <i class="glyphicon glyphicon-ok"> </i> {% endif %}
+                                {% if person.id == c_persons.PersonRisks_id %}  <i class="glyphicon glyphicon-ok"> </i> {% endif %}
                             {% endfor %}
                         </li>
                     {% endfor %}
@@ -104,7 +119,7 @@
                                 <td class="col-xs-1">
                                     {{route.name}}:
                                     {% for c_route in data.routes_of_entry %}
-                                        {% if c_route.id  == route.id %} <i class="glyphicon glyphicon-ok"> </i>{%endif%}
+                                        {% if c_route.RouteEntrys_id  == route.id %} <i class="glyphicon glyphicon-ok"> </i>{%endif%}
                                     {% endfor %}
                                 </td>
                             </tr>                                                    
@@ -112,7 +127,7 @@
                     </table>
                 </td>
                 {% for ppe in init.ppes %} 
-                    <td><img src="{{public_base}}assets/HealthSafety/Coshh/images/ppes/{{ppe.image}}"></td>
+                    <td><img src="{{asset_base}}assets/HealthSafety/Coshh/images/ppes/{{ppe.image}}"></td>
                     {% endfor %}                
             </tr>
             <tr class="text-center active">
@@ -125,9 +140,10 @@
                 <td>
                     {{data.assessment.location}}
                 </td>
-
+                
                 {% for ppe in init.ppes %}
-                    <td>{% for c_ppes in data.ppes %}{% if ppe.id == c_ppes.id %} <i class="glyphicon glyphicon-ok"> </i>{% endif %}{% endfor %}</td>
+                    <td>{% for c_ppes in data.ppes %}                  
+                    {% if ppe.id == c_ppes.Ppes_id %} <i class="glyphicon glyphicon-ok"> </i>{% endif %}{% endfor %}</td>
                 {% endfor %}
 
             </tr>
@@ -211,7 +227,7 @@
             <tr class="warning">
                 <th>
                     <label>Amount Used</label>
-                    
+
                 </th>
                 <th>
                     <label>How many times per day</label> 
@@ -224,11 +240,11 @@
                 <td>{{ data.assessment.AmountUseds.name}}</td>
                 <td>{{ data.assessment.TimePerDays.name}}</td>  
                 <td>{{ data.assessment.Durations.name}}</td>
-                             
+
             </tr>            
         </tbody>
     </table>    
-    <table class="table table-striped">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr class="info"> 
                 <th colspan="9"><h2 class="text-center">Substance Properties</h2></th>
@@ -236,17 +252,38 @@
         </thead>
         <tbody>
             <tr class="text-center">
-                {% for substance in init.substances %}
-                    <td class="col-xs-1"><img src="{{public_base}}assets/HealthSafety/Coshh/images/substance_properties/{{substance.image}}"></td>
+                {% for substance in init.substances|slice(0,6)  %}
+                    <td class="col-xs-1"><img src="{{asset_base}}assets/HealthSafety/Coshh/images/substance_properties/{{substance.image}}"></td>
                     {% endfor %}                
             </tr>
             <tr class="text-center">
-                {% for substance in init.substances %}
+                {% for substance in init.substances|slice(0,6) %}
                     <td>{{substance.name}}</td>
                 {% endfor %}  
             </tr>
             <tr class="text-center">
-                {% for substance in init.substances %}
+                {% for substance in init.substances|slice(0,6) %}
+                    <td>
+                        {% for c_substance in data.substances %}
+                            {% if substance.id == c_substance.Substances_id %}
+                                <i class="glyphicon glyphicon-ok"> </i>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                {% endfor %}  
+            </tr>
+            <tr class="text-center">
+                {% for substance in init.substances|slice(6,12)  %}
+                    <td class="col-xs-1"><img src="{{asset_base}}assets/HealthSafety/Coshh/images/substance_properties/{{substance.image}}"></td>
+                    {% endfor %}                
+            </tr>
+            <tr class="text-center">
+                {% for substance in init.substances|slice(6,12) %}
+                    <td>{{substance.name}}</td>
+                {% endfor %}  
+            </tr>
+            <tr class="text-center">
+                {% for substance in init.substances|slice(6,12) %}
                     <td>
                         {% for c_substance in data.substances %}
                             {% if substance.id == c_substance.id %}
@@ -316,6 +353,20 @@
             </tr>
         </tbody>
     </table>
+
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Coshh/'>Back <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><p class='navbar-btn'><a  class="btn btn-warning" href='{{public_base}}HealthSafety/Coshh/update/{{data.assessment.id}}'>Edit Document <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></p></li>
+
+                <li style='padding-left:5px;'><p class='navbar-btn'><a  class="btn btn-primary" href='{{public_base}}HealthSafety/COshh/document/{{data.assessment.id}}'>View Word Document <i class="fa fa-file-text" aria-hidden="true"></i></a></p></li>
+            </ul>
+        </div>
+    </nav>
 {% endblock audit_body %}
 
 {% block extra_js %}   

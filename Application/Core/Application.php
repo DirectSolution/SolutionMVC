@@ -2,7 +2,7 @@
 
 namespace SolutionMvc\Core;
 
-use SolutionMvc\Controller\ErrorController;
+use SolutionMvc\Core\Error;
 
 class Application {
 
@@ -64,7 +64,7 @@ class Application {
 
 
 
-        $error = new ErrorController();
+        $error = new Error();
 
         if (file_exists(APP . $this->project . '/Controller/' . $this->controller . 'Controller.php')) {
             // here we did check for controller: does such a controller exist ?
@@ -111,12 +111,14 @@ class Application {
                 $this->controller->indexAction();
             } else {
                 $error->errorType404Action("Error - No action found, and indexAction not defined.");
-            }
-        }else if ($this->project) { //ELSE IF Redirect to Portal Home Dash
-            $page = new \SolutionMvc\Controller\IndexController();
+            } 
+        }
+        else if ($this->project) { //ELSE IF Redirect to Portal Home Dash
+            $page = new \SolutionMvc\Portal\Controller\IndexController();
             $page->indexAction($this->project . " - Page not found.");
-        } else {
-            $page = new \SolutionMvc\Controller\IndexController();
+        } 
+        else {
+            $page = new \SolutionMvc\Portal\Controller\IndexController();
             $page->indexAction();
         }
     }

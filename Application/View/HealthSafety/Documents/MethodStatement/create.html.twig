@@ -1,7 +1,8 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Method - Create{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li><a href="{{public_base}}HealthSafety/Method">Method Statement</a></li>
     <li class='active'>Create</li>    
@@ -31,18 +32,20 @@
             <div class='method-sections'></div>
             <button type='button' class='btn btn-primary add-method'>Add Method <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
         </section>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar">
+                    <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Method/'>Cancel <i class="fa fa-ban" aria-hidden="true"></i></a></p></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                    <li><button type="submit" class="btn btn-success navbar-btn">Save Method Statement <i class="fa fa-floppy-o" aria-hidden="true"></i></button></li>
+                </ul>
+            </div>
+        </nav>
     </form>
+
     <hr>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav navbar">
-                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Method/'>Cancel <i class="fa fa-ban" aria-hidden="true"></i></a></p></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
-                <li><button type="submit" class="btn btn-success navbar-btn">Save Method Statement <i class="fa fa-floppy-o" aria-hidden="true"></i></button></li>
-            </ul>
-        </div>
-    </nav>
+
 {% endblock audit_body %}
 
 {% block extra_js %}  

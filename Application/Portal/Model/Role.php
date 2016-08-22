@@ -11,7 +11,7 @@ class Role extends BaseModel {
     }
 
     public function getRoles($client) {
-        return $this->prod_audit->ACLRoles->where("Clients_id", (int) $client)->and("retired", 0)->or("Clients_id", 0)->and("retired", 0);
+        return $this->prod_audit->ACLRoles->where("Clients_id", (int) $client)->and("retired", 0);
     }
 
     public function getRole($id) {
@@ -22,17 +22,24 @@ class Role extends BaseModel {
         return $this->prod_audit->ACLRoleRights->where("ACLRoles_id", $id);
     }
 
-    public function getAllPermissions() {
-        return $this->prod_audit->ACLPermissions->where("non_client", 0);
+    public function getAllPermissions($client) {
+        if ($client != 0) {
+            return $this->prod_audit->ACLPermissions->where("non_client", 0);
+        } else {
+            return $this->prod_audit->ACLPermissions();
+        }
     }
 
     public function getAllCurrentRights($id) {
         return $this->prod_audit->ACLRoleRights->where("ACLRoles_id", $id);
     }
 
-    public function getAllPermissionsNotAssigned($rights) {
-
-        return $this->prod_audit->ACLPermissions->where("NOT id ", $rights)->and("non_client", 0);
+    public function getAllPermissionsNotAssigned($rights, $client) {
+        if ($client != 0) {
+            return $this->prod_audit->ACLPermissions->where("NOT id ", $rights)->and("non_client", 0);
+        } else {
+            return $this->prod_audit->ACLPermissions->where("NOT id ", $rights);
+        }
     }
 
     public function setUpdate($request, $id) {
@@ -95,16 +102,16 @@ class Role extends BaseModel {
         $get = $this->prod_audit->ACLRoleRights->where("ACLRoles_id", $role);
         $get->delete();
         foreach ($request['permissions'] as $permission) {
-            print(string)$this->prod_audit->ACLRoleRights->insert(array(
-                "ACLRoles_id" => $role,
-                "ACLPermissions_id" => $permission
+            print(string) $this->prod_audit->ACLRoleRights->insert(array(
+                        "ACLRoles_id" => $role,
+                        "ACLPermissions_id" => $permission
             ));
         }
     }
-    
-    public function retireRole($request, $client){
-        $role = $this->prod_audit->ACLRoles[array("id" =>$request['id'], "Clients_id" => $client)];
-        if($role){
+
+    public function retireRole($request, $client) {
+        $role = $this->prod_audit->ACLRoles[array("id" => $request['id'], "Clients_id" => $client)];
+        if ($role) {
             $role->update(array('retired' => 1));
         }
         return "success";

@@ -125,18 +125,18 @@ class AuditController extends Controller {
 //        return\ print json_encode($this->response);
     }
 
-    public function getTakeAuditAction($id) {
-        $asset = $this->postdata->asset;
-        $auditID = $this->postdata->audit;
-        $client = $this->token->user->client;
-        $a = $this->assignment->isValidAssignmentRequest($asset, $auditID, $client);
-        if ($a) {
-            $this->response = $this->getTakeAudit($auditID, $client);
-        } else {
-            return $this->response->headers = http_response_code(400);
-        }
-        return print json_encode($this->response);
-    }
+//    public function getTakeAuditAction($id) {
+//        $asset = $this->postdata->asset;
+//        $auditID = $this->postdata->audit;
+//        $client = $this->token->user->client;
+//        $a = $this->assignment->isValidAssignmentRequest($asset, $auditID, $client);
+//        if ($a) {
+//            $this->response = $this->getTakeAudit($auditID, $client);
+//        } else {
+//            return $this->response->headers = http_response_code(400);
+//        }
+//        return print json_encode($this->response);
+//    }
 
     public function getTakeAuditNoAssetAction($id) {
 //        $auditID = $this->postdata->audit;

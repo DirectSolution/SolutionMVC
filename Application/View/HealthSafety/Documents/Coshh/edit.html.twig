@@ -1,7 +1,8 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Coshh - Update - {{ data.assessment.name|title }}{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li><a href="{{public_base}}HealthSafety/Coshh">Coshh</a></li>
     <li class='active'>Edit</li>    
@@ -12,7 +13,302 @@
 {% endblock h1 %}
 
 {% block audit_body %}
-{% endblock audit_body %}
 
-{% block extra_js %}   
-{% endblock extra_js %}
+    <form method="post" action="{{public_base}}HealthSafety/Coshh/update/{{data.assessment.id}}" class='form-horizontal'>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Document Name" name="name" value='{{data.assessment.name}}' required>
+            </div>
+        </div>
+        {#        <div class="form-group">
+                    <label for="ref" class="col-sm-2 control-label">Reference</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ref" placeholder="Reference Number" name="reference" value='{{data.assessment.reference}}' required>
+                    </div>
+                </div>#}
+        <div class="form-group">
+            <label for="supplied_by" class="col-sm-2 control-label">Supplied By</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="supplied_by" placeholder="Supplied By" value='{{data.assessment.supplied_by}}' name="supplied_by">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Persons Affected</label>
+            <div class="col-sm-10">
+                {% for person in init.persons_affected %}                    
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="person{{ person.id }}" value="{{ person.id }}" {% for a in data.persons_affected %}
+                               {% if person.id == a.PersonRisks.id %} checked {% endif %}
+                        {% endfor %} name="person[]"> {{ person.name }}
+                </label> 
+                {% endfor %}
+                </div>
+            </div>
+
+            {#        <div class="form-group">
+                        <label for="assessor" class="col-sm-2 control-label">Assessor</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="assessor" placeholder="Assessor" value='{{}}' name="assessor">
+                        </div>
+                    </div>#}
+            {#        <div class="form-group">
+                        <label for="supervisor" class="col-sm-2 control-label">Supervisor</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="supervisor" placeholder="Supervisor" value='{{}}' name="supervisor">
+                        </div>
+                    </div>#}
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="description" placeholder="Description of product" name="description">{{data.assessment.description|raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="method_of_use" class="col-sm-2 control-label">Method of Use</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="method_of_use" placeholder="How the product is used"  name="method_of_use">{{data.assessment.method_of_use|raw}}</textarea>
+                </div>
+            </div>
+            {#        <div class="form-group">
+                        <label for="location" class="col-sm-2 control-label">Location</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="location" placeholder="Location"  name="location">
+                        </div>
+                    </div>#}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Routes of Entry</label>
+                <div class="col-sm-10">  
+                    
+                    
+                    {% for route in init.routes_of_entry %}                
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="route{{route.id}}" name="route[]" {% for b in data.routes_of_entry %}
+                            {% if route.id == b.RouteEntrys.id %} checked {% endif %}
+                            {% endfor %} value="{{route.id}}"> {{ route.name }}
+                        </label>                    
+                    {% endfor %}               
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">PPE Required</label>
+                <div class="col-sm-10">
+                    
+                    {% for ppe in init.ppes %}
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="ppes[]" id="ppe{{ppe.id}}" {% for c in data.ppes %}
+                            {% if ppe.id == c.Ppes.id %} checked {% endif %}
+                            {% endfor %} value="{{ppe.id}}"> {{ ppe.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="risk_phrases" class="col-sm-2 control-label">Risk / Safety Phrases</label>
+                <div class="col-sm-10">
+                    <select  class="form-control" multiple id="risk_phrases" name="risk_phrases[]">              
+                        {% for phras in data.risk_phrases %}
+                            <option selected value="{{ phras.RiskPhrases.id }}">{{ phras.RiskPhrases.code }} - {{phras.RiskPhrases.description}}</option>
+                        {% endfor %}
+                        {% for phrase in init.phrases %}
+                            <option  value="{{ phrase.id }}">{{ phrase.code }} - {{phrase.description}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="oes" class="col-sm-2 control-label">Occupational Exposure Standard (OES)</label>
+                <div class="col-sm-10">
+                    <select  class="form-control" multiple id="oes" name="oess[]">
+                        {% for oe in data.oes %}
+                            <option selected value="{{ oe.Eh40s.id }}">{{ oe.Eh40s.substance }} ({{oe.Eh40s.cas_number}}) Long: oe.Eh40s.long_ppm}}ppm / {{oe.Eh40s.long_mgm3}}mgm-&sup3; || Short: {{oe.Eh40s.short_ppm}}ppm / {{oe.Eh40s.short_mgm3}}mgm-&sup3;</option>
+                        {% endfor %}
+                        {% for oes in init.eh40s %}
+                            <option  value="{{ oes.id }}">{{ oes.substance }} ({{oes.cas_number}}) Long: {{oes.long_ppm}}ppm / {{oes.long_mgm3}}mgm-&sup3; || Short: {{oes.short_ppm}}ppm / {{oes.short_mgm3}}mgm-&sup3;</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mel" class="col-sm-2 control-label">Maximum Exposure Limits (MEL)</label>
+                <div class="col-sm-10">
+                    <select  class="form-control" multiple id="mel" name="mels[]">
+                        {% for me in data.mel %}
+                            <option selected value="{{ me.Eh40s.id }}">{{ me.Eh40s.substance }} ({{me.Eh40s.cas_number}}) Long: me.Eh40s.long_ppm}}ppm / {{me.Eh40s.long_mgm3}}mgm-&sup3; || Short: {{me.Eh40s.short_ppm}}ppm / {{me.Eh40s.short_mgm3}}mgm-&sup3;</option>
+                        {% endfor %}
+                        {% for mel in init.eh40s %}
+                            <option  value="{{ mel.id }}">{{ mel.substance }} ({{mel.cas_number}}) Long: {{mel.long_ppm}}ppm / {{mel.long_mgm3}}mgm-&sup3; || Short: {{mel.short_ppm}}ppm / {{mel.short_mgm3}}mgm-&sup3;</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="wel" class="col-sm-2 control-label">Workplace Exposure Limits (WEL)</label>
+                <div class="col-sm-10">
+                    <select  class="form-control" multiple id="wel" name="wels[]">
+                        {% for we in data.wel %}
+                            <option selected value="{{ we.Eh40s.id }}">{{ we.Eh40s.substance }} ({{we.Eh40s.cas_number}}) Long: {{we.Eh40s.long_ppm}}ppm / {{we.Eh40s.long_mgm3}}mgm-&sup3; || Short: {{we.Eh40s.short_ppm}}ppm / {{we.Eh40s.short_mgm3}}mgm-&sup3;</option>
+                        {% endfor %}
+                        {% for wel in init.eh40s %}
+                            <option  value="{{ wel.id }}">{{ wel.substance }} ({{wel.cas_number}}) Long: {{wel.long_ppm}}ppm / {{wel.long_mgm3}}mgm-&sup3; || Short: {{wel.short_ppm}}ppm / {{wel.short_mgm3}}mgm-&sup3;</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ammount Used</label>
+                <div class="col-sm-10">                
+                    {% for amountUsed in init.amountsUsed %}
+                        <label class="radio-inline" for="amountUseds{{amountUsed.id}}">
+
+                            <input {% if amountUsed.id == data.assessment.AmountUseds_id %} checked {% endif %}  type="radio" name="amountUseds" id="amountUseds{{amountUsed.id}}" value="{{amountUsed.id}}">{{amountUsed.name}}
+                        </label>
+                    {% endfor %}                
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">How many times per day</label>
+                <div class="col-sm-10">
+                    {% for time in init.timesPerDay %}
+                        <label class="radio-inline">
+                            <input {% if time.id == data.assessment.TimePerDays.id %} checked {% endif %}  type="radio" name="time" id="time{{time.id}}" value="{{time.id}}"> {{time.name}}
+                        </label>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Duration</label>
+                <div class="col-sm-10">
+                    {% for duration in init.durations %}
+                        <label class="radio-inline">
+                            <input {% if duration.id == data.assessment.Durations_id %} checked {% endif %} type="radio" id="duration{{ duration.id }}" name="duration" value="{{ duration.id }}"> {{ duration.name }}
+                        </label>                
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Substances</label>
+                <div class="col-sm-10">
+                    
+                    {% for substance in init.substances %}
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="substance{{ substance.id }}" {% for d in data.substances %}
+                            {% if substance.id == d.Substances.id %} checked {% endif %}
+                            {% endfor %} name="substances[]" value="{{ substance.id }}"> {{ substance.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>            
+
+            <div class="form-group">
+                <label for="general_precautions" class="col-sm-2 control-label">General Precautions</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="general_precautions" placeholder="General Precautions" name="general_precautions">{{data.assessment.general_precautions | raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="first_aid_measures" class="col-sm-2 control-label">First Aid Measures</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="first_aid_measures" placeholder="First Aid Measures" name="first_aid_measures">{{data.assessment.first_aid_measures | raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="handling_storage" class="col-sm-2 control-label">Handling and Storage</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="handling_storage" placeholder="Handling and Storage" name="handling_storage">{{data.assessment.handling_storage|raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="disposal_procedure" class="col-sm-2 control-label">Disposal Procedure</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="disposal_procedure" placeholder="Disposal Procedure" name="disposal_procedure">{{data.assessment.disposal_procedure|raw}}</textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="further_controls" class="col-sm-2 control-label">Further Controls Required</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="further_controls" placeholder="Further Controls Required" name="further_controls">{{data.assessment.further_controls | raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="spillage_procedure" class="col-sm-2 control-label">Spillage Procedure</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="spillage_procedure" placeholder="Spillage Procedure" name="spillage_procedure">{{data.assessment.spillage_procedure|raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fire_prevention" class="col-sm-2 control-label">Fire Prevention</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="fire_prevention" placeholder="Fire Prevention" name="fire_prevention">{{data.assessment.fire_prevention|raw}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="responsibility" class="col-sm-2 control-label">Responsibility</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="responsibility" placeholder="Responsibility" name="responsibility" value='{{data.assessment.responsibility}}'>
+                </div>
+            </div>            
+
+            {#        <div class="form-group">
+                        <label for="by_when" class="col-sm-2 control-label">By When</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="by_when" placeholder="By When" name="by_when" value='{{data.assessment.by_when}}'>
+                        </div>
+                    </div>            #}
+
+            {#        <div class="form-group">
+                        <label for="date_done" class="col-sm-2 control-label">Date Done</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="date_done" placeholder="Date Done" name="date_done">
+                        </div>
+                    </div>  #}          
+
+
+
+            <div class="form-group">
+                <label for="comments" class="col-sm-2 control-label">Comments</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control ckeditor" id="comments" placeholder="Comments" name="comments">{{ data.assessment.comments|raw }}</textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save Coshh</button>         
+
+
+        </form>
+        {% endblock audit_body %}
+
+            {% block extra_js %}
+                <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+                <script src='{{asset_base}}js/select2/select2.min.js'></script>
+                <script>
+
+                    {#        var PRESELECTED_PHRASES = [{% for phrase1 in data.risk_phrases %} {{phrase1.id}}, {% endfor %}];
+                            var PRESELECTED_MEL = [{% for mel1 in data.mel %} { id: '{{mel1.id}}' }, {% endfor %} ];
+                            var PRESELECTED_WEL = [{% for wel1 in data.wel %}{{wel1.id}},{% endfor %}];
+                            var PRESELECTED_OES = [{% for oes1 in data.oes %}{{oes1.id}},{% endfor %}];
+                            $("#risk_phrases").select2({}).select2('val', PRESELECTED_PHRASES);
+                            $("#mel").select2({}).select2('val', PRESELECTED_MEL);
+                            $("#wel").select2({}).select2('val', PRESELECTED_WEL);
+                            $("#oes").select2({}).select2('val', PRESELECTED_OES);#}
+                                $("#risk_phrases").select2();
+                                $("#mel").select2();
+                                $("#wel").select2();
+                                $("#oes").select2();
+
+                </script>
+
+            {% endblock extra_js %}

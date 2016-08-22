@@ -5,6 +5,7 @@ namespace SolutionMvc\Audit\Controller;
 use SolutionMvc\Audit\Model\Audit,
     SolutionMvc\Audit\Model\Answer,
     SolutionMvc\Audit\Model\AnswersSet,
+    SolutionMvc\Audit\Model\AuditEvidence,
     SolutionMvc\Audit\Model\QuestionTypeOption,
     SolutionMvc\Audit\Controller\AssignmentController,
     SolutionMvc\Audit\Controller\AssetController,
@@ -26,6 +27,7 @@ class AnswersController extends Controller {
     protected $response;
     protected $questionTypeOption;
     protected $token;
+    protected $answerEvidence;
 
     public function __construct() {
         parent::__construct();
@@ -38,6 +40,7 @@ class AnswersController extends Controller {
         $this->security = new Security();
         $this->response = new Response();
         $this->token = $this->getToken();
+        $this->answerEvidence = new AuditEvidence();
 //        $this->postdata = json_decode(file_get_contents("php://input"));
 //        $this->token = $this->security->DecodeSecurityToken($this->postdata->token);
 //        $this->response->token = $this->security->EncodeSecurityToken((array) $this->token->user);
@@ -48,15 +51,10 @@ class AnswersController extends Controller {
     }
 
     public function setAnswers($assignment, $client, $request, $audit) {
-        
+//die($this->token->user->id);
         $answerSetId = $this->answerSet->setAnswersSet($assignment['id'], $client, $assignment['Audits_id'], $audit);
         $totalScore = array();
-
-        
         foreach ($request['takeAudit']['answers'] AS $question => $answer) {
-                   
-
-            
             if (key($answer) !== 'points') {
                 $aVal = $this->questionTypeOption->getOne($answer);
             } else {
@@ -64,13 +62,15 @@ class AnswersController extends Controller {
                     "name" => trim(ucfirst(key($answer))),
                     "value" => $answer->points);
             }
-            $this->answer->insertOne($question, $answer, $answerSetId, $assignment, $this->token->user, $aVal);
-//            die($aVal['value']);
+            print "<pre>";
+            print_r($answer);
+            print "</pre>";
+            
+            $answerId = $this->answer->insertOne($question, $answer, $answerSetId, $assignment, $this->token->user, $aVal);
+            if(key_exists("evidence", $answer)){$this->answerEvidence->setEvidence($answerId, $answer['evidence'], $this->token->user->id);}
             $totalScore[] = $aVal['value'];
         }
-//        die((string)array_sum($totalScore));
         $this->answerSet->update($answerSetId, array_sum($totalScore));
-//             die();   
         return $answerSetId;
     }
 
@@ -85,15 +85,10 @@ class AnswersController extends Controller {
 
     public function setAnswersAndAssetAction($audit) {
         $request = $this->requestObject();
-        //INSERT ASSET        
-        $asset = $this->asset->setAsset($request['asset'], $this->token->user->client);               
+        //INSERT ASSET
+        $asset = $this->asset->setAsset($request['asset'], $this->token->user->client);             
         //THEN INSERT ASSIGNMENT
-
-        
-        $assignment = $this->assignment->setOneAssignment($audit, $asset, $this->token->user->id, $this->token->user->client);   
-        
-
-        
+        $assignment = $this->assignment->setOneAssignment($audit, $asset, $this->token->user->id, $this->token->user->client);                
         return $this->setAnswers($assignment, $this->token->user->client, $this->requestObject(), $audit);
     }
 

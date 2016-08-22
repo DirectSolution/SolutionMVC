@@ -13,9 +13,9 @@ $(document).ready(function () {
     });
 
     $('#logmein').submit(function (event) {
+     
         event.preventDefault();
-        if (location.pathname !== "/apps2/public/Portal/Login") {
-//            alert(location.pathname);
+        if (location.pathname !== "/apps2/Portal/Login") {
             var url = location.pathname;
         } else {
             var url = null;

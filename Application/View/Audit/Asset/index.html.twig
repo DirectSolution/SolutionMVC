@@ -92,10 +92,10 @@
 
 {% block extra_js %}
     {{ parent() }}
-    <script src="{{public_base}}js/audit/table-filter.js"></script>
-    <script src="{{public_base}}js/audit/table-pagination.js"></script>
-    <script src='{{public_base}}js/select2/select2.min.js'></script>
-    <script src='{{public_base}}js/audit/assignment-modal.js'></script>
-    <script src='{{public_base}}js/audit/retire-asset.modal.js'></script>
+    <script src="{{asset_base}}js/audit/table-filter.js"></script>
+    <script src="{{asset_base}}js/audit/table-pagination.js"></script>
+    <script src='{{asset_base}}js/select2/select2.min.js'></script>
+    <script src='{{asset_base}}js/audit/assignment-modal.js'></script>
+    <script src='{{asset_base}}js/audit/retire-asset.modal.js'></script>
 
 {% endblock extra_js %}

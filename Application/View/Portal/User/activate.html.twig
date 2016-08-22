@@ -1,32 +1,31 @@
 {% extends "base.html.twig" %}
-
 {% block body %}
     <div class="cover-container">
         <div class="col-md-6 col-md-push-3" style="margin-top: 20px;">
             <div class="inner cover box-with-border">
-                <h1>Welcome {{ user }}</h1>
+                <h1>Welcome "{{ user.name }}"</h1>
                 <p>In order to activate your account please enter your desired password in the both input fields below. Once happy please then click the Activate button.</p>
-                
-                    <form action="{{public_base}}Portal/Login/index/html/{{project}}{{controller}}{{action}}" method="POST" name="form_login" id="logmein">
-
-                            <div id="password_group" class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon3"><i class="fa fa-sign-in"></i></span>
-                                    <input type="password" class="form-control" required placeholder="Make it memorable" name="_password_1" id="password_1">
-                                    <span class="input-group-addon" id="basic-addon4"></span>
-                                </div>
-                            </div>
-                            <div id="password_group" class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon3"><i class="fa fa-sign-in"></i></span>
-                                    <input type="password" class="form-control" required placeholder="Repeat Password here please." name="_password_2" id="password_2">
-                                    <span class="input-group-addon" id="basic-addon4"></span>
-                                </div>
-                            </div>  
-                            <div>
-                                <button type="submit" name="login" id="logmein" class="btn btn-success center-block">Active my Account <i class='fa fa-sign-in'> </i></button>
-                            </div>
-                        
+                <p>Just as a reminder from now on your Client number is: <strong>{{user.client}}</strong> and your username is: <strong>{{ user.username}}</strong></p>
+                <form action="{{public_base}}Portal/User/Activate/{{key}}" method="POST" name="form_login" id="logmein">
+                    <div id="password_group" class="form-group">
+                        <label>Password</label>
+                        <div class="input-group">                            
+                            <span class="input-group-addon" id="basic-addon3"><i class="fa fa-sign-in"></i></span>
+                            <input type="password" class="form-control" required placeholder="Make it memorable" name="_password_1" id="password_1">
+                            <span class="input-group-addon" id="basic-addon4"></span>
+                        </div>
+                    </div>
+                    <div id="password_group" class="form-group">
+                        <label>Repeat Password</label>
+                        <div class="input-group">                          
+                            <span class="input-group-addon" id="basic-addon3"><i class="fa fa-sign-in"></i></span>
+                            <input type="password" class="form-control" required placeholder="Repeat Password here please." name="_password_2" id="password_2">
+                            <span class="input-group-addon" id="basic-addon4"></span>
+                        </div>
+                    </div>  
+                    <div>
+                        <button type="submit" name="login" id="logmein" class="btn btn-success center-block">Active my Account <i class='fa fa-sign-in'> </i></button>
+                    </div>
                 </form>
             </div>
         </div>

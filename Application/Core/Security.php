@@ -6,7 +6,8 @@ use Symfony\Component\Yaml\Parser,
     SolutionMvc\Core\Response,
     SolutionMvc\Portal\Model\User,
     SolutionMvc\Audit\Model\Settings,
-    Firebase\JWT\JWT;
+    Firebase\JWT\JWT,
+    SolutionMvc\Core\Password;
 
 /**
  * Description of Security
@@ -21,6 +22,7 @@ class Security {
     protected $response;
     protected $user;
     protected $getToken;
+    protected $password;
 
     public function __construct() {
         //Json Web Token, Using this instead of sessions. It's stateless, prettier and the modern way.
@@ -34,56 +36,52 @@ class Security {
         $this->yaml = new Parser();
         $this->config = $this->yaml->parse(file_get_contents(APP . "Config/Config.yml"));
         $this->user = new User();
-                
+        $this->password = new Password();
     }
 
-    public function isAuth($auth){
+    public function isAuth($auth) {
         $token = $this->getToken();
-        if(isset($token)){
-            if(in_array($auth, $token->user->auth->Auth)){                               
+        if (isset($token)) {
+            if (in_array($auth, $token->user->auth->Auth)) {
                 return true;
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
-    
-    public function randomKeyGen(){        
-        return md5(uniqid($_SERVER['SERVER_ADDR']));
+
+    public function randomKeyGen() {
+        return $this->password->randomKeyGen();
     }
-    
+
     public function encodePassword($password) {
-        return md5($this->config['key']['password'] . $password);
+        return $this->password->encodePassword($password);
     }
 
     public function hasherAction($password) {
-        return md5($password . $this->config['key']['password']);
+        return $this->password->hasherAction($password);
     }
 
     public function checkPassword($passwordGiven, $passwordActual) {
-        if ($this->encodePassword($passwordGiven) === $passwordActual) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->password->checkPassword($passwordGiven, $passwordActual);
     }
-    
-    public function getToken($token = null){
-        if($token != null){
-           return $this->validateToken($this->DecodeSecurityToken($token));
-        }else if(isset($_SESSION['token'])){
-           return $this->validateToken($this->DecodeSecurityToken($_SESSION['token']));
-        }else{
+
+    public function getToken($token = null) {
+        if ($token != null) {
+            return $this->validateToken($this->DecodeSecurityToken($token));
+        } else if (isset($_SESSION['token'])) {
+            return $this->validateToken($this->DecodeSecurityToken($_SESSION['token']));
+        } else {
             return null;
         }
     }
-    
-    public function validateToken($token){
-        if($token->status == "Invalid Token"){
-            return null;            
-        }else{
+
+    public function validateToken($token) {
+        if ($token->status == "Invalid Token") {
+            return null;
+        } else {
             $this->refreshToken($token);
             return $token;
         }
@@ -97,7 +95,7 @@ class Security {
             "user" => array(
                 "id" => $user['id'],
                 "username" => $user['username'],
-                "client" => ($client == 0)? (string)$client : ltrim($client),
+                "client" => ($client == 0) ? (string) $client : ltrim($client),
                 "level" => "admin",
                 "company" => "nothing",
                 "auth" => $this->getAuthObject($user['id'])
@@ -108,23 +106,23 @@ class Security {
             //Not before now - 10 incase of slight variance.
             "nbf" => $time,
             //Set maximum Expiry time currently half hour, this gets refreshed everytime they make a call to the backend.
-            "exp" => $time + (60 * 30)
+            "exp" => $time + (60 * 60)
         );
         return $this->jwt->encode($token, $key);
     }
-    
+
     public function EncodeSecurityToken($user, $client) {
         $key = $this->config['key']['secret_key'];
         $time = \time();
-        
-        
-        
+
+
+
         $token = array(
             "iss" => "https://portal.solutionhost.co.uk",
             "user" => array(
                 "id" => $user['id'],
                 "username" => $user['username'],
-                "client" => ltrim($user['client'], 0),
+                "client" => (string)ltrim($user['client'], 0),
                 "level" => "admin",
                 "company" => $client['company'],
                 "auth" => $this->getAuthObject($user['id'])
@@ -142,38 +140,37 @@ class Security {
 
     public function DecodeSecurityToken($token) {
         try {
-            $jwt = new JWT();     
+            $jwt = new JWT();
             return $jwt->decode($token, $this->config['key']['secret_key'], array('HS256'));
-            
         } catch (\Exception $e) {
             $this->response->setHeaders(\http_response_code(200));
-                    $this->response->setStatus("Invalid Token");
+            $this->response->setStatus("Invalid Token");
             //$this->response->headers = \http_response_code(401);
 //            $this->response->status = "Invalid Token";
 
             return $this->response;
         }
     }
-    
+
     public function refreshToken($token) {
-        
-        if($token->user->client == 0){
-            $client = "0";
-        }else{
-            $client = $token->user->client;
+
+        if ($token->user->client == 0) {
+            $client = (string)"000";
+        } else {
+            $client = (string)$token->user->client;
         }
-        
-        $user = array("id" => $token->user->id, "username" => $token->user->username, "client" => (int)$client);
-        
+
+        $user = array("id" => $token->user->id, "username" => $token->user->username, "client" => (string) $client);
+
 //        print_R($user);
-        
-        $client = array("company" => $token->user->company);        
-        return $_SESSION['token'] = $this->EncodeSecurityToken($user, $client);        
+
+        $client = array("company" => $token->user->company);
+        return $_SESSION['token'] = $this->EncodeSecurityToken($user, $client);
     }
-    
+
     public function getAuthObject($id) {
-        $userRoleGroup = $this->user->getUserRole($id);        
-        return array(                       
+        $userRoleGroup = $this->user->getUserRole($id);
+        return array(
             "Role" => @$userRoleGroup->ACLRoles['name'],
             "Auth" => @$this->getAuthPermissions($userRoleGroup->ACLRoles['id'])
         );

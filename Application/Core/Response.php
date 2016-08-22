@@ -1,4 +1,5 @@
 <?php
+
 namespace SolutionMvc\Core;
 
 /**
@@ -6,8 +7,6 @@ namespace SolutionMvc\Core;
  *
  * @author doug
  */
-
-
 //Currently all this does is define a set of default reposnse objects, simply to 
 //encurage the same standard to be used across the portal. Eventually this could
 // probably be developed into something stronger. Maybe like this:
@@ -19,7 +18,7 @@ class Response {
     public $data;
     public $token;
     public $message;
-    
+
     function getHeaders() {
         return $this->headers;
     }
@@ -67,5 +66,9 @@ class Response {
 //        $this->status = new \stdClass;
 //        
 //    }
+
+
+
+
 
 }

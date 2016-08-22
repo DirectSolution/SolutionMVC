@@ -1,7 +1,7 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li class='active'>Documents</li>   
     {% endblock breadcrumbs %}
 
@@ -16,12 +16,12 @@
             <ul class="nav navbar-nav">                
                 <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Coshh" class="btn btn-success">Coshh Index</a></p></li>
                 <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Method" class="btn btn-success">Method Index</a></p></li>
-                <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Policy" class="btn btn-success">Policy Index</a></p></li>
+{#                <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Policy" class="btn btn-success">Policy Index</a></p></li>#}
                 <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Risk" class="btn btn-success">Risk Index</a></p></li>
                 </ul>
-            <form class="navbar-form navbar-right" role="search">
+           {# <form class="navbar-form navbar-right" role="search">
                 <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Audits for...">
-            </form>
+            </form>#}
         </div>
     </nav>
 

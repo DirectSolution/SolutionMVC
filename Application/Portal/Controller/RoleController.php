@@ -18,7 +18,7 @@ class RoleController extends Controller {
     }
 
     public function indexAction() {
-        if (in_array(39, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(39)) {
 
             echo $this->twig->render("Portal/Role/index.html.twig", array(
                 "roles" => $this->role->getRoles($this->token->user->client)
@@ -33,7 +33,7 @@ class RoleController extends Controller {
     }
 
     public function viewAction($id) {
-        if (in_array(39, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(39)) {
             echo $this->twig->render("Portal/Role/view.html.twig", array(
                 "role" => $this->role->getRole($id),
                 "rights" => $this->role->getRoleRights($id)
@@ -48,12 +48,12 @@ class RoleController extends Controller {
     }
 
     public function createAction() {
-        if (in_array(35, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(35)) {
             if ($this->requestType() == "GET") {
 
                 $permissions = array();
 
-                foreach ($this->role->getAllPermissions() as $permission) {
+                foreach ($this->role->getAllPermissions($this->getToken()->user->client) as $permission) {
                     $permissions[$permission->ACLPermissionGroups['name']][] = array($permission);
                 }
 
@@ -78,13 +78,13 @@ class RoleController extends Controller {
     }
 
     public function updateAction($id) {
-        if (in_array(38, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(38)) {
             if ($this->requestType() == "GET") {
                 $rights = array();
                 foreach ($this->role->getAllCurrentRights($id) AS $right) {
                     $rights[] = $right['ACLPermissions_id'];
                 }
-                foreach ($this->role->getAllPermissionsNotAssigned($rights) as $permission) {
+                foreach ($this->role->getAllPermissionsNotAssigned($rights, $this->getToken()->user->client) as $permission) {
                     $permissions[$permission->ACLPermissionGroups['name']][] = array($permission);
                 }
                 echo $this->twig->render("Portal/Role/update.html.twig", array(
@@ -110,7 +110,7 @@ class RoleController extends Controller {
 
     public function retireRoleAction() {
         $request = $this->requestObject();
-        if (in_array(36, $this->token->user->auth->Auth) && $this->getToken()) {
+        if ($this->isAuth(36)) {
             $this->role->retireRole($request['id'], $this->token->user->client);
             return print json_encode("success");
         } else {

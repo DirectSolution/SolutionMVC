@@ -1,27 +1,46 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Risk Assessments{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li class='active'>Risk Assessments</li>
     {% endblock breadcrumbs %}
 
 {% block h1 %} 
-   Risk Assessments
+    Risk Assessments
 {% endblock h1 %}
 
 {% block audit_body %}
+
+    <div class="modal fade" id="retireRisk" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" value=''  id='retireNow'>Yes, do it.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <ul class="nav navbar-nav">                
                 <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Risk/create" class="btn btn-success">Create Risk Assessment</a></p></li>
+                <li class="button-li"><p class="navbar-btn"><a href="{{public_base}}HealthSafety/Risk/awaiting" class="btn btn-primary">{{awaiting}} Awaiting Review</a></p></li>
             </ul>
             <form class="navbar-form navbar-right" role="search">
-                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search Audits for...">
+                <input type="text" class="light-table-filter form-control" data-table="order-table" placeholder="Search for...">
             </form>
         </div>
     </nav>
-  <table id="table" class="order-table table table-hover table-responsive paginated">
+    <table id="table" class="order-table table table-hover table-responsive paginated">
         <thead>
             <tr>
                 <th>Document Name</th>
@@ -37,23 +56,26 @@
                     <td>{{ risk.author.name }} / {{ risk.author.username }}</td>
                     <td>{{risk.risks.created_at| date('d/m/Y')}}</td>
                     <td>
-                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Risk/document/{{risk.risks.id}}">View Word Doc</a>
-                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Risk/view/{{risk.risks.id}}">View</a>
+                        <a class="btn btn-info" href="{{public_base}}HealthSafety/Risk/documentbyid/{{risk.risks.id}}">View Word Doc <i class="fa fa-file-word-o" aria-hidden="true"></i></a>
+                        <a class="btn btn-primary" href="{{public_base}}HealthSafety/Risk/view/{{risk.risks.id}}">View <i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a class="btn btn-warning" href="{{public_base}}HealthSafety/Risk/update/{{risk.risks.id}}">Update <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <button class="btn btn-danger setRetire" type='button' data-toggle="modal" data-target="#retireRisk" data-risk-id='{{risk.risks.id}}' data-risk-name='{{risk.risks.name}}' value="{{risk.risks.id}}">Retire <i class="fa fa-trash" aria-hidden="true"></i></button>
+
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
         <tfoot>
-                <tr>
-                    <td colspan='10'>
-                        <nav id="pagi" class='text-center'>
-                            <ul class="pagination pagination-lg">
+            <tr>
+                <td colspan='10'>
+                    <nav id="pagi" class='text-center'>
+                        <ul class="pagination pagination-lg">
 
-                            </ul>
-                        </nav>
-                    </td>
-                </tr>
-            </tfoot>
+                        </ul>
+                    </nav>
+                </td>
+            </tr>
+        </tfoot>
     </table>                     
 
 
@@ -61,6 +83,37 @@
 
 {% block extra_js %}
     {{ parent() }}
-    <script src="{{public_base}}js/audit/table-filter.js"></script>
-    <script src="{{public_base}}js/audit/table-pagination.js"></script>
+    <script src="{{asset_base}}js/audit/table-filter.js"></script>
+    <script src="{{asset_base}}js/audit/table-pagination.js"></script>
+
+
+    <script>
+        $('#retireRisk').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var methodName = button.attr('data-risk-name'); // Extract info from data-* attributes
+            var methodId = button.attr('data-risk-id'); // Extract info from data-* attributes
+            modal.find('.modal-title').text('Are you sure you wish to retire ' + methodName);
+            modal.find('#leadText').append("<i>" + methodName + "</i>");
+            modal.find('#retireNow').val(methodId);
+        });
+
+
+        $('body').on('click', '#retireNow', function () {
+            var id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{public_base}}HealthSafety/Risk/Retire/" + id,
+                dataType: 'json',
+                encode: true
+            }
+            ).done(function (data) {
+                $('#table').load(document.URL + ' #table', function () {
+                    paginate();
+                    $(".global-error-inner")
+                            .append("<div class='alert alert-success alert-dismissible' role='alert'>  <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Succesfully retired risk assessment!</div>");
+                });
+            });
+        });
+    </script>
 {% endblock extra_js %}

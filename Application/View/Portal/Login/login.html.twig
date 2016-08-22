@@ -16,7 +16,7 @@
                     <div class="inner cover box-with-border">
 
                         <div class="panel-heading text-center">
-                            <img class='img-responsive img-responsive-center-fill' src='{{public_base}}img/portal/sh-logo.png' alt='SolutionHost'>
+                            <img class='img-responsive img-responsive-center-fill' src='{{asset_base}}img/portal/sh-logo.png' alt='SolutionHost'>
                         </div>
 
                         <form action="{{public_base}}Portal/Login/index/html/{{project}}{{controller}}{{action}}" method="POST" name="form_login" id="logmein">
@@ -96,15 +96,8 @@
 {#    </div>#}
 
 
-    <script src="{{public_base}}js/portal/login.js"></script>
-    <script src="{{public_base}}js/portal/newsfeed.js"></script>
-    <script src="{{public_base}}js/matchHeight/jquery.matchHeight-min.js"></script>
+    <script src="{{asset_base}}js/portal/login.js"></script>
+    <script src="{{asset_base}}js/portal/newsfeed.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('.heighted').matchHeight();
-        });
-
-    </script>
 
 {% endblock body %}

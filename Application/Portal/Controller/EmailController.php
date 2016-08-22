@@ -21,36 +21,31 @@ class EmailController Extends Controller {
         $this->config = $this->yaml->parse(file_get_contents(APP . "Config/Config.yml"));
         $this->mandrill = new \Mandrill($this->config['mandrill']['api_key']);
         $this->security = new Security();
-        $this->users = new Users();
+        $this->users = new User();
     }
 
-    public function newUserEmailAction($newUser = null, $currentUser = null, $request = null) {
-
-//Test data
-        
-        $newUser['email'] = "doug@hsdirect.co.uk";
-        $newUser['name'] = "Doug Hayward";
-        $currentUser['name'] = "Dougl";
-        $currentUser['companyname'] = "HsDirect";
-        $currentUser['id'] = "13509";
+    public function newUserEmail($newUser, $currentUser, $request) {
         
         
-        // End Test
+//        
+////        print "<PRE>";
+////        print_r($currentUser);
+////        print "</PRE>";
+//        print "<PRE>";
+//        print_r($newUser);
+//        print "</PRE>";
+//        die();
         
-        $key = $this->security->randomKeyGen();
-        
-        
+        $key = $this->security->randomKeyGen();                
         $this->users->setKey($key, $newUser['id']);
-
-        $emailView = $this->twig->render("Email/Portal/new-user.email.twig", array(
+        $html = $this->twig->render("Email/Portal/new-user.email.twig", array(
                 "user" => $newUser,
-                "client" => $currentUser,
+                "clientusername" => $currentUser->user->username,
+                "clientname" => $currentUser->user->company,
+                "clientnumber" => $currentUser->user->client,
                 "key" => $key
             ));
-        
-        $html = $emailView;
-        //Send the email
-        
+                        
         $message = array(
             'html' => $html,
             'subject' => 'User Account Activation',
@@ -67,9 +62,7 @@ class EmailController Extends Controller {
             'track_clicks' => true
         );
         $async = true;
-        $result = $this->mandrill->messages->send($message, $async);
-
-        print_r($result);
+        return $this->mandrill->messages->send($message, $async);
     }
 
 }

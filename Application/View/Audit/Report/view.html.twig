@@ -92,35 +92,43 @@
                             <th class="col-xs-6">
                                 <label>Question</label>
                             </th>
-                            <th class="col-xs-2">
+                            <th class="col-xs-3">
                                 <label>Answer</label>
                             </th>
-                            <th class="col-xs-1">
+                            <th class="col-xs-3">
                                 <label>Score</label>
                             </th>
 {#                            {% if Group.AnswerEvidence.length > 0 %}#}
-                                <th class="col-xs-3">
+{#                                <th class="col-xs-3">
                                     <label>Image</label>
-                                </th>
+                                </th>#}
 {#                            {% endif %}#}
                         </tr>
                         {% for QA in Group %}
                             <tr class="">
-                                <td class="col-xs-6">
+                                <td>
                                     <p><b>{{loop.index}}.</b> {{ QA.Question }}</p>
                                 </td>
-                                <td class="col-xs-2">
+                                <td>
                                     <p>{{ QA.Answer }}</p>
                                 </td>
                                 <td class="col-xs-1">
                                     <p>{{ QA.AnswerScore }}</p>
                                 </td>
-{#                                {% if QA.AnswerEvidence %}#}
-                                    <td class="col-xs-3">
-                                        <img class="img img-thumbnail img-responsive" style='max-width: 200px;' src="{{ QA.AnswerEvidence }}">
-                                    </td>
-{#                                {% endif %}#}
                             </tr>
+                                {% if QA.AnswerEvidence|length > 0 %}
+                                    <tr>
+                                        <td colspan="3">
+                                             {% for evidence in QA.AnswerEvidence %}
+{#                                                 <div class="col-xs-2">#}
+                                                     <a href="http://doug.portal.solutionhost.co.uk/apps/Audit/Filestore/images/000/Audits/{{Misc.AuditId}}/{{ evidence.name }}" target="_blank">
+                                                         <img class="img-thumbnail col-xs-3" src="http://doug.portal.solutionhost.co.uk/apps/Audit/Filestore/images/000/Audits/{{Misc.AuditId}}/{{ evidence.name }}">
+                                                     </a>
+{#                                                 </div>#}
+                                            {% endfor %}
+                                        </td>
+                                </tr> 
+                                {% endif %}
                         {% endfor %}
                     </table>
                 </section>
@@ -145,11 +153,11 @@
 {% endblock audit_body %}
 
 {% block extra_js %}
-    <script src="{{public_base}}js/matchHeight/jquery.matchHeight-min.js"></script>
+{#    <script src="{{asset_base}}js/matchHeight/jquery.matchHeight-min.js"></script>
     {{ parent() }}
     <script>
         $(document).ready(function () {
             $('.heighted').matchHeight();
         });
-    </script>
+    </script>#}
 {% endblock extra_js %}

@@ -14,10 +14,11 @@
         "symfony/yaml": "2.6.*",
         "firebase/php-jwt": "^3.0",
         "twig/twig": "~1.0",
-                "fisharebest/php-polyfill": "~1.0",
-                 "mandrill/mandrill": "1.0.*",
-                 "phpoffice/phpword": "0.12.1",
-        "dompdf/dompdf": "^0.7.0"
+        "fisharebest/php-polyfill": "~1.0",
+        "mandrill/mandrill": "1.0.*",
+        "phpoffice/phpword": "dev-master",
+        "dompdf/dompdf": "^0.7.0",
+        "tecnickcom/tcpdf" : "dev-master"
 
 
     },
@@ -38,7 +39,7 @@
             "SolutionMvc\\Ffc\\Controller\\": "Application/Ffc/Controller",
             "SolutionMvc\\Ffc\\Model\\": "Application/Ffc/Model",
             "SolutionMvc\\Config\\": "Application/Config"
-            
+
         }
     }
 

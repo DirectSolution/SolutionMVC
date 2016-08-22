@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}| Home{% endblock title %}
+{% block breadcrumbs %}
+    <li class='active'>Portal Home</li>    
+    {% endblock breadcrumbs %}
+
+{% block h1 %} 
+    Welcome {{token.user.username}}, below are your packages.
+{% endblock h1 %}
+
+{% block body %}
+
+    <div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Safety First Pack</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">First for Employment Pack</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">First for Contractors Pack</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">First for Holidays cpanel v3</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">Employee Manager v3</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">First for Payroll</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">Invoicing - Free App</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                        <div class="panel panel-default">
+                <div class="panel-heading">Project Management</div>
+                <div class="panel-body">
+                    No sale found
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

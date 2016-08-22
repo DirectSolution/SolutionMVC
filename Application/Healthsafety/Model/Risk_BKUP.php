@@ -65,23 +65,22 @@ class Risk extends BaseModel {
     public function getRiskAssessments_PersonRisks($id) {
         return $this->prod_documents->RiskAssessments_PersonRisks->where("RiskAssessments_id", $id);
     }
-    
-    public function getRiskAssessments_Hazards($id){
+
+    public function getRiskAssessments_Hazards($id) {
         $hazards = $this->prod_documents->RiskAssessments_Hazards->where("RiskAssessments_id", $id);
         $hazardArr = array();
-        foreach($hazards as $hazard){
+        foreach ($hazards as $hazard) {
             $hazardArr[] = array(
                 "hazard" => array(
                     "name" => $hazard->Hazards['name'],
                     "likelihood" => $hazard['likelihood'],
                     "severity" => $hazard['severity'],
                     "risk_ranking" => $hazard['risk_ranking']
-                    
                 ),
                 "controls" => $this->prod_documents->RiskAssessments_Hazards_Controls->where("RiskAssessments_Hazards_id", $hazard['id'])
-                );
+            );
         }
-        
+
         return $hazardArr;
     }
 
@@ -115,6 +114,26 @@ class Risk extends BaseModel {
                 );
             }
             $this->prod_documents->RiskAssessments_Hazards_Controls->insert_multi($controlsArray);
+        }
+        return;
+    }
+
+    public function setRetire($id, $user) {
+        $getRiskAss = $this->prod_documents->RiskAssessments[$id];
+        if ($getRiskAss) {
+            $getRiskAss->update(array(
+                "retired" => 1,
+                "updated_at" => new \SolutionORM\Controllers\LiteralController("NOW()"),
+                "updated_by" => $user
+            ));
+        }
+        $getHazards = $this->prod_documents->RiskHazards->where("RiskAssessments_id", $id);
+        foreach ($getHazards as $hazard) {
+            $hazard->update(array(
+                "retired" => 1,
+                "updated_at" => new \SolutionORM\Controllers\LiteralController("NOW()"),
+                "updated_by" => $user
+            ));
         }
         return;
     }

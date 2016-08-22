@@ -16,7 +16,7 @@ define('ROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // set a constant that holds the project's "application" folder, like "/var/www/application".
 define('APP', ROOT . 'Application' . DIRECTORY_SEPARATOR);
 define('LEG', $_SERVER['DOCUMENT_ROOT']."/");
-define('HTTP_ROOT', "//".$_SERVER['HTTP_HOST']."/apps2/public/");
+define('HTTP_ROOT', "//".$_SERVER['HTTP_HOST']."/apps2/");
 define('SERVER_ROOT', "//".$_SERVER['HTTP_HOST']);
 define('FILESTORE', "/home/git/htmlp/html/doug/portal.solutionhost.co.uk/web/apps/Audit/Filestore/");
 //print_r($_SERVER['HTTP_HOST']);

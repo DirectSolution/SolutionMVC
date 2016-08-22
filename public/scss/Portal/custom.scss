@@ -162,7 +162,7 @@ body {
     .larger-masthead,
     .larger-mastfoot,
     .larger-cover-container {
-        width: 800px;
+        /*width: 800px;*/
         /*width: 80%;*/
 
     }
@@ -273,7 +273,8 @@ body {
 
 /* Small devices (tablets, 768px and up) */
 .global-error-outer{
-    display: table-row;
+    
+    /*display: table-row;*/
 }
 .global-error-inner{
     width: 100%;
@@ -591,6 +592,7 @@ div[data-toggle="buttons"] label:active, div[data-toggle="buttons"] label.active
         justify-content: center;
     }
     .sidebar-nav{
+        min-height: calc(100vh - 30px);
         width: 100%;
     }
     .sidebar-nav .navbar .navbar-collapse {        
@@ -615,3 +617,52 @@ div[data-toggle="buttons"] label:active, div[data-toggle="buttons"] label.active
         display: none;
     }
 }
+
+
+.main-nav{
+    min-height: 35px;
+    max-height: 35px;
+    margin-bottom: 0;
+    border: 0;
+}
+.navbar-default{
+    border: none;
+    
+}
+
+.main-nav .navbar-brand{
+    height: 30px;
+    border: 0;
+}
+
+
+            .nav-container{
+                padding-top: 5px;
+                vertical-align: bottom;
+            }
+
+            .nav-tab{                
+                text-align: center;
+                height: 25px;
+                width: 92px;  
+                padding-top: 0px !important;
+                background-image: url('/images/nav_tab.png');
+                background-repeat: no-repeat;
+
+            }
+            .nav-tab:hover{
+                background-image: url('/images/nav_tab_hover.png');
+
+            }
+            .nav-tab a{
+                margin-top: 1px !important;
+                padding-top: 1px !important;
+                vertical-align:bottom;
+                text-decoration: none;
+                color: #000000;
+            }
+            .nav-tab a:hover{
+
+                color: #333333;
+
+            }

@@ -161,7 +161,7 @@
                                         <div class="col-xs-6 col-md-2 form-group">
                                             <label>Evidence</label>
                                             <div type='file' class="dropzone dropzone{{question.id}}"></div>
-                                            <input id="evidence{{question.id}}" type='hidden' value='' name='takeAudit[answers][{{question.id}}][evidence]'>
+{#                                            <input id="evidence{{question.id}}" type='hidden' value='' name='takeAudit[answers][{{question.id}}][evidence]'>#}
 
                                         </div>
                                     {% else %}
@@ -192,7 +192,7 @@
                     </script>
 
 
-                    <script src='{{public_base}}js/select2/select2.min.js'></script>
+                    <script src='{{asset_base}}js/select2/select2.min.js'></script>
                     <script>
 
                         $(document).ready(function () {
@@ -205,12 +205,15 @@
                         {% for group in data.audit.groups %}
                             {% for question in group.questions %}
                                 {% if question.addEvidence == 1 %}
+                                    Dropzone.autoDiscover = false;
                                         $(".dropzone{{question.id}}").dropzone({
                                             url: "{{public_base}}Portal/Upload/UploadAuditImage/{{data.auditID}}",
                                             addRemoveLinks: true,
+                                            uploadMultiple: true,
                                             success: function (data) {
                                                 var response = $($.parseJSON(data.xhr.response));
-                                                $("body").find("#evidence{{question.id}}").val(response[0].FileName);
+                                                console.log(response);
+                                                $("body").find(".dropzone{{question.id}}").append("<input type='hidden' name='takeAudit[answers][{{question.id}}][evidence][]' value='"+response[0].FileName+"'>");
                                             }
                                         });
                                 {% endif %}

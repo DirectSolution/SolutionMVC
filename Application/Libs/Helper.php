@@ -4,18 +4,21 @@ namespace SolutionMvc\Library;
 
 class Helper {
 
+    public $explodeOnLastDot;
+
     /**
      * @param string
      * @return array
      * @description Explode a filename, retaining its file extension. returns an array with the filename and the extension eg: array("fileName" => Somefile, "fileExtension" => .jpg);
      */
     public function explodeOnLastDot($file) {
+
         //Explode on "." delimiter
-        $makeArray = explode(".", $file);
+        $makeArray = explode(".", $file[0]);
         //Get the last instance which should be followed by a file extension
         $fileExtension = end($makeArray);
         //Get the Filename by exploding on extension
-        $fileName = explode("." . $fileExtension, $file);
+        $fileName = explode("." . $fileExtension, $file[0]);
         //Return both parts
         return array(
             "fileName" => $fileName[0],
@@ -125,26 +128,67 @@ class Helper {
     public function passwordHasherAction($password) {
         return md5($this->secret . $password);
     }
-    
-    
-    public function getCountries(){
-       $helpers = new \SolutionMvc\Audit\Model\Helpers();
-       return $helpers->getCountriesArray();
+
+    public function getCountries() {
+        $helpers = new \SolutionMvc\Audit\Model\Helpers();
+        return $helpers->getCountriesArray();
     }
 
-    public function getCounties(){
-       $helpers = new \SolutionMvc\Audit\Model\Helpers();
-       return $helpers->getCountiesArray();
+    public function getCounties() {
+        $helpers = new \SolutionMvc\Audit\Model\Helpers();
+        return $helpers->getCountiesArray();
     }
 
-    
-    public function convertDayMonthYearToMysqlDataTime($date = null){                
-        if($date != null){        
+    public function convertDayMonthYearToMysqlDataTime($date = null) {
+        if ($date != null) {
             $d = \DateTime::createFromFormat('!d/m/Y', $date);
-            return $d->format('Y-m-d H:i:s');       
-        }else{
+            return $d->format('Y-m-d H:i:s');
+        } else {
             return null;
         }
     }
-    
+
+    /**
+     * Word Sanitizer - Function to make strings suitable for phpWord
+     * @param type $string
+     * @return type $string
+     */
+    public function wordSanitizer($string) {
+        $a = str_replace(array("<p>&nbsp;</p>", "&nbsp;", "nbsp", "&", "&ndash;", "", "Â", "â", "€", "™"), "", $string);
+        $b = str_replace(array("&", "&amps;", "&amp;"), " and ", $a);
+        $c = str_replace(array("&ldquo;", "&rdquo;", "&rsquo;", "&#39;", "ldquo;", "rdquo;"), "'", $b);
+        $d = preg_replace("/\t+/", "", $c);
+        $e = str_replace("YOUR COMPANY", "<strong>YOUR COMPANY</strong>", $d);
+        $f = str_replace("<p>&ndash;</p>", " - ", $e);
+        $g = str_replace("&gt;", " > ", $f);
+        $i = str_replace("&lt;", " < ", $g);
+        return $i;
+    }
+
+    /**
+     * HtmlStripper - Function to make strings of html suitable for dumping into a pdf. No classes, divs, styles etc. 
+     * @param type $string
+     * @return type $string
+     */
+    public function htmlStripper($string) {
+        $a = preg_replace('/style="width: /', 'width="', $string);
+        $b = preg_replace(
+                array(
+            '/<div(.*?)>/',
+            '/<div>/',
+            '/<\/div>/',
+            '/<ul class="dropdown-menu">(.*?)<\/ul>/',
+            "/<button(.+?)<\/button>/",
+            "/<i(.+)?<\/i>/",
+            '/ style="(.*?)"/',
+            '/ contenteditable="(.*?)"/',
+            '/ class="contenteditable"/',
+            '/ id="(.*?)"/',
+            '/"sortable">/',
+            '/style="/',
+                ), "", $a
+        );
+        return $b;
+    }
+
 }

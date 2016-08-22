@@ -1,10 +1,11 @@
-{% extends "Audit/audit_base.html.twig" %}
+{% extends "HealthSafety/hs_base.html.twig" %}
 {% set menu_selected = 'document' %}
+{% block title %}| Risk - View - {{ riskAssessment.name|title }}{% endblock title %}
 {% block breadcrumbs %}
-    <li><a href="{{public_base}}HealthSafety">Health and Safety</a></li>
+    <li><a href="{{public_base}}HealthSafety/home">Health and Safety</a></li>
     <li><a href="{{public_base}}HealthSafety/Document">Documents</a></li>
     <li><a href="{{public_base}}HealthSafety/Risk">Risk Assessments</a></li>
-    <li class='active'>{{ Risk.name }}</li>    
+    <li class='active'>{{ riskAssessment.name }}</li>    
     {% endblock breadcrumbs %}
 
 {% block h1 %} 
@@ -12,7 +13,18 @@
 {% endblock h1 %}
 
 {% block audit_body %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Risk/'>Back <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><p class='navbar-btn'><a  class="btn btn-warning" href='{{public_base}}HealthSafety/Risk/update/{{riskAssessment.id}}'>Edit Document <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></p></li>
 
+                <li style='padding-left:5px;'><p class='navbar-btn'><a  class="btn btn-primary" href='{{public_base}}HealthSafety/Risk/documentbyid/{{riskAssessment.id}}'>View Word Document <i class="fa fa-file-text" aria-hidden="true"></i></a></p></li>
+            </ul>
+        </div>
+    </nav>
     <section style='color: red'>
         <h3>RISK ASSESSMENT INFORMATION</h3>
         <p>Risk Assessment Examples</p>
@@ -125,7 +137,18 @@
         <p>HS direct Ltd take great pride in providing help and assistance with all health and safety related paperwork for over 1500 clients throughout the UK using our Safety First Package. </p>
         <p>To get further information on the entire range of products and services we can assist you with please do not hesitate to call us on 0114 2444461. Our offices are open 8am – 9pm Monday to Friday, and 9am - 5 pm at weekends. </p>
     </section>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar">
+                <li><p class='navbar-btn'><a class='btn btn-danger' href='{{public_base}}HealthSafety/Risk/'>Back <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style='margin-right: 0;'>
+                <li><p class='navbar-btn'><a  class="btn btn-warning" href='{{public_base}}HealthSafety/Risk/update/{{riskAssessment.id}}'>Edit Document <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></p></li>
 
+                <li style='padding-left:5px;'><p class='navbar-btn'><a  class="btn btn-primary" href='{{public_base}}HealthSafety/Risk/document/{{riskAssessment.id}}'>View Word Document <i class="fa fa-file-text" aria-hidden="true"></i></a></p></li>
+            </ul>
+        </div>
+    </nav>
 
 {% endblock audit_body %}
 
